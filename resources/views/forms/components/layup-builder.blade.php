@@ -7,6 +7,7 @@
                 x-data="layupBuilder({
                 state: $wire.$entangle(@js($getStatePath())),
                 statePath: @js($getStatePath()),
+                componentKey: @js($getKey()),
                 content: @js($getState()),
                 breakpoints: @js($breakpoints),
                 defaultBreakpoint: @js($defaultBreakpoint),
@@ -353,6 +354,7 @@
             Alpine.data('layupBuilder', (config) => ({
                 state: config.state,
                 statePath: config.statePath,
+                componentKey: config.componentKey,
                 content: config.content,
                 breakpoints: config.breakpoints,
                 currentBreakpoint: config.defaultBreakpoint,
@@ -592,7 +594,7 @@
                  * @param id
                  */
                 rowDelete: function(id) {
-                    $wire.mountAction('rowDelete', { id: id }, { schemaComponent: '{{ $getKey() }}'});
+                    $wire.mountAction('rowDelete', { id: id }, { schemaComponent: this.componentKey});
                 },
                 rowDeleted: function(id) {
                     if (typeof this.content.rows != 'object') {
@@ -603,7 +605,7 @@
                 rowDuplicate: function(id) {
                     let $self = this;
 
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'rowDuplicate', {id: id})
+                    $wire.callSchemaComponentMethod(this.componentKey, 'rowDuplicate', {id: id})
                         .then(function (response) {
                             if (typeof response != 'object') {
                                 // Add in a warning eventually..
@@ -632,7 +634,7 @@
                         position = 0;
                     }
 
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'rowAdd', {columns: schema, position: position})
+                    $wire.callSchemaComponentMethod(this.componentKey, 'rowAdd', {columns: schema, position: position})
                         .then(function (response) {
 
                             if (typeof response != 'object' || !response) {
@@ -657,7 +659,7 @@
                 },
 
                 rowEdit: function(id) {
-                    $wire.mountAction('rowEdit', { id: id }, { schemaComponent: '{{ $getKey() }}'});
+                    $wire.mountAction('rowEdit', { id: id }, { schemaComponent: this.componentKey});
                 },
 
                 /**
@@ -665,7 +667,7 @@
                  */
                 columnAdd: function(rowId) {
                     let $self = this;
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'columnAdd', {rowId: rowId})
+                    $wire.callSchemaComponentMethod(this.componentKey, 'columnAdd', {rowId: rowId})
                         .then(function (response) {
                             if (typeof response != 'object' || !response.id) return;
                             $self.content.rows = ($self.content.rows || []).map(function(row) {
@@ -679,11 +681,11 @@
                 },
 
                 columnEdit: function(rowId, columnId) {
-                    $wire.mountAction('columnEdit', { rowId: rowId, columnId: columnId }, { schemaComponent: '{{ $getKey() }}'});
+                    $wire.mountAction('columnEdit', { rowId: rowId, columnId: columnId }, { schemaComponent: this.componentKey});
                 },
 
                 columnDelete: function(rowId, columnId) {
-                    $wire.mountAction('columnDelete', { rowId: rowId, columnId: columnId }, { schemaComponent: '{{ $getKey() }}'});
+                    $wire.mountAction('columnDelete', { rowId: rowId, columnId: columnId }, { schemaComponent: this.componentKey});
                 },
 
                 columnMove: function(rowId, columnId, direction) {
@@ -701,18 +703,18 @@
                         $self.pushHistory();
                     }
                     // Sync to PHP
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'columnMove', {rowId: rowId, columnId: columnId, direction: direction});
+                    $wire.callSchemaComponentMethod(this.componentKey, 'columnMove', {rowId: rowId, columnId: columnId, direction: direction});
                 },
 
                 /**
                  * Widget Methods
                  */
                 widgetEdit: function(rowId, columnId, widgetId) {
-                    $wire.mountAction('widgetEdit', { rowId: rowId, columnId: columnId, widgetId: widgetId }, { schemaComponent: '{{ $getKey() }}'});
+                    $wire.mountAction('widgetEdit', { rowId: rowId, columnId: columnId, widgetId: widgetId }, { schemaComponent: this.componentKey});
                 },
 
                 widgetDelete: function(rowId, columnId, widgetId) {
-                    $wire.mountAction('widgetDelete', { rowId: rowId, columnId: columnId, widgetId: widgetId }, { schemaComponent: '{{ $getKey() }}'});
+                    $wire.mountAction('widgetDelete', { rowId: rowId, columnId: columnId, widgetId: widgetId }, { schemaComponent: this.componentKey});
                 },
 
                 widgetAdd: function(rowId, columnId, widgetType, position) {
@@ -721,7 +723,7 @@
                     if (typeof position === 'number') {
                         args.position = position;
                     }
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'widgetAdd', args)
+                    $wire.callSchemaComponentMethod(this.componentKey, 'widgetAdd', args)
                         .then(function (response) {
                             if (typeof response != 'object' || !response.id) return;
                             $self.content.rows = ($self.content.rows || []).map(function(row) {
@@ -747,7 +749,7 @@
 
                 widgetDuplicate: function(rowId, columnId, widgetId) {
                     let $self = this;
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'widgetDuplicate', {rowId: rowId, columnId: columnId, widgetId: widgetId})
+                    $wire.callSchemaComponentMethod(this.componentKey, 'widgetDuplicate', {rowId: rowId, columnId: columnId, widgetId: widgetId})
                         .then(function (response) {
                             if (typeof response != 'object' || !response.id) return;
                             $self.content.rows = ($self.content.rows || []).map(function(row) {
@@ -810,7 +812,7 @@
                         $self.pushHistory();
                     }
                     // Sync to PHP
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'widgetMoveTo', {
+                    $wire.callSchemaComponentMethod(this.componentKey, 'widgetMoveTo', {
                         sourceRowId: sourceRowId, sourceColId: sourceColId, widgetId: widgetId,
                         targetRowId: targetRowId, targetColId: targetColId, position: position
                     });
@@ -874,7 +876,7 @@
                         this.pushHistory();
 
                         // Sync to PHP
-                        $wire.callSchemaComponentMethod('{{ $getKey() }}', 'rowMoveTo', {id: rowId, targetIndex: targetIndex});
+                        $wire.callSchemaComponentMethod(this.componentKey, 'rowMoveTo', {id: rowId, targetIndex: targetIndex});
                     }
                 },
 
@@ -1110,7 +1112,7 @@
                     }
 
                     console.log('incoming update.');
-                    $wire.callSchemaComponentMethod('{{ $getKey() }}', 'widgetUpdateContent', {rowId: rowId, columnId: colId, widgetId: widgetId, content: newContent});
+                    $wire.callSchemaComponentMethod(this.componentKey, 'widgetUpdateContent', {rowId: rowId, columnId: colId, widgetId: widgetId, content: newContent});
                     this.cancelInlineEdit();
                 },
 
@@ -1180,7 +1182,7 @@
                         const row = this.content.rows.find(r => r.id === this.columnResize.rowId);
                         if (row) {
                             const spans = row.columns.map(col => col.span);
-                            $wire.callSchemaComponentMethod('{{ $getKey() }}', 'columnResize', {
+                            $wire.callSchemaComponentMethod(this.componentKey, 'columnResize', {
                                 rowId: this.columnResize.rowId,
                                 spans: spans
                             });
