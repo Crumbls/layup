@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Crumbls\Layup\Support\LayupContent;
 use Crumbls\Layup\Support\WidgetRegistry;
-use Crumbls\Layup\View\TextWidget;
 use Illuminate\Contracts\Support\Htmlable;
 
 beforeEach(function (): void {

@@ -9,7 +9,7 @@ use Crumbls\Layup\View\Column;
 use Crumbls\Layup\View\Row;
 use Illuminate\Contracts\Support\Htmlable;
 
-class LayupContent implements Htmlable
+class dLayupContent implements Htmlable
 {
     use RegistersWidgets;
 
@@ -79,7 +79,7 @@ class LayupContent implements Htmlable
                     function (array $widgetData) use ($registry) {
                         $type = $widgetData['type'] ?? null;
                         if (! is_string($type) || $type === '') {
-                            return null;
+                            return;
                         }
 
                         $class = $registry->get($type);
