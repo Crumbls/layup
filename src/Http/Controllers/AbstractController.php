@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Http\Controllers;
 
-use Crumbls\Layup\Http\Controllers\Concerns\RegistersWidgets;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;

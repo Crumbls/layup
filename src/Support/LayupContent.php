@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Support;
 
-use Crumbls\Layup\View\BaseWidget;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\View\Column;
 use Crumbls\Layup\View\Row;
+use Illuminate\Contracts\Support\Htmlable;
 
-class LayupContent
+class LayupContent implements Htmlable
 {
+    use RegistersWidgets;
+
     protected array $content;
 
     public function __construct(mixed $content)
@@ -26,8 +29,7 @@ class LayupContent
     }
 
     /**
-     * Get sections with their hydrated row trees.
-     * Returns array of ['settings' => [...], 'rows' => [Row, ...]]
+     * @return array<int, array{settings: array, rows: array<Row>}>
      */
     public function getSectionTree(): array
     {
@@ -44,8 +46,6 @@ class LayupContent
     }
 
     /**
-     * Get a flat list of hydrated Row objects across all sections.
-     *
      * @return array<Row>
      */
     public function getContentTree(): array
@@ -65,8 +65,6 @@ class LayupContent
     }
 
     /**
-     * Hydrate raw row data into Row → Column → Widget object trees.
-     *
      * @return array<Row>
      */
     protected function buildRowTree(array $rows): array
@@ -115,46 +113,5 @@ class LayupContent
         }
 
         return [];
-    }
-
-    protected function ensureWidgetsRegistered(): void
-    {
-        $registry = app(WidgetRegistry::class);
-
-        if (count($registry->all()) > 0) {
-            return;
-        }
-
-        foreach (config('layup.widgets', []) as $widgetClass) {
-            $registry->register($widgetClass);
-        }
-
-        $this->discoverAppWidgets($registry);
-    }
-
-    protected function discoverAppWidgets(WidgetRegistry $registry): void
-    {
-        $namespace = config('layup.widget_discovery.namespace', 'App\\Layup\\Widgets');
-        $directory = config('layup.widget_discovery.directory') ?? app_path('Layup/Widgets');
-
-        if (! is_dir($directory)) {
-            return;
-        }
-
-        foreach (new \DirectoryIterator($directory) as $file) {
-            if ($file->isDot() || $file->getExtension() !== 'php') {
-                continue;
-            }
-
-            $className = "{$namespace}\\{$file->getBasename('.php')}";
-
-            if (
-                class_exists($className)
-                && is_subclass_of($className, BaseWidget::class)
-                && ! $registry->has($className::getType())
-            ) {
-                $registry->register($className);
-            }
-        }
     }
 }

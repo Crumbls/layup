@@ -564,11 +564,17 @@ This copies `layup.js` to `resources/js/vendor/layup.js` where you can modify it
 
 ## Rendering content from a model field
 
-To render conten from a model fiel simply use the `LayupContent` helper class:
-```php
-!! new LayupContent($model->field)->toHtml() !!}
+The simplest way is the `@layup` Blade directive:
+```blade
+@layup($model->field)
 ```
 
+You can also use the `LayupContent` helper class directly. It implements `Htmlable`:
+```php
+use Crumbls\Layup\Support\LayupContent;
+
+{{ new LayupContent($model->field) }}
+```
 
 ## Custom Widgets
 
