@@ -5,6 +5,13 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5](https://github.com/Crumbls/layup/compare/1.0.4...v1.0.5) (2026-03-10)
+
+
+### Bug Fixes
+
+* **ui:** page builder with locale key ([dbd60ba](https://github.com/Crumbls/layup/commit/dbd60ba0c1b44f5163649a2308f1862860b86b99))
+
 ## [1.0.3](https://github.com/Crumbls/layup/compare/1.0.2...v1.0.3) (2026-03-08)
 
 
