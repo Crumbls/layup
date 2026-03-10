@@ -9,7 +9,7 @@ use Crumbls\Layup\View\Column;
 use Crumbls\Layup\View\Row;
 use Illuminate\Contracts\Support\Htmlable;
 
-class dLayupContent implements Htmlable
+class LayupContent implements Htmlable
 {
     use RegistersWidgets;
 
