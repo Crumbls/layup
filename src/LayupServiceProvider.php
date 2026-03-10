@@ -71,5 +71,7 @@ class LayupServiceProvider extends ServiceProvider
         Blade::directive('layupScripts', fn (): string => "<?php if(config('layup.frontend.include_scripts', true)): ?>"
             . '<script>' . file_get_contents(__DIR__ . '/../resources/js/layup.js') . '</script>'
             . '<?php endif; ?>');
+
+        Blade::directive('layup', fn (string $expression): string => "<?php echo (new \Crumbls\Layup\Support\LayupContent({$expression}))->toHtml(); ?>");
     }
 }

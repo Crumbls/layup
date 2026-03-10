@@ -562,6 +562,20 @@ This copies `layup.js` to `resources/js/vendor/layup.js` where you can modify it
 | `layupCounter` | Number Counter | `(target, animate)` |
 | `layupBarCounter` | Bar Counter | `(percent, animate)` |
 
+## Rendering content from a model field
+
+The simplest way is the `@layup` Blade directive:
+```blade
+@layup($model->field)
+```
+
+You can also use the `LayupContent` helper class directly. It implements `Htmlable`:
+```php
+use Crumbls\Layup\Support\LayupContent;
+
+{{ new LayupContent($model->field) }}
+```
+
 ## Custom Widgets
 
 Create a widget by extending `Crumbls\Layup\View\BaseWidget`:
