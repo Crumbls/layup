@@ -622,17 +622,51 @@ class MyWidget extends BaseWidget
 
 The form schema automatically inherits Design (spacing, background) and Advanced (id, class, inline CSS) tabs from `BaseWidget`. You only define the Content tab.
 
-### Register via config
+### Registration
+
+There are three ways to register custom widgets. Whichever you choose, the widget must be registered for **both** the Filament admin panel and the frontend renderer.
+
+#### Option 1: Auto-Discovery (recommended)
+
+Place widget classes in `app/Layup/Widgets/` and they will be auto-discovered on frontend routes automatically. However, **you must also register them with the Filament plugin** for the admin panel editor to recognize them:
+
+```php
+// app/Providers/Filament/AdminPanelProvider.php
+use App\Layup\Widgets\MyWidget;
+
+LayupPlugin::make()
+    ->widgets([
+        MyWidget::class,
+    ])
+```
+
+Without this step, the widget will render correctly on the frontend but the admin edit form will appear empty (no form fields, just a save button) because the admin panel's WidgetRegistry doesn't know about the widget type.
+
+The auto-discovery namespace and directory are configurable:
+
+```php
+// config/layup.php
+'widget_discovery' => [
+    'namespace' => 'App\\Layup\\Widgets',
+    'directory' => null, // defaults to app_path('Layup/Widgets')
+],
+```
+
+#### Option 2: Config file only
+
+Add the widget class to the config. This registers it for both admin and frontend:
 
 ```php
 // config/layup.php
 'widgets' => [
     // ... built-in widgets ...
-    \App\Layup\MyWidget::class,
+    \App\Layup\Widgets\MyWidget::class,
 ],
 ```
 
-### Register via plugin
+#### Option 3: Plugin only
+
+Register via the plugin. This also covers both admin and frontend since the plugin populates the shared WidgetRegistry:
 
 ```php
 LayupPlugin::make()
@@ -654,7 +688,7 @@ LayupPlugin::make()
 | Command | Description |
 |---------|-------------|
 | `layup:make-controller {name}` | Scaffold a frontend controller extending AbstractController |
-| `layup:make-widget {name}` | Scaffold a custom widget (PHP class + Blade view) |
+| `layup:make-widget {name}` | Scaffold a custom widget (PHP class + Blade view). Remember to [register it](#registration) with the plugin. |
 | `layup:safelist` | Generate the Tailwind safelist file |
 | `layup:audit` | Audit page content for structural issues |
 | `layup:export` | Export pages as JSON files |
@@ -666,8 +700,15 @@ LayupPlugin::make()
 ```php
 // config/layup.php
 return [
-    // Widget classes available in the page builder
+    // Widget classes available in the page builder (registered for both admin and frontend)
     'widgets' => [ /* ... */ ],
+
+    // Auto-discover widgets from this namespace/directory (frontend only —
+    // for admin panel access, also register via LayupPlugin::make()->widgets([...]))
+    'widget_discovery' => [
+        'namespace' => 'App\\Layup\\Widgets',
+        'directory' => null, // defaults to app_path('Layup/Widgets')
+    ],
 
     // Page model and table name (swap per dashboard)
     'pages' => [
