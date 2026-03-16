@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Crumbls\Layup\Database\Factories;
 
 use Crumbls\Layup\Models\Page;
@@ -33,6 +35,47 @@ class PageFactory extends Factory
     public function draft(): static
     {
         return $this->state(['status' => 'draft']);
+    }
+
+    /**
+     * Create a page with specific widget types.
+     *
+     * @param  array<string>  $types  Widget type strings (e.g. ['text', 'button'])
+     */
+    public function withWidgets(array $types): static
+    {
+        $widgets = array_map(fn (string $type): array => [
+            'id' => 'widget_' . Str::random(8),
+            'type' => $type,
+            'data' => [],
+        ], $types);
+
+        return $this->state([
+            'content' => [
+                'rows' => [
+                    [
+                        'id' => 'row_' . Str::random(8),
+                        'settings' => [],
+                        'columns' => [
+                            [
+                                'id' => 'col_' . Str::random(8),
+                                'span' => 12,
+                                'settings' => [],
+                                'widgets' => $widgets,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Create a page with explicit content structure.
+     */
+    public function withContent(array $content): static
+    {
+        return $this->state(['content' => $content]);
     }
 
     protected function defaultContent(): array

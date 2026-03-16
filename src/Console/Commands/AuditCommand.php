@@ -6,6 +6,7 @@ namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\ContentValidator;
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\SafelistCollector;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Illuminate\Console\Command;
@@ -51,15 +52,12 @@ class AuditCommand extends Command
                 $issues[$page->title] = $result->errors();
             }
 
-            // Count widget usage
-            foreach ($page->content['rows'] ?? [] as $row) {
-                foreach ($row['columns'] ?? [] as $col) {
-                    foreach ($col['widgets'] ?? [] as $widget) {
-                        $type = $widget['type'] ?? 'unknown';
-                        $widgetUsage[$type] = ($widgetUsage[$type] ?? 0) + 1;
-                        $totalWidgets++;
-                    }
-                }
+            // Count widget usage (handles both sections and legacy rows)
+            $pageTypes = ContentWalker::collectWidgetTypes($page->content ?? []);
+
+            foreach ($pageTypes as $type => $count) {
+                $widgetUsage[$type] = ($widgetUsage[$type] ?? 0) + $count;
+                $totalWidgets += $count;
             }
         }
 

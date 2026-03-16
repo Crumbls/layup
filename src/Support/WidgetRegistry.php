@@ -27,7 +27,13 @@ class WidgetRegistry
             );
         }
 
-        $this->widgets[$widgetClass::getType()] = $widgetClass;
+        $type = $widgetClass::getType();
+
+        if (isset($this->widgets[$type])) {
+            logger()->warning("Layup: Widget type '{$type}' already registered by {$this->widgets[$type]}. Overriding with {$widgetClass}.");
+        }
+
+        $this->widgets[$type] = $widgetClass;
         $this->fingerprint = null;
 
         return $this;

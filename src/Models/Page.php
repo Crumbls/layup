@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Models;
 
+use Crumbls\Layup\Concerns\HasLayupContent;
 use Crumbls\Layup\Support\ContentValidator;
 use Crumbls\Layup\Support\SafelistCollector;
-use Crumbls\Layup\Support\WidgetRegistry;
-use Crumbls\Layup\View\BaseView;
-use Crumbls\Layup\View\Column;
-use Crumbls\Layup\View\Row;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasLayupContent, SoftDeletes;
 
     protected static function booted(): void
     {
@@ -218,12 +215,14 @@ class Page extends Model
     protected function extractFaqItems(): array
     {
         $faqs = [];
-        $rows = $this->content['rows'] ?? [];
+        $rows = $this->getLayupContent()['rows'] ?? [];
 
         // Also check inside sections
-        if (! empty($this->content['sections'])) {
+        $content = $this->getLayupContent();
+
+        if (! empty($content['sections'])) {
             $rows = [];
-            foreach ($this->content['sections'] as $section) {
+            foreach ($content['sections'] as $section) {
                 foreach ($section['rows'] ?? [] as $row) {
                     $rows[] = $row;
                 }
@@ -308,131 +307,6 @@ class Page extends Model
         $prefix = config('layup.frontend.prefix', 'pages');
 
         return url(ltrim("{$prefix}/{$this->slug}", '/'));
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | CSS / Tailwind Safelist
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Get all Tailwind CSS classes used in this page's content.
-     *
-     * @return array<string>
-     */
-    public function getUsedClasses(): array
-    {
-        return SafelistCollector::classesFromContent($this->content);
-    }
-
-    /**
-     * Get all inline CSS declarations used in this page's content.
-     *
-     * @return array<string>
-     */
-    public function getUsedInlineStyles(): array
-    {
-        return SafelistCollector::inlineStylesFromContent($this->content);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Content Hydration
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Hydrate the stored JSON content into a tree of BaseView instances.
-     *
-     * Returns an array of Row objects, each containing Column children,
-     * each containing widget children.
-     *
-     * @return array<Row>
-     */
-    /**
-     * Get sections with their row trees.
-     * Returns array of ['settings' => [...], 'rows' => [Row, ...]]
-     */
-    public function getSectionTree(): array
-    {
-        $content = $this->content ?? [];
-
-        // Support both { sections: [...] } and legacy { rows: [...] }
-        if (array_key_exists('sections', $content)) {
-            $sections = $content['sections'];
-        } else {
-            // Legacy: wrap all rows in one default section
-            $sections = [['settings' => [], 'rows' => $content['rows'] ?? []]];
-        }
-
-        return array_map(fn (array $sectionData): array => [
-            'settings' => $sectionData['settings'] ?? [],
-            'rows' => $this->buildRowTree($sectionData['rows'] ?? []),
-        ], $sections);
-    }
-
-    public function getContentTree(): array
-    {
-        $content = $this->content ?? [];
-        $rows = $content['rows'] ?? [];
-
-        // If sections exist, flatten all rows from all sections
-        if (array_key_exists('sections', $content)) {
-            $rows = [];
-            foreach ($content['sections'] as $section) {
-                foreach ($section['rows'] ?? [] as $row) {
-                    $rows[] = $row;
-                }
-            }
-        }
-
-        return $this->buildRowTree($rows);
-    }
-
-    protected function buildRowTree(array $rows): array
-    {
-        $registry = app(WidgetRegistry::class);
-
-        return array_map(function (array $rowData) use ($registry): \Crumbls\Layup\View\Row {
-            $columns = array_map(function (array $colData) use ($registry): \Crumbls\Layup\View\Column {
-                $widgets = array_map(function (array $widgetData) use ($registry) {
-                    $type = $widgetData['type'] ?? null;
-                    $class = $type ? $registry->get($type) : null;
-
-                    if (! $class) {
-                        return;
-                    }
-
-                    return $class::make($widgetData['data'] ?? []);
-                }, $colData['widgets'] ?? []);
-
-                $widgets = array_filter($widgets);
-
-                return Column::make(
-                    data: $colData['settings'] ?? [],
-                    children: array_values($widgets),
-                )->span($colData['span'] ?? 12);
-            }, $rowData['columns'] ?? []);
-
-            return Row::make(
-                data: $rowData['settings'] ?? [],
-                children: $columns,
-            );
-        }, $rows);
-    }
-
-    /**
-     * Render the full page content to an HTML string.
-     */
-    public function toHtml(): string
-    {
-        $tree = $this->getContentTree();
-
-        return implode("\n", array_map(
-            fn (Row $row) => $row->render()->render(),
-            $tree,
-        ));
     }
 
     /*

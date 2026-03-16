@@ -24,7 +24,12 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Content validation** — structural + widget type validation
 - **Widget auto-discovery** — scans `App\Layup\Widgets` for custom widgets
 - **Configurable model** — swap the Page model per dashboard
-- **1,051 tests, 3,304 assertions**
+- **`HasLayupContent` trait** -- add Layup rendering to any Eloquent model
+- **`<x-layup-widget>` component** -- render individual widgets in any Blade template
+- **Testing helpers** -- factory states and assertions for custom widget development
+- **Developer tooling** -- `layup:doctor`, `layup:list-widgets`, `layup:search` commands
+- **Publishable stubs** -- customize `make-widget` scaffolding templates
+- **1,086 tests, 3,448 assertions**
 
 ### Built-in Widgets (75)
 
@@ -576,6 +581,55 @@ use Crumbls\Layup\Support\LayupContent;
 {{ new LayupContent($model->field) }}
 ```
 
+## Using Layup Content on Any Model
+
+Add the `HasLayupContent` trait to any Eloquent model with a JSON content column:
+
+```php
+use Crumbls\Layup\Concerns\HasLayupContent;
+
+class Post extends Model
+{
+    use HasLayupContent;
+
+    protected string $layupContentColumn = 'body'; // default: 'content'
+
+    protected function casts(): array
+    {
+        return ['body' => 'array'];
+    }
+}
+```
+
+The trait provides:
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `toHtml()` | `string` | Render content to HTML |
+| `getSectionTree()` | `array` | Sections with hydrated Row/Column/Widget objects |
+| `getContentTree()` | `array` | Flat list of Row objects |
+| `getUsedClasses()` | `array` | Tailwind classes used in content |
+| `getUsedInlineStyles()` | `array` | Inline styles used in content |
+
+Render in Blade:
+
+```blade
+{!! $post->toHtml() !!}
+```
+
+Works with the custom controller pattern -- your `AbstractController` subclass can return any model that uses this trait.
+
+## Rendering Individual Widgets
+
+Use the `<x-layup-widget>` Blade component to render a single widget outside the page builder:
+
+```blade
+<x-layup-widget type="button" :data="['label' => 'Sign Up', 'url' => '/register']" />
+<x-layup-widget type="testimonial" :data="$testimonialData" />
+```
+
+This resolves the widget from the registry, applies Design/Advanced tab defaults, and renders the widget's Blade view. Unknown types render nothing and log a warning.
+
 ## Custom Widgets
 
 Create a widget by extending `Crumbls\Layup\View\BaseWidget`:
@@ -673,6 +727,16 @@ LayupPlugin::make()
     ->widgets([MyWidget::class])
 ```
 
+### Customizing the Widget Scaffold
+
+To customize the templates used by `layup:make-widget`:
+
+```bash
+php artisan vendor:publish --tag=layup-stubs
+```
+
+This publishes `stubs/layup-widget.php.stub` and `stubs/layup-widget-view.blade.php.stub` to your project root, where you can modify them to match your team's conventions.
+
 ### Remove built-in widgets
 
 ```php
@@ -683,6 +747,43 @@ LayupPlugin::make()
     ])
 ```
 
+## Testing
+
+Layup ships testing helpers for verifying custom widgets and page content.
+
+### Factory States
+
+```php
+use Crumbls\Layup\Models\Page;
+
+// Page with specific widgets
+$page = Page::factory()->withWidgets(['text', 'button'])->create();
+
+// Page with explicit content structure
+$page = Page::factory()->withContent([...])->create();
+```
+
+### Assertions
+
+Add the `LayupAssertions` trait to your test case:
+
+```php
+use Crumbls\Layup\Testing\LayupAssertions;
+
+test('homepage has expected widgets', function () {
+    $page = Page::factory()->withWidgets(['heading', 'text', 'button'])->create();
+
+    $this->assertPageContainsWidget($page, 'heading');
+    $this->assertPageContainsWidget($page, 'button', expectedCount: 1);
+    $this->assertPageDoesNotContainWidget($page, 'html');
+    $this->assertPageRenders($page);
+});
+
+test('custom widget renders without errors', function () {
+    $this->assertWidgetRenders('my-widget', ['title' => 'Hello']);
+});
+```
+
 ## Artisan Commands
 
 | Command | Description |
@@ -691,6 +792,9 @@ LayupPlugin::make()
 | `layup:make-widget {name}` | Scaffold a custom widget (PHP class + Blade view). Remember to [register it](#registration) with the plugin. |
 | `layup:safelist` | Generate the Tailwind safelist file |
 | `layup:audit` | Audit page content for structural issues |
+| `layup:doctor` | Diagnose common setup issues (config, migrations, widgets, safelist) |
+| `layup:list-widgets` | List all registered widgets with type, label, category, and source |
+| `layup:search {type}` | Find pages containing a widget type. Use `--unused` to find unregistered widgets |
 | `layup:export` | Export pages as JSON files |
 | `layup:import` | Import pages from JSON files |
 | `layup:install` | Run the initial setup |

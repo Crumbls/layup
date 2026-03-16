@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Crumbls\Layup;
 
 use Crumbls\Layup\Console\Commands\AuditCommand;
+use Crumbls\Layup\Console\Commands\DoctorCommand;
 use Crumbls\Layup\Console\Commands\ExportCommand;
 use Crumbls\Layup\Console\Commands\GenerateSafelist;
 use Crumbls\Layup\Console\Commands\ImportCommand;
 use Crumbls\Layup\Console\Commands\InstallCommand;
+use Crumbls\Layup\Console\Commands\ListWidgetsCommand;
 use Crumbls\Layup\Console\Commands\MakeControllerCommand;
 use Crumbls\Layup\Console\Commands\MakeWidgetCommand;
+use Crumbls\Layup\Console\Commands\SearchCommand;
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\View\Components\LayupWidgetComponent;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,7 +38,18 @@ class LayupServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         if ($this->app->runningInConsole()) {
-            $this->commands([GenerateSafelist::class, InstallCommand::class, MakeWidgetCommand::class, MakeControllerCommand::class, AuditCommand::class, ExportCommand::class, ImportCommand::class]);
+            $this->commands([
+                GenerateSafelist::class,
+                InstallCommand::class,
+                MakeWidgetCommand::class,
+                MakeControllerCommand::class,
+                AuditCommand::class,
+                ExportCommand::class,
+                ImportCommand::class,
+                ListWidgetsCommand::class,
+                SearchCommand::class,
+                DoctorCommand::class,
+            ]);
         }
 
         if (config('layup.frontend.enabled', true)) {
@@ -68,10 +84,50 @@ class LayupServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/lang' => $this->app->langPath('vendor/layup'),
         ], 'layup-translations');
 
+        $this->publishes([
+            __DIR__ . '/../stubs/layup-widget.php.stub' => base_path('stubs/layup-widget.php.stub'),
+            __DIR__ . '/../stubs/layup-widget-view.blade.php.stub' => base_path('stubs/layup-widget-view.blade.php.stub'),
+        ], 'layup-stubs');
+
+        Blade::component('layup-widget', LayupWidgetComponent::class);
+
         Blade::directive('layupScripts', fn (): string => "<?php if(config('layup.frontend.include_scripts', true)): ?>"
             . '<script>' . file_get_contents(__DIR__ . '/../resources/js/layup.js') . '</script>'
             . '<?php endif; ?>');
 
         Blade::directive('layup', fn (string $expression): string => "<?php echo (new \Crumbls\Layup\Support\LayupContent({$expression}))->toHtml(); ?>");
+
+        $this->validateConfig();
+    }
+
+    protected function validateConfig(): void
+    {
+        $modelClass = config('layup.pages.model');
+
+        if ($modelClass && ! class_exists($modelClass)) {
+            logger()->warning("Layup: pages.model class '{$modelClass}' does not exist.");
+        } elseif ($modelClass && ! is_subclass_of($modelClass, Model::class)) {
+            logger()->warning("Layup: pages.model '{$modelClass}' does not extend Illuminate\\Database\\Eloquent\\Model.");
+        }
+
+        $disk = config('layup.uploads.disk');
+
+        if ($disk && ! config("filesystems.disks.{$disk}")) {
+            logger()->warning("Layup: uploads.disk '{$disk}' is not configured in filesystems.php.");
+        }
+
+        $table = config('layup.pages.table');
+
+        if (! is_string($table) || $table === '') {
+            logger()->warning('Layup: pages.table is empty or not a string.');
+        }
+
+        if (config('layup.frontend.enabled', true)) {
+            $layout = config('layup.frontend.layout');
+
+            if (! is_string($layout) || $layout === '') {
+                logger()->warning('Layup: frontend.layout is empty but frontend is enabled.');
+            }
+        }
     }
 }
