@@ -143,9 +143,11 @@ class LayupPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->resources([
-            PageResource::class,
-        ]);
+        if (config('layup.pages.enabled', true)) {
+            $panel->resources([
+                PageResource::class,
+            ]);
+        }
     }
 
     public function boot(Panel $panel): void
