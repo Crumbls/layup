@@ -91,7 +91,7 @@ trait HasLayupContent
                         $class = $type ? $registry->get($type) : null;
 
                         if (! $class) {
-                            return null;
+                            return;
                         }
 
                         try {
@@ -103,7 +103,7 @@ trait HasLayupContent
                                 'error' => $e->getMessage(),
                             ]);
 
-                            return null;
+                            return;
                         }
                     },
                     $colData['widgets'] ?? []

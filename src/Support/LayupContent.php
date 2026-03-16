@@ -89,12 +89,12 @@ class LayupContent implements Htmlable
                     function (array $widgetData) use ($registry) {
                         $type = $widgetData['type'] ?? null;
                         if (! is_string($type) || $type === '') {
-                            return null;
+                            return;
                         }
 
                         $class = $registry->get($type);
                         if (! $class) {
-                            return null;
+                            return;
                         }
 
                         try {
@@ -106,7 +106,7 @@ class LayupContent implements Htmlable
                                 'error' => $e->getMessage(),
                             ]);
 
-                            return null;
+                            return;
                         }
                     },
                     $colData['widgets'] ?? []

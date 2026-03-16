@@ -41,7 +41,7 @@ class ContentWalker
      * Collect widget type counts from a content structure.
      *
      * @param  array  $content  The page content array
-     * @return array<string, int>  Widget type => count
+     * @return array<string, int> Widget type => count
      */
     public static function collectWidgetTypes(array $content): array
     {
