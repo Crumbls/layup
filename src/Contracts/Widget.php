@@ -56,6 +56,37 @@ interface Widget
     public static function getPreview(array $data): string;
 
     /**
+     * Transform stored data before it reaches the Blade view.
+     * Called automatically in the render pipeline.
+     */
+    public static function prepareForRender(array $data): array;
+
+    /**
+     * Validation rules for this widget's data.
+     * Keys are field names, values are Laravel validation rule strings.
+     *
+     * @return array<string, string>
+     */
+    public static function getValidationRules(): array;
+
+    /**
+     * Additional search terms for the builder's widget picker.
+     *
+     * @return array<string>
+     */
+    public static function getSearchTerms(): array;
+
+    /**
+     * Whether this widget is deprecated.
+     */
+    public static function isDeprecated(): bool;
+
+    /**
+     * Message explaining deprecation and migration path.
+     */
+    public static function getDeprecationMessage(): string;
+
+    /**
      * Called after the widget data is saved via the slideover.
      * Context is provided when available (page, row/column/widget IDs).
      *
@@ -76,6 +107,21 @@ interface Widget
      * Context is provided when available.
      */
     public static function onDelete(array $data, ?WidgetContext $context = null): void;
+
+    /**
+     * Called when the widget is duplicated within the builder.
+     * Use to clone resources (e.g. copy uploaded files).
+     *
+     * Return the (possibly modified) data array for the duplicate.
+     */
+    public static function onDuplicate(array $data, ?WidgetContext $context = null): array;
+
+    /**
+     * Declare JS/CSS dependencies for this widget.
+     *
+     * @return array{js?: array<string>, css?: array<string>}
+     */
+    public static function getAssets(): array;
 
     /**
      * Serialize widget metadata for the Alpine.js builder.

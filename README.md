@@ -20,8 +20,17 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Page templates** — 5 built-in templates (blank, landing, about, contact, pricing) + save your own
 - **Content revisions** — auto-save on content change, configurable max, restore from history
 - **Export / Import** — pages as JSON files
-- **Widget lifecycle hooks** — `onSave`, `onCreate`, `onDelete` with optional context
-- **Content validation** — structural + widget type validation
+- **Widget lifecycle hooks** -- `onSave`, `onCreate`, `onDelete`, `onDuplicate` with optional context
+- **Content validation** -- structural + widget type validation
+- **Form Field Packs** -- reusable field groups for image, link, and color patterns
+- **`prepareForRender()` hook** -- transform widget data before rendering
+- **Widget validation rules** -- self-declaring validation via `getValidationRules()`
+- **Widget deprecation** -- graceful sunset path with `isDeprecated()`
+- **`WidgetData` value object** -- typed accessors for Blade views
+- **Widget debug command** -- `layup:debug-widget` for instant widget introspection
+- **Render isolation** -- broken widgets no longer crash entire pages
+- **Widget search tags** -- additional terms for the builder's widget picker
+- **Widget asset declaration** -- declare JS/CSS dependencies per widget
 - **Widget auto-discovery** — scans `App\Layup\Widgets` for custom widgets
 - **Configurable model** — swap the Page model per dashboard
 - **`HasLayupContent` trait** -- add Layup rendering to any Eloquent model
@@ -581,6 +590,21 @@ use Crumbls\Layup\Support\LayupContent;
 {{ new LayupContent($model->field) }}
 ```
 
+### WidgetData in Blade Views
+
+Use the `WidgetData` value object for typed, null-safe access to widget data in Blade views:
+
+```blade
+@php $d = \Crumbls\Layup\Support\WidgetData::from($data); @endphp
+<h1>{{ $d->string('heading') }}</h1>
+<img src="{{ $d->storageUrl('background_image') }}" alt="{{ $d->string('alt') }}" />
+@if($d->bool('show_overlay'))
+    <div style="opacity: {{ $d->float('overlay_opacity', 0.5) }}"></div>
+@endif
+```
+
+Available methods: `string()`, `bool()`, `int()`, `float()`, `array()`, `has()`, `storageUrl()`, `url()`, `toArray()`. Implements `ArrayAccess` for backward compatibility.
+
 ## Using Layup Content on Any Model
 
 Add the `HasLayupContent` trait to any Eloquent model with a JSON content column:
@@ -632,25 +656,43 @@ This resolves the widget from the registry, applies Design/Advanced tab defaults
 
 ## Custom Widgets
 
-Create a widget by extending `Crumbls\Layup\View\BaseWidget`:
+> **For AI agents and detailed reference:** see [agents.md](agents.md) -- a complete, zero-ambiguity guide for creating widgets without error. Covers every method, Blade integration point, common mistakes, and a full checklist.
+
+Create a widget by extending `Crumbls\Layup\View\BaseWidget`. A widget is two files: a PHP class and a Blade view.
+
+```bash
+php artisan layup:make-widget ProductCard --with-test
+# Creates:
+#   app/Layup/Widgets/ProductCardWidget.php
+#   resources/views/components/layup/product-card.blade.php
+#   tests/Unit/Layup/ProductCardWidgetTest.php
+```
+
+Or create manually:
 
 ```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Layup\Widgets;
+
 use Crumbls\Layup\View\BaseWidget;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 
-class MyWidget extends BaseWidget
+class ProductCardWidget extends BaseWidget
 {
-    public static function getType(): string { return 'my-widget'; }
-    public static function getLabel(): string { return 'My Widget'; }
+    public static function getType(): string { return 'product-card'; }
+    public static function getLabel(): string { return 'Product Card'; }
     public static function getIcon(): string { return 'heroicon-o-cube'; }
-    public static function getCategory(): string { return 'custom'; }
+    public static function getCategory(): string { return 'content'; }
 
     public static function getContentFormSchema(): array
     {
         return [
-            TextInput::make('data.title')->label('Title')->required(),
-            RichEditor::make('data.content')->label('Content'),
+            TextInput::make('title')->label('Title')->required(),
+            RichEditor::make('description')->label('Description'),
         ];
     }
 
@@ -658,23 +700,158 @@ class MyWidget extends BaseWidget
     {
         return [
             'title' => '',
-            'content' => '',
+            'description' => '',
         ];
     }
 
     public static function getPreview(array $data): string
     {
-        return $data['title'] ?: '(empty)';
-    }
-
-    public function render(): \Illuminate\Contracts\View\View
-    {
-        return view('widgets.my-widget', ['data' => $this->data]);
+        return $data['title'] ?: '(empty product card)';
     }
 }
 ```
 
+The Blade view at `resources/views/components/layup/product-card.blade.php`:
+
+```blade
+@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+     class="{{ $vis }} {{ $data['class'] ?? '' }}"
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+>
+    <h3>{{ $data['title'] ?? '' }}</h3>
+    <div class="prose">{!! $data['description'] ?? '' !!}</div>
+</div>
+```
+
+**Key rules:**
+- `getType()` must be kebab-case and match the Blade view filename
+- Every key in `getDefaultData()` must match a field name in `getContentFormSchema()`
+- Blade views must include all four integration points: `id`, visibility classes, inline styles, animation attributes
+- Design (colors, spacing) and Advanced (id, classes, CSS, animations) tabs are inherited -- do not re-declare them
+
 The form schema automatically inherits Design (spacing, background) and Advanced (id, class, inline CSS) tabs from `BaseWidget`. You only define the Content tab.
+
+### Form Field Packs
+
+Common field patterns are available as reusable packs:
+
+```php
+use Crumbls\Layup\Support\FieldPacks;
+
+public static function getContentFormSchema(): array
+{
+    return [
+        TextInput::make('heading')->required(),
+        ...FieldPacks::image('hero_image'),        // FileUpload + alt TextInput
+        ...FieldPacks::link('cta'),                 // url TextInput + new_tab Toggle
+        ...FieldPacks::colorPair('text', 'bg'),     // two ColorPicker fields
+        ...FieldPacks::hoverColors('btn'),           // bg, hover_bg, text, hover_text colors
+    ];
+}
+```
+
+### Transforming Data Before Render
+
+Override `prepareForRender()` to transform stored data before it reaches the Blade view:
+
+```php
+class CountdownWidget extends BaseWidget
+{
+    public static function prepareForRender(array $data): array
+    {
+        $data['target_timestamp'] = strtotime($data['target_date'] ?? 'now');
+        $data['is_expired'] = $data['target_timestamp'] < time();
+
+        return $data;
+    }
+}
+```
+
+This is called automatically in the render pipeline. The default implementation is a passthrough.
+
+### Widget Validation Rules
+
+Widgets can self-declare validation rules via `getValidationRules()`. The `ContentValidator` will query these before falling back to hardcoded rules:
+
+```php
+class ButtonWidget extends BaseWidget
+{
+    public static function getValidationRules(): array
+    {
+        return [
+            'label' => 'required|string',
+            'url' => 'required|string',
+        ];
+    }
+}
+```
+
+### Widget Search Tags
+
+Add extra terms so users can find your widget in the picker:
+
+```php
+public static function getSearchTerms(): array
+{
+    return ['cta', 'action', 'conversion', 'signup'];
+}
+```
+
+### Deprecating Widgets
+
+Mark widgets as deprecated to provide a transition period:
+
+```php
+public static function isDeprecated(): bool { return true; }
+
+public static function getDeprecationMessage(): string
+{
+    return 'Use GalleryWidget instead. Removal planned for v2.0.';
+}
+```
+
+Deprecated widgets are flagged in `layup:doctor` and `layup:audit` output.
+
+### Widget Asset Declaration
+
+Widgets can declare external JS/CSS dependencies:
+
+```php
+public static function getAssets(): array
+{
+    return [
+        'js' => ['https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js'],
+    ];
+}
+```
+
+Collect assets from a content structure with `WidgetAssetCollector`:
+
+```php
+use Crumbls\Layup\Support\WidgetAssetCollector;
+
+$assets = WidgetAssetCollector::fromContent($page->content);
+// $assets = ['js' => [...], 'css' => [...]]
+```
+
+### onDuplicate Hook
+
+Handle resource cloning when a widget is duplicated:
+
+```php
+public static function onDuplicate(array $data, ?WidgetContext $context = null): array
+{
+    if (! empty($data['src'])) {
+        $newPath = 'layup/images/' . Str::uuid() . '.' . pathinfo($data['src'], PATHINFO_EXTENSION);
+        Storage::disk(config('layup.uploads.disk', 'public'))->copy($data['src'], $newPath);
+        $data['src'] = $newPath;
+    }
+
+    return $data;
+}
+```
 
 ### Registration
 
@@ -784,12 +961,33 @@ test('custom widget renders without errors', function () {
 });
 ```
 
+#### Widget Contract Assertions
+
+Validate that your custom widget follows all conventions:
+
+```php
+test('widget satisfies the contract', function () {
+    $this->assertWidgetContractValid(MyWidget::class);
+});
+
+test('defaults cover all form fields', function () {
+    $this->assertDefaultsCoverFormFields(MyWidget::class);
+});
+
+test('renders with default data', function () {
+    $this->assertWidgetRendersWithDefaults(MyWidget::class);
+});
+```
+
+Generate these tests automatically with `php artisan layup:make-widget MyWidget --with-test`.
+
 ## Artisan Commands
 
 | Command | Description |
 |---------|-------------|
 | `layup:make-controller {name}` | Scaffold a frontend controller extending AbstractController |
-| `layup:make-widget {name}` | Scaffold a custom widget (PHP class + Blade view). Remember to [register it](#registration) with the plugin. |
+| `layup:make-widget {name}` | Scaffold a custom widget (PHP class + Blade view). Use `--with-test` to generate a Pest test. Remember to [register it](#registration) with the plugin. |
+| `layup:debug-widget {type}` | Dump the full resolved state of a widget (class, fields, defaults, validation, assets, rendered HTML). Use `--data='{...}'` to pass custom data. |
 | `layup:safelist` | Generate the Tailwind safelist file |
 | `layup:audit` | Audit page content for structural issues |
 | `layup:doctor` | Diagnose common setup issues (config, migrations, widgets, safelist) |
@@ -883,7 +1081,7 @@ class PageB extends \Crumbls\Layup\Models\Page
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code style, and testing guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code style, and testing guidelines. For widget development, see [agents.md](agents.md) for a detailed reference covering every method, Blade pattern, and common pitfall.
 
 ## Vision & Roadmap
 

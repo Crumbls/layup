@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 
 class MakeWidgetCommand extends Command
 {
-    protected $signature = 'layup:make-widget {name : Widget class name (e.g. BannerWidget)}';
+    protected $signature = 'layup:make-widget
+        {name : Widget class name (e.g. BannerWidget)}
+        {--with-test : Generate a Pest test file for the widget}';
 
     protected $description = 'Scaffold a new Layup widget (PHP class + Blade view)';
 
@@ -56,6 +58,25 @@ class MakeWidgetCommand extends Command
         $bladeStub = $this->resolveStub('layup-widget-view.blade.php.stub');
         file_put_contents($bladePath, $bladeStub);
         $this->info(__('layup::commands.blade_created', ['path' => $bladePath]));
+
+        // Create test file
+        if ($this->option('with-test')) {
+            $testPath = base_path("tests/Unit/Layup/{$className}Test.php");
+            $testDir = dirname($testPath);
+
+            if (! is_dir($testDir)) {
+                mkdir($testDir, 0755, true);
+            }
+
+            $testStub = $this->resolveStub('layup-widget-test.php.stub');
+            $testStub = str_replace(
+                ['{{ namespace }}', '{{ className }}'],
+                [$namespace, $className],
+                $testStub,
+            );
+            file_put_contents($testPath, $testStub);
+            $this->info("Test created: {$testPath}");
+        }
 
         $this->newLine();
         $this->comment(__('layup::commands.next_steps'));

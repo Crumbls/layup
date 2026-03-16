@@ -1,0 +1,18 @@
+<?php
+
+use Crumbls\Layup\Testing\LayupAssertions;
+use {{ namespace }}\{{ className }};
+
+uses(LayupAssertions::class);
+
+it('satisfies the widget contract', function () {
+    $this->assertWidgetContractValid({{ className }}::class);
+});
+
+it('defaults cover all form fields', function () {
+    $this->assertDefaultsCoverFormFields({{ className }}::class);
+});
+
+it('renders with default data', function () {
+    $this->assertWidgetRendersWithDefaults({{ className }}::class);
+});

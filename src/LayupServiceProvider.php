@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Crumbls\Layup;
 
 use Crumbls\Layup\Console\Commands\AuditCommand;
+use Crumbls\Layup\Console\Commands\DebugWidgetCommand;
 use Crumbls\Layup\Console\Commands\DoctorCommand;
 use Crumbls\Layup\Console\Commands\ExportCommand;
 use Crumbls\Layup\Console\Commands\GenerateSafelist;
@@ -49,6 +50,7 @@ class LayupServiceProvider extends ServiceProvider
                 ListWidgetsCommand::class,
                 SearchCommand::class,
                 DoctorCommand::class,
+                DebugWidgetCommand::class,
             ]);
         }
 
@@ -87,6 +89,7 @@ class LayupServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../stubs/layup-widget.php.stub' => base_path('stubs/layup-widget.php.stub'),
             __DIR__ . '/../stubs/layup-widget-view.blade.php.stub' => base_path('stubs/layup-widget-view.blade.php.stub'),
+            __DIR__ . '/../stubs/layup-widget-test.php.stub' => base_path('stubs/layup-widget-test.php.stub'),
         ], 'layup-stubs');
 
         Blade::component('layup-widget', LayupWidgetComponent::class);

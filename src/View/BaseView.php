@@ -175,7 +175,7 @@ abstract class BaseView extends Component
      *
      * @param  array<SchemaComponent>  $components
      */
-    protected static function walkComponents(array $components, \Closure $callback): void
+    public static function walkComponents(array $components, \Closure $callback): void
     {
         foreach ($components as $component) {
             $callback($component);

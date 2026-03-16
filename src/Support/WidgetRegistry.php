@@ -154,6 +154,16 @@ class WidgetRegistry
     }
 
     /**
+     * Run the onDuplicate callback for a widget type.
+     */
+    public function fireOnDuplicate(string $type, array $data, ?WidgetContext $context = null): array
+    {
+        $class = $this->get($type);
+
+        return $class ? $class::onDuplicate($data, $context) : $data;
+    }
+
+    /**
      * Get all widget types grouped by category.
      *
      * Results are cached using the same fingerprint strategy as toJs().

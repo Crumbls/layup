@@ -6,6 +6,7 @@ namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\View\BaseView;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
@@ -25,19 +26,20 @@ class DoctorCommand extends Command
     public function handle(): int
     {
         $this->info('Layup Doctor');
-        $this->line(str_repeat('─', 40));
+        $this->line(str_repeat('-', 40));
         $this->newLine();
 
         $this->checkConfig();
         $this->checkMigrations();
         $this->checkWidgets();
         $this->checkWidgetViews();
+        $this->checkDefaultDataCompleteness();
         $this->checkSafelist();
         $this->checkUploadDisk();
         $this->checkPageStats();
 
         $this->newLine();
-        $this->line(str_repeat('─', 40));
+        $this->line(str_repeat('-', 40));
         $this->info("{$this->passes} passed, {$this->warnings} warning(s), {$this->failures} failure(s)");
 
         return $this->failures > 0 ? self::FAILURE : self::SUCCESS;
@@ -126,6 +128,14 @@ class DoctorCommand extends Command
 
             $seen[$type] = $class;
         }
+
+        // Check for deprecated widgets
+        foreach ($all as $type => $class) {
+            if ($class::isDeprecated()) {
+                $message = $class::getDeprecationMessage();
+                $this->reportWarn("{$class} is deprecated" . ($message !== '' ? ": {$message}" : ''));
+            }
+        }
     }
 
     protected function checkWidgetViews(): void
@@ -152,6 +162,27 @@ class DoctorCommand extends Command
             foreach ($missing as $type) {
                 $this->reportFail("Widget '{$type}' has no Blade view");
             }
+        }
+    }
+
+    protected function checkDefaultDataCompleteness(): void
+    {
+        $registry = app(WidgetRegistry::class);
+        $allComplete = true;
+
+        foreach ($registry->all() as $type => $class) {
+            $fieldNames = $this->extractFieldNames($class::getContentFormSchema());
+            $defaults = array_keys($class::getDefaultData());
+            $missing = array_diff($fieldNames, $defaults);
+
+            foreach ($missing as $field) {
+                $this->reportWarn("{$class}: form field '{$field}' has no default value");
+                $allComplete = false;
+            }
+        }
+
+        if ($allComplete) {
+            $this->reportPass('All widgets have complete defaults');
         }
     }
 
@@ -236,5 +267,24 @@ class DoctorCommand extends Command
                 $registry->register($class);
             }
         }
+    }
+
+    /**
+     * @return array<string>
+     */
+    protected function extractFieldNames(array $components): array
+    {
+        $names = [];
+
+        BaseView::walkComponents($components, function ($component) use (&$names): void {
+            if (method_exists($component, 'getName')) {
+                $name = $component->getName();
+                if ($name !== null && $name !== '') {
+                    $names[] = $name;
+                }
+            }
+        });
+
+        return $names;
     }
 }
