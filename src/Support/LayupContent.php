@@ -22,10 +22,20 @@ class LayupContent implements Htmlable
 
     public function toHtml(): string
     {
-        return implode("\n", array_map(
-            fn (Row $row) => $row->render()->render(),
+        return implode("\n", array_filter(array_map(
+            function (Row $row): string {
+                try {
+                    return $row->render()->render();
+                } catch (\Throwable $e) {
+                    logger()->error('Layup: Row render failed', ['error' => $e->getMessage()]);
+
+                    return app()->hasDebugModeEnabled()
+                        ? '<!-- [Layup] Render error: ' . e($e->getMessage()) . ' -->'
+                        : '';
+                }
+            },
             $this->getContentTree(),
-        ));
+        )));
     }
 
     /**
@@ -83,8 +93,21 @@ class LayupContent implements Htmlable
                         }
 
                         $class = $registry->get($type);
+                        if (! $class) {
+                            return;
+                        }
 
-                        return $class ? $class::make($widgetData['data'] ?? []) : null;
+                        try {
+                            $rawData = $widgetData['data'] ?? [];
+
+                            return $class::make($class::prepareForRender($rawData));
+                        } catch (\Throwable $e) {
+                            logger()->error("Layup: Widget '{$type}' failed to instantiate", [
+                                'error' => $e->getMessage(),
+                            ]);
+
+                            return;
+                        }
                     },
                     $colData['widgets'] ?? []
                 )));

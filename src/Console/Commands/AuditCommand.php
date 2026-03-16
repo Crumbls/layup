@@ -6,6 +6,7 @@ namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\ContentValidator;
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\SafelistCollector;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Illuminate\Console\Command;
@@ -14,7 +15,7 @@ class AuditCommand extends Command
 {
     protected $signature = 'layup:audit';
 
-    protected $description = 'Audit Layup pages — check for broken widgets, unused classes, and content issues';
+    protected $description = 'Audit Layup pages -- check for broken widgets, unused classes, and content issues';
 
     public function handle(): int
     {
@@ -22,7 +23,7 @@ class AuditCommand extends Command
         $pages = $modelClass::all();
 
         $this->info(__('layup::commands.audit_report'));
-        $this->line(str_repeat('─', 40));
+        $this->line(str_repeat('-', 40));
         $this->newLine();
 
         // Page stats
@@ -44,6 +45,7 @@ class AuditCommand extends Command
         $issues = [];
         $widgetUsage = [];
         $totalWidgets = 0;
+        $deprecatedUsage = [];
 
         foreach ($pages as $page) {
             $result = $validator->validate($page->content ?? ['rows' => []]);
@@ -51,14 +53,17 @@ class AuditCommand extends Command
                 $issues[$page->title] = $result->errors();
             }
 
-            // Count widget usage
-            foreach ($page->content['rows'] ?? [] as $row) {
-                foreach ($row['columns'] ?? [] as $col) {
-                    foreach ($col['widgets'] ?? [] as $widget) {
-                        $type = $widget['type'] ?? 'unknown';
-                        $widgetUsage[$type] = ($widgetUsage[$type] ?? 0) + 1;
-                        $totalWidgets++;
-                    }
+            // Count widget usage (handles both sections and legacy rows)
+            $pageTypes = ContentWalker::collectWidgetTypes($page->content ?? []);
+
+            foreach ($pageTypes as $type => $count) {
+                $widgetUsage[$type] = ($widgetUsage[$type] ?? 0) + $count;
+                $totalWidgets += $count;
+
+                // Track deprecated widget usage
+                $widgetClass = $registry->get($type);
+                if ($widgetClass && $widgetClass::isDeprecated()) {
+                    $deprecatedUsage[$type] = ($deprecatedUsage[$type] ?? 0) + $count;
                 }
             }
         }
@@ -71,8 +76,19 @@ class AuditCommand extends Command
             $this->newLine();
             $this->line(__('layup::commands.widget_usage'));
             foreach ($widgetUsage as $type => $count) {
-                $registered = $registry->has($type) ? '✓' : '✗';
+                $registered = $registry->has($type) ? '>' : 'x';
                 $this->line("  {$registered} {$type}: {$count}");
+            }
+        }
+
+        // Deprecated widget usage
+        if ($deprecatedUsage !== []) {
+            $this->newLine();
+            $this->warn('Deprecated widget usage:');
+            foreach ($deprecatedUsage as $type => $count) {
+                $widgetClass = $registry->get($type);
+                $message = $widgetClass ? $widgetClass::getDeprecationMessage() : '';
+                $this->line("  {$type}: {$count} instance(s)" . ($message !== '' ? " -- {$message}" : ''));
             }
         }
 

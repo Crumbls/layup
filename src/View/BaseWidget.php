@@ -49,7 +49,7 @@ abstract class BaseWidget extends BaseView implements Widget
         if (! empty($data['content'])) {
             $text = strip_tags((string) $data['content']);
 
-            return mb_strlen($text) > 60 ? mb_substr($text, 0, 60) . '…' : $text;
+            return mb_strlen($text) > 60 ? mb_substr($text, 0, 60) . "\u{2026}" : $text;
         }
 
         if (! empty($data['label'])) {
@@ -57,10 +57,41 @@ abstract class BaseWidget extends BaseView implements Widget
         }
 
         if (! empty($data['src'])) {
-            return '🖼 ' . basename((string) $data['src']);
+            return "\u{1F5BC} " . basename((string) $data['src']);
         }
 
         return '(empty)';
+    }
+
+    public static function prepareForRender(array $data): array
+    {
+        return $data;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getValidationRules(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getSearchTerms(): array
+    {
+        return [];
+    }
+
+    public static function isDeprecated(): bool
+    {
+        return false;
+    }
+
+    public static function getDeprecationMessage(): string
+    {
+        return '';
     }
 
     /**
@@ -90,6 +121,19 @@ abstract class BaseWidget extends BaseView implements Widget
         // No-op by default
     }
 
+    public static function onDuplicate(array $data, ?WidgetContext $context = null): array
+    {
+        return $data;
+    }
+
+    /**
+     * @return array{js?: array<string>, css?: array<string>}
+     */
+    public static function getAssets(): array
+    {
+        return [];
+    }
+
     public static function toArray(): array
     {
         return [
@@ -98,6 +142,9 @@ abstract class BaseWidget extends BaseView implements Widget
             'icon' => static::getIcon(),
             'category' => static::getCategory(),
             'defaults' => static::getDefaultData(),
+            'search_terms' => static::getSearchTerms(),
+            'deprecated' => static::isDeprecated(),
+            'deprecation_message' => static::getDeprecationMessage(),
         ];
     }
 

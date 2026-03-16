@@ -27,7 +27,13 @@ class WidgetRegistry
             );
         }
 
-        $this->widgets[$widgetClass::getType()] = $widgetClass;
+        $type = $widgetClass::getType();
+
+        if (isset($this->widgets[$type])) {
+            logger()->warning("Layup: Widget type '{$type}' already registered by {$this->widgets[$type]}. Overriding with {$widgetClass}.");
+        }
+
+        $this->widgets[$type] = $widgetClass;
         $this->fingerprint = null;
 
         return $this;
@@ -145,6 +151,16 @@ class WidgetRegistry
         if ($class) {
             $class::onDelete($data, $context);
         }
+    }
+
+    /**
+     * Run the onDuplicate callback for a widget type.
+     */
+    public function fireOnDuplicate(string $type, array $data, ?WidgetContext $context = null): array
+    {
+        $class = $this->get($type);
+
+        return $class ? $class::onDuplicate($data, $context) : $data;
     }
 
     /**

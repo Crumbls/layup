@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 
 class MakeWidgetCommand extends Command
 {
-    protected $signature = 'layup:make-widget {name : Widget class name (e.g. BannerWidget)}';
+    protected $signature = 'layup:make-widget
+        {name : Widget class name (e.g. BannerWidget)}
+        {--with-test : Generate a Pest test file for the widget}';
 
     protected $description = 'Scaffold a new Layup widget (PHP class + Blade view)';
 
@@ -38,7 +40,12 @@ class MakeWidgetCommand extends Command
             mkdir($phpDir, 0755, true);
         }
 
-        $stub = $this->generatePhpStub($namespace, $className, $type);
+        $stub = $this->resolveStub('layup-widget.php.stub');
+        $stub = str_replace(
+            ['{{ namespace }}', '{{ className }}', '{{ type }}'],
+            [$namespace, $className, $type],
+            $stub,
+        );
         file_put_contents($phpPath, $stub);
         $this->info(__('layup::commands.widget_created', ['path' => $phpPath]));
 
@@ -48,9 +55,28 @@ class MakeWidgetCommand extends Command
             mkdir($bladeDir, 0755, true);
         }
 
-        $bladeStub = $this->generateBladeStub($type);
+        $bladeStub = $this->resolveStub('layup-widget-view.blade.php.stub');
         file_put_contents($bladePath, $bladeStub);
         $this->info(__('layup::commands.blade_created', ['path' => $bladePath]));
+
+        // Create test file
+        if ($this->option('with-test')) {
+            $testPath = base_path("tests/Unit/Layup/{$className}Test.php");
+            $testDir = dirname($testPath);
+
+            if (! is_dir($testDir)) {
+                mkdir($testDir, 0755, true);
+            }
+
+            $testStub = $this->resolveStub('layup-widget-test.php.stub');
+            $testStub = str_replace(
+                ['{{ namespace }}', '{{ className }}'],
+                [$namespace, $className],
+                $testStub,
+            );
+            file_put_contents($testPath, $testStub);
+            $this->info("Test created: {$testPath}");
+        }
 
         $this->newLine();
         $this->comment(__('layup::commands.next_steps'));
@@ -63,86 +89,18 @@ class MakeWidgetCommand extends Command
         return self::SUCCESS;
     }
 
-    protected function generatePhpStub(string $namespace, string $className, string $type): string
-    {
-        return <<<PHP
-<?php
-
-declare(strict_types=1);
-
-namespace {$namespace};
-
-use Crumbls\\Layup\\View\\BaseWidget;
-use Filament\\Forms\\Components\\TextInput;
-
-class {$className} extends BaseWidget
-{
-    public static function getType(): string
-    {
-        return '{$type}';
-    }
-
-    public static function getLabel(): string
-    {
-        return __('layup::widgets.labels.{$type}');
-    }
-
-    public static function getIcon(): string
-    {
-        return 'heroicon-o-cube';
-    }
-
-    public static function getCategory(): string
-    {
-        return 'content';
-    }
-
-    public static function getContentFormSchema(): array
-    {
-        return [
-            TextInput::make('title')
-                ->label('Title')
-                ->required(),
-        ];
-    }
-
-    public static function getDefaultData(): array
-    {
-        return [
-            'title' => '',
-        ];
-    }
-
-    public static function getPreview(array \$data): string
-    {
-        return \$data['title'] ?? '(empty {$type})';
-    }
-
     /**
-     * Override to use a custom view path.
-     * Default: components.layup.{$type}
+     * Resolve a stub file, checking for published stubs first.
      */
-    public static function getViewName(): string
+    protected function resolveStub(string $stubName): string
     {
-        return 'components.layup.{$type}';
-    }
-}
+        $publishedPath = base_path("stubs/{$stubName}");
 
-PHP;
-    }
+        if (file_exists($publishedPath)) {
+            return file_get_contents($publishedPath);
+        }
 
-    protected function generateBladeStub(string $type): string
-    {
-        return <<<'BLADE'
-@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
-     class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
->
-    {{ $data['title'] ?? '' }}
-</div>
-BLADE;
+        return file_get_contents(__DIR__ . '/../../../stubs/' . $stubName);
     }
 
     protected function humanize(string $kebab): string

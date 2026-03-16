@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Crumbls\Layup\View\BaseWidget;
+use Filament\Forms\Components\TextInput;
+
+class {{ className }} extends BaseWidget
+{
+    public static function getType(): string
+    {
+        return '{{ type }}';
+    }
+
+    public static function getLabel(): string
+    {
+        return __('layup::widgets.labels.{{ type }}');
+    }
+
+    public static function getIcon(): string
+    {
+        return 'heroicon-o-cube';
+    }
+
+    public static function getCategory(): string
+    {
+        return 'content';
+    }
+
+    public static function getContentFormSchema(): array
+    {
+        return [
+            TextInput::make('title')
+                ->label('Title')
+                ->required(),
+        ];
+    }
+
+    public static function getDefaultData(): array
+    {
+        return [
+            'title' => '',
+        ];
+    }
+
+    public static function getPreview(array $data): string
+    {
+        return $data['title'] ?? '(empty {{ type }})';
+    }
+
+    /**
+     * Override to use a custom view path.
+     * Default: components.layup.{{ type }}
+     */
+    public static function getViewName(): string
+    {
+        return 'components.layup.{{ type }}';
+    }
+}
