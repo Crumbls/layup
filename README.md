@@ -174,6 +174,31 @@ Pages support nested slugs via wildcard routing:
 /pages/about/team     → slug: about/team
 ```
 
+### Default Page (Homepage)
+
+By default, hitting the index route (`/pages` or `/` with an empty prefix) looks for a page with an empty slug. To serve a specific page as the homepage instead, set `default_slug` in your config:
+
+```php
+// config/layup.php
+'pages' => [
+    'table' => 'layup_pages',
+    'model' => \Crumbls\Layup\Models\Page::class,
+    'default_slug' => 'home',  // Serve the "home" page at the index route
+],
+```
+
+With this configuration:
+
+| URL | Resolves |
+|-----|----------|
+| `/pages` (or `/` with empty prefix) | Page with slug `home` |
+| `/pages/about` | Page with slug `about` |
+| `/pages/docs/getting-started` | Page with slug `docs/getting-started` |
+
+Set `default_slug` to `null` to use the original behavior (looks for a page with an empty slug).
+
+This works with any prefix configuration -- whether you serve pages at `/pages/{slug}` or directly at `/{slug}` with an empty prefix.
+
 ### Custom Controller
 
 Layup provides a base controller for frontend rendering:
@@ -1016,6 +1041,7 @@ return [
     'pages' => [
         'table' => 'layup_pages',
         'model' => \Crumbls\Layup\Models\Page::class,
+        'default_slug' => null, // Slug to serve at the index route (null = empty slug)
     ],
 
     // Frontend rendering

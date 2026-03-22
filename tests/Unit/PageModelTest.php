@@ -94,7 +94,9 @@ it('reads table name from config', function (): void {
 
 it('getUrl() returns the correct URL', function (): void {
     $page = Page::create(['title' => 'Url', 'slug' => 'my-page', 'status' => 'draft']);
-    expect($page->getUrl())->toEndWith('/pages/my-page');
+    $prefix = config('layup.frontend.prefix', 'pages');
+    $expected = ltrim("{$prefix}/my-page", '/');
+    expect($page->getUrl())->toEndWith("/{$expected}");
 });
 
 it('getMetaTitle() falls back to title', function (): void {
@@ -217,13 +219,13 @@ it('prunes old revisions beyond max', function (): void {
 });
 
 it('sitemapEntries returns published pages', function (): void {
-    Page::create(['title' => 'Published', 'slug' => 'sitemap-pub', 'content' => ['rows' => []], 'status' => 'published']);
+    $pub = Page::create(['title' => 'Published', 'slug' => 'sitemap-pub', 'content' => ['rows' => []], 'status' => 'published']);
     Page::create(['title' => 'Draft', 'slug' => 'sitemap-draft', 'content' => ['rows' => []], 'status' => 'draft']);
 
     $entries = Page::sitemapEntries();
     $urls = array_column($entries, 'url');
-    expect($urls)->toContain(url('pages/sitemap-pub'));
-    expect($urls)->not->toContain(url('pages/sitemap-draft'));
+    expect($urls)->toContain($pub->getUrl());
+    expect($urls)->not->toContain(url('sitemap-draft'));
 });
 
 it('does not sync safelist when auto_sync is disabled', function (): void {
