@@ -9,6 +9,8 @@ beforeEach(function (): void {
 });
 
 it('serves the configured default page when no slug is provided', function (): void {
+    $prefix = config('layup.frontend.prefix', 'pages');
+
     Page::create([
         'title' => 'Welcome Home',
         'slug' => 'home',
@@ -31,12 +33,14 @@ it('serves the configured default page when no slug is provided', function (): v
 
     config(['layup.pages.default_slug' => 'home']);
 
-    $this->get('/')
+    $this->get("/{$prefix}")
         ->assertStatus(200)
         ->assertSee('Welcome to our site');
 });
 
 it('falls back to empty slug when default_slug is null', function (): void {
+    $prefix = config('layup.frontend.prefix', 'pages');
+
     Page::create([
         'title' => 'Root Page',
         'slug' => '',
@@ -59,18 +63,22 @@ it('falls back to empty slug when default_slug is null', function (): void {
 
     config(['layup.pages.default_slug' => null]);
 
-    $this->get('/')
+    $this->get("/{$prefix}")
         ->assertStatus(200)
         ->assertSee('Root content');
 });
 
 it('returns 404 when default page does not exist', function (): void {
+    $prefix = config('layup.frontend.prefix', 'pages');
+
     config(['layup.pages.default_slug' => 'nonexistent-home']);
 
-    $this->get('/')->assertStatus(404);
+    $this->get("/{$prefix}")->assertStatus(404);
 });
 
 it('returns 404 when default page is draft', function (): void {
+    $prefix = config('layup.frontend.prefix', 'pages');
+
     Page::create([
         'title' => 'Draft Home',
         'slug' => 'home',
@@ -80,10 +88,12 @@ it('returns 404 when default page is draft', function (): void {
 
     config(['layup.pages.default_slug' => 'home']);
 
-    $this->get('/')->assertStatus(404);
+    $this->get("/{$prefix}")->assertStatus(404);
 });
 
 it('ignores default_slug when an explicit slug is provided', function (): void {
+    $prefix = config('layup.frontend.prefix', 'pages');
+
     Page::create([
         'title' => 'Home',
         'slug' => 'home',
@@ -126,14 +136,16 @@ it('ignores default_slug when an explicit slug is provided', function (): void {
 
     config(['layup.pages.default_slug' => 'home']);
 
-    $this->get('/about')
+    $this->get("/{$prefix}/about")
         ->assertStatus(200)
         ->assertSee('About us content')
         ->assertDontSee('Home page');
 });
 
 it('returns 404 at index when no default is configured and no empty-slug page exists', function (): void {
+    $prefix = config('layup.frontend.prefix', 'pages');
+
     config(['layup.pages.default_slug' => null]);
 
-    $this->get('/')->assertStatus(404);
+    $this->get("/{$prefix}")->assertStatus(404);
 });

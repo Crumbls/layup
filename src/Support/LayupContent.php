@@ -125,6 +125,57 @@ class LayupContent implements Htmlable
         }, $rows);
     }
 
+    /**
+     * @return array<int, array{type: string, children: array, data?: array, span?: array}>
+     */
+    public function toArray(): array
+    {
+        return $this->serializeNodes($this->getContentTree());
+    }
+
+    /**
+     * @param  array<\Crumbls\Layup\View\BaseView>  $nodes
+     */
+    protected function serializeNodes(array $nodes): array
+    {
+        return array_values(array_map(function (\Crumbls\Layup\View\BaseView $node): array {
+            $entry = ['type' => $this->resolveNodeType($node)];
+
+            if ($node instanceof Column) {
+                $entry['span'] = $node->getSpan();
+            }
+
+            if ($node instanceof \Crumbls\Layup\View\BaseWidget) {
+                $entry['data'] = $node->getData();
+            }
+
+            $children = $node->getChildren();
+
+            if ($children !== []) {
+                $entry['children'] = $this->serializeNodes($children);
+            }
+
+            return $entry;
+        }, $nodes));
+    }
+
+    protected function resolveNodeType(\Crumbls\Layup\View\BaseView $node): string
+    {
+        if ($node instanceof Row) {
+            return 'row';
+        }
+
+        if ($node instanceof Column) {
+            return 'column';
+        }
+
+        if ($node instanceof \Crumbls\Layup\View\BaseWidget) {
+            return $node::getType();
+        }
+
+        return 'unknown';
+    }
+
     protected function normalize(mixed $content): array
     {
         if (is_array($content)) {
