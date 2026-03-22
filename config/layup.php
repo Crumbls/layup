@@ -159,6 +159,7 @@ return [
     'pages' => [
         'table' => 'layup_pages',
         'model' => \Crumbls\Layup\Models\Page::class,
+        'default_slug' => null,
     ],
 
     /*

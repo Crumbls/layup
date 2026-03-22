@@ -38,21 +38,21 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Testing helpers** -- factory states and assertions for custom widget development
 - **Developer tooling** -- `layup:doctor`, `layup:list-widgets`, `layup:search` commands
 - **Publishable stubs** -- customize `make-widget` scaffolding templates
-- **1,086 tests, 3,448 assertions**
+- **1,131 tests, 3,517 assertions**
 
-### Built-in Widgets (75)
+### Built-in Widgets (95)
 
 | Category | Widgets |
 |----------|---------|
-| **Content** | Text, Heading, Blurb, Icon, Accordion, Toggle, Tabs, Person, Testimonial, Number Counter, Bar Counter, Alert, Table, Progress Circle, Blockquote, Feature List, Timeline, Stat Card, Star Rating, Logo Grid, Menu, Testimonial Carousel, Comparison Table, Team Grid, Notification Bar, FAQ (with JSON-LD), Hero Section, Breadcrumbs |
-| **Media** | Image (with hover effects), Gallery (with lightbox + captions), Video, Audio, Slider, Map, Before/After |
-| **Interactive** | Button (hover colors), Call to Action, Countdown, Pricing Table, Social Follow, Search, Contact Form, Login, Newsletter Signup |
-| **Layout** | Spacer, Divider, Marquee, Section (bg image/video/gradient/parallax) |
-| **Advanced** | HTML, Code Block, Embed |
+| **Content** (57) | Text, Heading, Rich Text, Blurb, Icon, Icon Box, Icon List, Badge, Card, Alert, List, Blockquote, Banner, Section Heading, Accordion, Toggle, Tabs, Feature List, Feature Grid, Testimonial, Testimonial Carousel, Testimonial Grid, Testimonial Slider, Breadcrumbs, Person, Step Process, Team Grid, Logo Grid, Logo Slider, Avatar Group, Price, Metric, Social Proof, Image Text, Text Columns, Timeline, Animated Heading, Bar Counter, Highlight Box, Number Counter, Star Rating, Gradient Text, Typewriter, Quote Carousel, Marquee, Table of Contents, Stat Card, Changelog, Menu, Notification Bar, Table, Comparison Table, Skill Bar, Progress Circle, Post List, Hero, FAQ (with JSON-LD) |
+| **Media** (13) | Image (with hover effects), Gallery (with lightbox + captions), Video, Video Playlist, Audio, Slider, Masonry, Lottie, Map, Before/After, Image Card, Hotspot, Image Hotspot |
+| **Interactive** (18) | Button (hover colors), Call to Action, CTA Banner, Countdown, Pricing Table, Pricing Toggle, Social Follow, Search, Contact Form, Login, Newsletter, Modal, Flip Card, Cookie Consent, Content Toggle, Share Buttons, File Download, Back to Top |
+| **Layout** (4) | Spacer, Divider, Separator, Anchor |
+| **Advanced** (3) | HTML, Code Block, Embed |
 
 ## Requirements
 
-- PHP 8.2+
+- PHP 8.3+
 - Laravel 12+
 - Filament 5
 - Livewire 4
@@ -105,19 +105,13 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-**4. Publish assets:**
-
-```bash
-php artisan vendor:publish --tag=layup-assets
-```
-
-**5. (Optional) Publish the config:**
+**4. (Optional) Publish the config:**
 
 ```bash
 php artisan vendor:publish --tag=layup-config
 ```
 
-That's it. Head to your Filament panel — you'll see a **Pages** resource in the sidebar.
+That's it. Head to your Filament panel -- you'll see a **Pages** resource in the sidebar.
 
 ### Quick Verification
 
@@ -137,13 +131,14 @@ In `config/layup.php`:
     'prefix'  => 'pages',       // → yoursite.com/pages/{slug}
     'middleware' => ['web'],
     'domain'  => null,           // Restrict to a specific domain
-    'layout'  => 'layouts.app',  // Blade component layout
+    'layout'  => 'app',         // Blade component layout
     'view'    => 'layup::frontend.page',
 ],
 ```
 
 The `layout` value is passed to `<x-dynamic-component>`, so it should be a Blade component name. For example:
 
+- `'app'` → `resources/views/components/app.blade.php`
 - `'layouts.app'` → `resources/views/components/layouts/app.blade.php`
 - `'app-layout'` → `App\View\Components\AppLayout`
 
@@ -278,7 +273,7 @@ After creating your controller:
 
     ```php
     'frontend' => [
-        'layout' => 'layouts.app',
+        'layout' => 'app',
     ],
     ```
 
@@ -600,6 +595,7 @@ This copies `layup.js` to `resources/js/vendor/layup.js` where you can modify it
 | `layupSlider` | Slider | `(total, autoplay, speed)` |
 | `layupCounter` | Number Counter | `(target, animate)` |
 | `layupBarCounter` | Bar Counter | `(percent, animate)` |
+| `layupLightbox` | Gallery | none |
 
 ## Rendering content from a model field
 
@@ -1020,7 +1016,7 @@ Generate these tests automatically with `php artisan layup:make-widget MyWidget 
 | `layup:search {type}` | Find pages containing a widget type. Use `--unused` to find unregistered widgets |
 | `layup:export` | Export pages as JSON files |
 | `layup:import` | Import pages from JSON files |
-| `layup:install` | Run the initial setup |
+| `layup:install` | Run the initial setup (publishes config, runs migrations, generates safelist) |
 
 ## Configuration Reference
 
@@ -1030,11 +1026,16 @@ return [
     // Widget classes available in the page builder (registered for both admin and frontend)
     'widgets' => [ /* ... */ ],
 
-    // Auto-discover widgets from this namespace/directory (frontend only —
+    // Auto-discover widgets from this namespace/directory (frontend only --
     // for admin panel access, also register via LayupPlugin::make()->widgets([...]))
     'widget_discovery' => [
         'namespace' => 'App\\Layup\\Widgets',
         'directory' => null, // defaults to app_path('Layup/Widgets')
+    ],
+
+    // Filesystem disk for FileUpload fields in the page builder
+    'uploads' => [
+        'disk' => 'public',
     ],
 
     // Page model and table name (swap per dashboard)
@@ -1044,26 +1045,31 @@ return [
         'default_slug' => null, // Slug to serve at the index route (null = empty slug)
     ],
 
+    // Automatically save content revisions when a page is updated
+    'revisions' => [
+        'enabled' => true,
+        'max' => 50,
+    ],
+
     // Frontend rendering
     'frontend' => [
-        'enabled'    => true,
-        'prefix'     => 'pages',
-        'middleware'  => ['web'],
-        'domain'     => null,
-        'layout'     => 'layouts.app',
-        'view'       => 'layup::frontend.page',
+        'enabled'         => true,
+        'prefix'          => 'pages',
+        'middleware'       => ['web'],
+        'domain'          => null,
+        'layout'          => 'app',
+        'view'            => 'layup::frontend.page',
+        'max_width'       => 'container',
+        'include_scripts' => true,
     ],
 
     // Tailwind safelist
     'safelist' => [
-        'enabled'   => true,
-        'auto_sync' => true,
-        'path'      => 'storage/layup-safelist.txt',
+        'enabled'       => true,
+        'auto_sync'     => true,
+        'path'          => 'storage/layup-safelist.txt',
+        'extra_classes' => [], // Additional classes to always include
     ],
-
-    // Frontend container class (applied to each row's inner wrapper)
-    // Use 'container' for Tailwind's default, or 'max-w-7xl', etc.
-    'max_width' => 'container',
 
     // Responsive breakpoints
     'breakpoints' => [
@@ -1083,25 +1089,42 @@ return [
 ];
 ```
 
+## Publishing Assets
+
+Layup supports publishing various asset groups for customization:
+
+| Tag | Command | Description |
+|-----|---------|-------------|
+| `layup-config` | `php artisan vendor:publish --tag=layup-config` | Config file to `config/layup.php` |
+| `layup-views` | `php artisan vendor:publish --tag=layup-views` | Blade views to `resources/views/vendor/layup/` |
+| `layup-routes` | `php artisan vendor:publish --tag=layup-routes` | Route file to `routes/layup.php` |
+| `layup-scripts` | `php artisan vendor:publish --tag=layup-scripts` | Alpine.js components to `resources/js/vendor/layup.js` |
+| `layup-templates` | `php artisan vendor:publish --tag=layup-templates` | Page templates to `resources/layup/templates/` |
+| `layup-translations` | `php artisan vendor:publish --tag=layup-translations` | Language files to `lang/vendor/layup/` |
+| `layup-stubs` | `php artisan vendor:publish --tag=layup-stubs` | Widget scaffolding stubs to `stubs/` |
+
+Publishing views is useful when you need to customize frontend rendering (page layout, row/column markup, or individual widget templates). After publishing, edit the files in `resources/views/vendor/layup/` -- Laravel will use your copies instead of the package defaults.
+
 ## Multiple Dashboards
 
-To use Layup across multiple Filament panels with separate page tables:
+To use Layup across multiple Filament panels with separate page tables, override the model in your published config:
 
 ```php
-// Panel A
-LayupPlugin::make()
-    ->model(PageA::class)    // or set via config
-
-// Panel B — different table
-LayupPlugin::make()
-    ->model(PageB::class)
+// config/layup.php
+'pages' => [
+    'table' => 'layup_pages',
+    'model' => \App\Models\PageB::class,
+],
 ```
 
-Your custom model with your overrides:
+Your custom model extends the base Page:
 
 ```php
+namespace App\Models;
+
 class PageB extends \Crumbls\Layup\Models\Page
 {
+    protected $table = 'custom_pages';
 }
 ```
 
