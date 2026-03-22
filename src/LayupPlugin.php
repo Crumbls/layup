@@ -46,6 +46,7 @@ class LayupPlugin implements Plugin
      */
     public function widgets(array $widgets): static
     {
+
         $this->extraWidgets = array_merge($this->extraWidgets, $widgets);
 
         return $this;

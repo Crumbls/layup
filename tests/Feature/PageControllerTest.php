@@ -7,6 +7,9 @@ use Crumbls\Layup\Models\Page;
 beforeEach(function (): void {
     config(['layup.frontend.enabled' => true]);
     config(['layup.frontend.include_scripts' => true]);
+
+    $prefix = config('layup.frontend.prefix', 'pages');
+    $this->routePrefix = $prefix !== '' ? "/{$prefix}" : '';
 });
 
 it('returns 200 for a published page', function (): void {
@@ -17,11 +20,11 @@ it('returns 200 for a published page', function (): void {
         'status' => 'published',
     ]);
 
-    $this->get('/pages/test-page')->assertStatus(200);
+    $this->get("{$this->routePrefix}/test-page")->assertStatus(200);
 });
 
 it('returns 404 for a missing slug', function (): void {
-    $this->get('/pages/nonexistent')->assertStatus(404);
+    $this->get("{$this->routePrefix}/nonexistent")->assertStatus(404);
 });
 
 it('returns 404 for a draft page', function (): void {
@@ -32,7 +35,7 @@ it('returns 404 for a draft page', function (): void {
         'status' => 'draft',
     ]);
 
-    $this->get('/pages/draft-page')->assertStatus(404);
+    $this->get("{$this->routePrefix}/draft-page")->assertStatus(404);
 });
 
 it('supports nested slugs', function (): void {
@@ -43,7 +46,7 @@ it('supports nested slugs', function (): void {
         'status' => 'published',
     ]);
 
-    $this->get('/pages/about/team')->assertStatus(200);
+    $this->get("{$this->routePrefix}/about/team")->assertStatus(200);
 });
 
 it('renders widget HTML for text widget', function (): void {
@@ -67,7 +70,7 @@ it('renders widget HTML for text widget', function (): void {
         'status' => 'published',
     ]);
 
-    $this->get('/pages/text-test')
+    $this->get("{$this->routePrefix}/text-test")
         ->assertStatus(200)
         ->assertSee('Hello from Layup');
 });
@@ -93,7 +96,7 @@ it('renders heading widget with correct level', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/heading-test');
+    $response = $this->get("{$this->routePrefix}/heading-test");
     $response->assertStatus(200);
     $response->assertSee('Big Title');
     $response->assertSee('<h1', false);
@@ -120,7 +123,7 @@ it('renders button widget', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/button-test');
+    $response = $this->get("{$this->routePrefix}/button-test");
     $response->assertStatus(200);
     $response->assertSee('Click Me');
     $response->assertSee('https://example.com', false);
@@ -147,7 +150,7 @@ it('renders accordion widget with Alpine directive', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/accordion-test');
+    $response = $this->get("{$this->routePrefix}/accordion-test");
     $response->assertStatus(200);
     $response->assertSee('layupAccordion', false);
     $response->assertSee('Q1');
@@ -184,7 +187,7 @@ it('renders pricing table with featured badge', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/pricing-test');
+    $response = $this->get("{$this->routePrefix}/pricing-test");
     $response->assertStatus(200);
     $response->assertSee('Pro Plan');
     $response->assertSee('Popular');
@@ -213,7 +216,7 @@ it('renders countdown widget with Alpine directive', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/countdown-test');
+    $response = $this->get("{$this->routePrefix}/countdown-test");
     $response->assertStatus(200);
     $response->assertSee('layupCountdown', false);
     $response->assertSee('Launch!');
@@ -236,7 +239,7 @@ it('renders row with container class', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/container-test');
+    $response = $this->get("{$this->routePrefix}/container-test");
     $response->assertStatus(200);
     $response->assertSee('container', false);
     $response->assertSee('mx-auto', false);
@@ -259,7 +262,7 @@ it('renders full-width row without container', function (): void {
         'status' => 'published',
     ]);
 
-    $content = $this->get('/pages/full-width-test')->getContent();
+    $content = $this->get("{$this->routePrefix}/full-width-test")->getContent();
     // The inner flex div should NOT have container class
     expect($content)->toContain('flex flex-wrap');
     // full_width rows skip the container — check the flex div doesn't include it
@@ -284,7 +287,7 @@ it('renders column with correct responsive width classes', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/col-width-test');
+    $response = $this->get("{$this->routePrefix}/col-width-test");
     $response->assertStatus(200);
     $response->assertSee('w-full', false);
     $response->assertSee('md:w-6/12', false);
@@ -308,7 +311,7 @@ it('renders column gutters correctly for multi-column rows', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/gutter-test');
+    $response = $this->get("{$this->routePrefix}/gutter-test");
     $content = $response->getContent();
     $response->assertStatus(200);
     expect($content)->toContain('md:pr-2');
@@ -324,7 +327,7 @@ it('includes @layupScripts when enabled', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/scripts-test');
+    $response = $this->get("{$this->routePrefix}/scripts-test");
     $response->assertStatus(200);
     $response->assertSee('alpine:init', false);
     $response->assertSee('Alpine.data', false);
@@ -340,12 +343,11 @@ it('excludes @layupScripts when disabled', function (): void {
         'status' => 'published',
     ]);
 
-    $content = $this->get('/pages/no-scripts')->getContent();
+    $content = $this->get("{$this->routePrefix}/no-scripts")->getContent();
     expect($content)->not->toContain('Alpine.data');
 });
 
 it('uses configurable route prefix', function (): void {
-    // Default prefix is 'pages'
     Page::create([
         'title' => 'Prefix Test',
         'slug' => 'prefix-test',
@@ -353,7 +355,7 @@ it('uses configurable route prefix', function (): void {
         'status' => 'published',
     ]);
 
-    $this->get('/pages/prefix-test')->assertStatus(200);
+    $this->get("{$this->routePrefix}/prefix-test")->assertStatus(200);
 });
 
 it('renders multiple widgets in a single column', function (): void {
@@ -377,7 +379,7 @@ it('renders multiple widgets in a single column', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/multi-widget');
+    $response = $this->get("{$this->routePrefix}/multi-widget");
     $response->assertStatus(200);
     $response->assertSee('Title Here');
     $response->assertSee('Body text');
@@ -404,7 +406,7 @@ it('renders spacer and divider widgets', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/layout-widgets');
+    $response = $this->get("{$this->routePrefix}/layout-widgets");
     $response->assertStatus(200);
     $response->assertSee('3rem', false);
     $response->assertSee('dashed', false);
@@ -436,7 +438,7 @@ it('skips unknown widget types gracefully', function (): void {
         'status' => 'published',
     ]);
 
-    $response = $this->get('/pages/unknown-widget');
+    $response = $this->get("{$this->routePrefix}/unknown-widget");
     $response->assertStatus(200);
     $response->assertSee('Still works');
 });

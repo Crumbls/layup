@@ -22,8 +22,14 @@ class PageController extends AbstractController
     {
         $modelClass = config('layup.pages.model', Page::class);
 
+        $slug = $request->route('slug', '');
+
+        if ($slug === '' || $slug === null) {
+            $slug = config('layup.pages.default_slug') ?? '';
+        }
+
         return $modelClass::query()
-            ->where('slug', $request->route('slug', ''))
+            ->where('slug', $slug)
             ->published()
             ->firstOrFail();
     }
