@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Resources\PageResource\Pages;
 
+use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Resources\PageResource;
 use Crumbls\Layup\Support\PageTemplate;
 use Crumbls\Layup\View\Row;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\Width;
+use Illuminate\Support\Str;
 
 class EditPage extends EditRecord
 {
@@ -48,6 +51,46 @@ class EditPage extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('pageSettings')
+                ->label(__('layup::resource.page_settings'))
+                ->icon('heroicon-o-cog-6-tooth')
+                ->color('gray')
+                ->modalWidth('md')
+                ->fillForm(fn (): array => [
+                    'title' => $this->record->title,
+                    'slug' => $this->record->slug,
+                    'status' => $this->record->status,
+                ])
+                ->schema([
+                    TextInput::make('title')
+                        ->label(__('layup::resource.title'))
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('slug')
+                        ->label(__('layup::resource.slug'))
+                        ->required()
+                        ->maxLength(255)
+                        ->unique(
+                            config('layup.pages.model', Page::class),
+                            'slug',
+                            ignoreRecord: true,
+                        ),
+                    Select::make('status')
+                        ->label(__('layup::resource.status'))
+                        ->options([
+                            'draft' => __('layup::resource.draft'),
+                            'published' => __('layup::resource.published'),
+                        ])
+                        ->required(),
+                ])
+                ->action(function (array $data): void {
+                    $this->record->update($data);
+
+                    Notification::make()
+                        ->success()
+                        ->title(__('layup::resource.page_settings_updated'))
+                        ->send();
+                }),
             Action::make('revisions')
                 ->label(__('layup::resource.revision_history'))
                 ->icon('heroicon-o-clock')

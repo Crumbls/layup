@@ -30,6 +30,7 @@ return [
     'published' => 'Veröffentlicht',
 
     // Aktionen
+    'new_page' => 'Neue Seite',
     'duplicate' => 'Duplizieren',
     'export' => 'Exportieren',
     'import' => 'Importieren',
@@ -38,7 +39,14 @@ return [
     'json_file' => 'JSON-Datei',
     'copy_suffix' => '(Kopie)',
 
+    // Feldbeschriftungen
+    'title' => 'Titel',
+    'slug' => 'Slug',
+    'status' => 'Status',
+
     // Bearbeitungsseite Kopfaktionen
+    'page_settings' => 'Seiteneinstellungen',
+    'page_settings_updated' => 'Seiteneinstellungen aktualisiert',
     'revision_history' => 'Versionsgeschichte',
     'revision_history_description' => 'Frühere Versionen dieser Seite anzeigen und wiederherstellen',
     'save_as_template' => 'Als Vorlage speichern',

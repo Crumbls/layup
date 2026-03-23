@@ -7,10 +7,14 @@ namespace Crumbls\Layup\Resources\PageResource\Pages;
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Resources\PageResource;
 use Crumbls\Layup\Support\ContentValidator;
+use Crumbls\Layup\Support\PageTemplate;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Str;
 
 class ListPages extends ListRecords
@@ -20,7 +24,47 @@ class ListPages extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\Action::make('create')
+                ->label(__('layup::resource.new_page'))
+                ->icon('heroicon-o-plus')
+                ->modalWidth('md')
+                ->schema([
+                    Select::make('template')
+                        ->label(__('layup::resource.start_from_template'))
+                        ->options(PageTemplate::options())
+                        ->placeholder(__('layup::resource.blank_page'))
+                        ->nullable()
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, Set $set): void {
+                            if ($state) {
+                                $template = PageTemplate::get($state);
+                                if ($template) {
+                                    $set('content', $template['content']);
+                                }
+                            }
+                        }),
+                    TextInput::make('title')
+                        ->label(__('layup::resource.title'))
+                        ->required()
+                        ->maxLength(255),
+                ])
+                ->action(function (array $data) {
+                    $modelClass = config('layup.pages.model', Page::class);
+                    $slug = Str::slug($data['title']);
+
+                    if ($modelClass::where('slug', $slug)->exists()) {
+                        $slug .= '-' . Str::random(4);
+                    }
+
+                    $record = $modelClass::create([
+                        'title' => $data['title'],
+                        'slug' => $slug,
+                        'content' => $data['content'] ?? ['rows' => []],
+                        'status' => 'draft',
+                    ]);
+
+                    return redirect(PageResource::getUrl('edit', ['record' => $record]));
+                }),
             Actions\Action::make('import')
                 ->label(__('layup::resource.import'))
                 ->icon('heroicon-o-arrow-up-tray')

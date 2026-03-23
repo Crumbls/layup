@@ -8,14 +8,12 @@ use BackedEnum;
 use Crumbls\Layup\Forms\Components\LayupBuilder;
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Resources\PageResource\Pages;
-use Crumbls\Layup\Support\PageTemplate;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
@@ -58,47 +56,6 @@ class PageResource extends Resource
     {
         return $schema
             ->components([
-                Section::make(__('layup::resource.template'))
-                    ->schema([
-                        Select::make('template')
-                            ->label(__('layup::resource.start_from_template'))
-                            ->options(PageTemplate::options())
-                            ->placeholder(__('layup::resource.blank_page'))
-                            ->nullable()
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, \Filament\Schemas\Components\Utilities\Set $set): void {
-                                if ($state) {
-                                    $template = PageTemplate::get($state);
-                                    if ($template) {
-                                        $set('content', $template['content']);
-                                    }
-                                }
-                            }),
-                    ])
-                    ->hiddenOn('edit'),
-
-                Section::make(__('layup::resource.page_details'))
-                    ->schema([
-                        TextInput::make('title')
-                            ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, \Filament\Schemas\Components\Utilities\Set $set, ?Page $record): mixed => $record instanceof \Crumbls\Layup\Models\Page ? null : $set('slug', Str::slug($state))
-                            ),
-                        TextInput::make('slug')
-                            ->required()
-                            ->maxLength(255)
-                            ->unique(Page::class, 'slug', ignoreRecord: true),
-                        Select::make('status')
-                            ->options([
-                                'draft' => __('layup::resource.draft'),
-                                'published' => __('layup::resource.published'),
-                            ])
-                            ->default('draft')
-                            ->required(),
-                    ])
-                    ->columnSpanFull(),
-
                 Section::make(__('layup::resource.seo'))
                     ->schema([
                         TextInput::make('meta.description')
@@ -208,7 +165,6 @@ class PageResource extends Resource
     {
         return [
             'index' => Pages\ListPages::route('/'),
-            'create' => Pages\CreatePage::route('/create'),
             'edit' => Pages\EditPage::route('/{record}/edit'),
         ];
     }

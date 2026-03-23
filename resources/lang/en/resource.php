@@ -30,6 +30,7 @@ return [
     'published' => 'Published',
 
     // Actions
+    'new_page' => 'New Page',
     'duplicate' => 'Duplicate',
     'export' => 'Export',
     'import' => 'Import',
@@ -38,7 +39,14 @@ return [
     'json_file' => 'JSON File',
     'copy_suffix' => '(Copy)',
 
+    // Field labels
+    'title' => 'Title',
+    'slug' => 'Slug',
+    'status' => 'Status',
+
     // Edit page header actions
+    'page_settings' => 'Page Settings',
+    'page_settings_updated' => 'Page settings updated',
     'revision_history' => 'Revision History',
     'revision_history_description' => 'View and restore previous versions of this page',
     'save_as_template' => 'Save as Template',
