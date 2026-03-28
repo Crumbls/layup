@@ -327,7 +327,7 @@ class DoctorCommand extends Command
         if ($found) {
             $this->reportPass('Safelist referenced in Tailwind config');
         } else {
-            $this->reportWarn("Safelist not found in app.css or tailwind.config.js -- dynamic classes will be missing from compiled CSS");
+            $this->reportWarn('Safelist not found in app.css or tailwind.config.js -- dynamic classes will be missing from compiled CSS');
         }
     }
 
