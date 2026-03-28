@@ -187,18 +187,20 @@ The `layout` value is passed to `<x-dynamic-component>`, so it should be a Blade
 - `'layouts.app'` → `resources/views/components/layouts/app.blade.php`
 - `'app-layout'` → `App\View\Components\AppLayout`
 
-Your layout must accept a `title` slot and optionally a `meta` slot for SEO tags. It must also include the `@layupScripts` directive for interactive widgets (accordion, tabs, countdown, slider, etc.) to function:
+Your layout must accept a `title` slot and optionally a `meta` slot for SEO tags:
 
 ```blade
-{{-- resources/views/components/layouts/app.blade.php --}}
+{{-- resources/views/components/app.blade.php --}}
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>{{ $title ?? '' }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ $title ?? config('app.name') }}</title>
     {{ $meta ?? '' }}
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="antialiased">
     {{ $slot }}
 
     @layupScripts
@@ -206,7 +208,10 @@ Your layout must accept a `title` slot and optionally a `meta` slot for SEO tags
 </html>
 ```
 
-> If you create a custom layout or override the default, make sure to include `@layupScripts`. Without it, interactive widgets will render but won't respond to clicks or animate. There is no error -- they just won't work.
+Two things are required for interactive widgets to work:
+
+- **Alpine.js** must be loaded. A standard Laravel starter bundles it in `resources/js/app.js`. If your JS entry point doesn't import Alpine, interactive widgets (cookie consent, accordion, tabs, countdown, etc.) will render but won't respond to clicks.
+- **`@layupScripts`** registers Layup's Alpine components. Without it, widgets that depend on custom Alpine data (accordion, tabs, slider, counters) won't function. There is no error in either case -- things just silently don't work.
 
 ### Serving Pages at the Site Root
 
