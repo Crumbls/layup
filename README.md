@@ -80,15 +80,7 @@ See the [Filament installation docs](https://filamentphp.com/docs/panels/install
 composer require crumbls/layup
 ```
 
-**2. Run migrations:**
-
-```bash
-php artisan migrate
-```
-
-This creates the `layup_pages` and `layup_page_revisions` tables.
-
-**3. Register the plugin in your Filament panel provider:**
+**2. Register the plugin in your Filament panel provider:**
 
 Open your panel provider (e.g. `app/Providers/Filament/AdminPanelProvider.php`) and add the Layup plugin:
 
@@ -105,17 +97,70 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-**4. (Optional) Publish the config:**
+> Without this step, the "Pages" resource will not appear in your Filament sidebar. There is no error -- it simply won't show up.
+
+**3. Run the install command:**
 
 ```bash
-php artisan vendor:publish --tag=layup-config
+php artisan layup:install
 ```
 
-That's it. Head to your Filament panel -- you'll see a **Pages** resource in the sidebar.
+This handles everything in one step:
+
+- Publishes the config file
+- Runs database migrations (creates `layup_pages` and `layup_page_revisions` tables)
+- Creates a storage symlink (`storage:link`) so uploaded images are web-accessible
+- Creates the frontend layout component if it doesn't exist
+- Publishes Filament assets (CSS)
+- Generates the Tailwind safelist
+- Checks your setup and warns about any issues
+
+**4. Add the safelist to your Tailwind config:**
+
+Tailwind v4 (`resources/css/app.css`):
+```css
+@source "../../storage/layup-safelist.txt";
+```
+
+Tailwind v3 (`tailwind.config.js`):
+```js
+content: ['./storage/layup-safelist.txt']
+```
+
+**5. Rebuild your frontend assets:**
+
+```bash
+npm run build
+# or: bun run build / pnpm run build / yarn build
+```
+
+> Without steps 4 and 5, the page builder will work in the admin panel but frontend pages will have broken or missing styling.
+
+**6. Create and publish a page:**
+
+Visit your Filament panel and create a page. New pages default to **draft** status -- they will not appear on the frontend until you set the status to **published**. If you visit a page URL and get a 404, check the status first.
 
 ### Quick Verification
 
-After installation, visit `/admin/pages` (or your panel path) and create a new page. You should see the visual builder with rows, columns, and the widget picker.
+After installation, run the diagnostic command to check for any remaining issues:
+
+```bash
+php artisan layup:doctor
+```
+
+Then visit `/admin/pages` (or your panel path) and create a new page. You should see the visual builder with rows, columns, and the widget picker.
+
+### Manual Installation
+
+If you prefer to run each step yourself instead of using `layup:install`:
+
+```bash
+php artisan vendor:publish --tag=layup-config
+php artisan migrate
+php artisan storage:link
+php artisan filament:assets
+php artisan layup:safelist
+```
 
 ## Frontend Rendering
 
@@ -142,7 +187,7 @@ The `layout` value is passed to `<x-dynamic-component>`, so it should be a Blade
 - `'layouts.app'` → `resources/views/components/layouts/app.blade.php`
 - `'app-layout'` → `App\View\Components\AppLayout`
 
-Your layout must accept a `title` slot and optionally a `meta` slot for SEO tags:
+Your layout must accept a `title` slot and optionally a `meta` slot for SEO tags. It must also include the `@layupScripts` directive for interactive widgets (accordion, tabs, countdown, slider, etc.) to function:
 
 ```blade
 {{-- resources/views/components/layouts/app.blade.php --}}
@@ -151,13 +196,35 @@ Your layout must accept a `title` slot and optionally a `meta` slot for SEO tags
 <head>
     <title>{{ $title ?? '' }}</title>
     {{ $meta ?? '' }}
-    @layupScripts
     @vite(['resources/css/app.css'])
 </head>
 <body>
     {{ $slot }}
+
+    @layupScripts
 </body>
 </html>
+```
+
+> If you create a custom layout or override the default, make sure to include `@layupScripts`. Without it, interactive widgets will render but won't respond to clicks or animate. There is no error -- they just won't work.
+
+### Serving Pages at the Site Root
+
+To serve pages directly at `/` instead of `/pages`, set the prefix to an empty string:
+
+```php
+'frontend' => [
+    'prefix' => '',
+],
+```
+
+Layup automatically excludes Filament panel paths, Livewire, and other common framework routes so the catch-all doesn't shadow them. If you have custom routes that conflict, add them to `excluded_paths`:
+
+```php
+'frontend' => [
+    'prefix' => '',
+    'excluded_paths' => ['blog', 'shop'],
+],
 ```
 
 ### Nested Slugs
@@ -450,7 +517,7 @@ Or in a deploy script:
 
 ```bash
 php artisan layup:safelist
-npm run build
+npm run build   # or: bun run build / pnpm run build / yarn build
 ```
 
 ### Auto-Sync on Save
@@ -1011,12 +1078,12 @@ Generate these tests automatically with `php artisan layup:make-widget MyWidget 
 | `layup:debug-widget {type}` | Dump the full resolved state of a widget (class, fields, defaults, validation, assets, rendered HTML). Use `--data='{...}'` to pass custom data. |
 | `layup:safelist` | Generate the Tailwind safelist file |
 | `layup:audit` | Audit page content for structural issues |
-| `layup:doctor` | Diagnose common setup issues (config, migrations, widgets, safelist) |
+| `layup:doctor` | Diagnose setup issues (plugin registration, storage symlink, layout, @layupScripts, safelist in Tailwind, widgets, config) |
 | `layup:list-widgets` | List all registered widgets with type, label, category, and source |
 | `layup:search {type}` | Find pages containing a widget type. Use `--unused` to find unregistered widgets |
 | `layup:export` | Export pages as JSON files |
 | `layup:import` | Import pages from JSON files |
-| `layup:install` | Run the initial setup (publishes config, runs migrations, generates safelist) |
+| `layup:install` | Full guided setup (config, migrations, storage link, layout, Filament assets, safelist, doctor check) |
 
 ## Configuration Reference
 
@@ -1054,13 +1121,14 @@ return [
     // Frontend rendering
     'frontend' => [
         'enabled'         => true,
-        'prefix'          => 'pages',
+        'prefix'          => 'pages',        // set to '' to serve at site root
         'middleware'       => ['web'],
         'domain'          => null,
         'layout'          => 'app',
         'view'            => 'layup::frontend.page',
         'max_width'       => 'container',
         'include_scripts' => true,
+        'excluded_paths'  => [],             // extra paths to exclude when prefix is ''
     ],
 
     // Tailwind safelist
