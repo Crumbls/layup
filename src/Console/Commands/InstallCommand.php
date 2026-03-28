@@ -101,6 +101,16 @@ class InstallCommand extends Command
         if (File::exists($path)) {
             $this->info(__('layup::commands.layout_exists', ['layout' => $layout]));
 
+            $contents = File::get($path);
+
+            if (! str_contains($contents, '@layupScripts')) {
+                $this->components->warn(__('layup::commands.layout_missing_scripts'));
+            }
+
+            if (! str_contains($contents, 'app.js') && ! str_contains($contents, 'alpine')) {
+                $this->components->warn(__('layup::commands.layout_missing_alpine'));
+            }
+
             return;
         }
 

@@ -19,6 +19,8 @@ return [
     'storage_link_created' => 'Storage symlink created',
     'assets_published' => 'Filament assets published',
     'layout_exists' => 'Layout component [:layout] already exists',
+    'layout_missing_scripts' => 'Your layout does not include @layupScripts. Add it before </body> for interactive widgets (accordion, tabs, countdown, etc.) to work.',
+    'layout_missing_alpine' => 'Your layout may not load Alpine.js. Ensure your JS bundle imports Alpine (e.g. @vite([\'resources/js/app.js\'])) or interactive widgets will not respond to clicks.',
     'layout_created' => 'Created layout component [:layout]',
     'safelist_generated' => 'Tailwind safelist generated',
     'plugin_not_registered' => 'LayupPlugin is not registered in any Filament panel. Add LayupPlugin::make() to your panel provider\'s ->plugins([]) array.',
