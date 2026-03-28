@@ -7,6 +7,7 @@ namespace Crumbls\Layup\Http\Controllers;
 use Crumbls\Layup\Models\Page;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Default invokable controller that resolves pages by slug.
@@ -28,9 +29,29 @@ class PageController extends AbstractController
             $slug = config('layup.pages.default_slug') ?? '';
         }
 
-        return $modelClass::query()
+        $page = $modelClass::query()
             ->where('slug', $slug)
             ->published()
-            ->firstOrFail();
+            ->first();
+
+        if ($page) {
+            return $page;
+        }
+
+        // In debug mode, check if a draft exists and hint at the cause
+        if (app()->hasDebugModeEnabled()) {
+            $draft = $modelClass::query()
+                ->where('slug', $slug)
+                ->where('status', 'draft')
+                ->exists();
+
+            if ($draft) {
+                throw new NotFoundHttpException(
+                    "Layup: Page '{$slug}' exists but is in draft status. Publish it in the admin panel to make it visible."
+                );
+            }
+        }
+
+        throw new NotFoundHttpException;
     }
 }

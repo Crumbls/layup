@@ -12,12 +12,16 @@ return [
 
     // Install
     'installing' => 'Installing Layup...',
+    'filament_missing' => 'Filament is not installed. Install it first:',
     'config_published' => 'Config published',
     'migrations_completed' => 'Migrations completed',
+    'storage_link_exists' => 'Storage symlink already exists',
+    'storage_link_created' => 'Storage symlink created',
     'assets_published' => 'Filament assets published',
     'layout_exists' => 'Layout component [:layout] already exists',
     'layout_created' => 'Created layout component [:layout]',
     'safelist_generated' => 'Tailwind safelist generated',
+    'plugin_not_registered' => 'LayupPlugin is not registered in any Filament panel. Add LayupPlugin::make() to your panel provider\'s ->plugins([]) array.',
     'installed' => 'Layup installed successfully!',
     'next_steps' => 'Next steps:',
 

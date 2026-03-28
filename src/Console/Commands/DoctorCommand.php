@@ -7,8 +7,10 @@ namespace Crumbls\Layup\Console\Commands;
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Crumbls\Layup\View\BaseView;
+use Filament\Facades\Filament;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 
 class DoctorCommand extends Command
@@ -29,12 +31,17 @@ class DoctorCommand extends Command
         $this->line(str_repeat('-', 40));
         $this->newLine();
 
+        $this->checkPluginRegistration();
         $this->checkConfig();
         $this->checkMigrations();
+        $this->checkStorageLink();
+        $this->checkLayoutComponent();
+        $this->checkLayupScriptsDirective();
         $this->checkWidgets();
         $this->checkWidgetViews();
         $this->checkDefaultDataCompleteness();
         $this->checkSafelist();
+        $this->checkSafelistInTailwind();
         $this->checkUploadDisk();
         $this->checkPageStats();
 
@@ -43,6 +50,29 @@ class DoctorCommand extends Command
         $this->info("{$this->passes} passed, {$this->warnings} warning(s), {$this->failures} failure(s)");
 
         return $this->failures > 0 ? self::FAILURE : self::SUCCESS;
+    }
+
+    protected function checkPluginRegistration(): void
+    {
+        try {
+            $found = false;
+
+            foreach (Filament::getPanels() as $panel) {
+                if ($panel->hasPlugin('layup')) {
+                    $found = true;
+
+                    break;
+                }
+            }
+
+            if ($found) {
+                $this->reportPass('LayupPlugin is registered in a Filament panel');
+            } else {
+                $this->reportFail('LayupPlugin is not registered in any Filament panel -- add LayupPlugin::make() to your panel provider');
+            }
+        } catch (\Throwable) {
+            $this->reportWarn('Could not check Filament panel registration');
+        }
     }
 
     protected function checkConfig(): void
@@ -97,6 +127,66 @@ class DoctorCommand extends Command
             }
         } catch (\Throwable $e) {
             $this->reportWarn('Could not check migrations: ' . $e->getMessage());
+        }
+    }
+
+    protected function checkStorageLink(): void
+    {
+        $link = public_path('storage');
+
+        if (file_exists($link)) {
+            $this->reportPass('Storage symlink exists');
+        } else {
+            $this->reportFail('Storage symlink missing (run php artisan storage:link) -- uploaded images will not be accessible');
+        }
+    }
+
+    protected function checkLayoutComponent(): void
+    {
+        if (! config('layup.frontend.enabled', true)) {
+            return;
+        }
+
+        $layout = config('layup.frontend.layout', 'app');
+
+        if ($layout === '') {
+            return;
+        }
+
+        $path = resource_path("views/components/{$layout}.blade.php");
+
+        if (File::exists($path)) {
+            $this->reportPass("Layout component [{$layout}] exists");
+        } else {
+            $this->reportFail("Layout component [{$layout}] not found at {$path} -- run php artisan layup:install to create it");
+        }
+    }
+
+    protected function checkLayupScriptsDirective(): void
+    {
+        if (! config('layup.frontend.enabled', true)) {
+            return;
+        }
+
+        if (! config('layup.frontend.include_scripts', true)) {
+            $this->reportPass('@layupScripts disabled in config (ensure Alpine components are loaded manually)');
+
+            return;
+        }
+
+        $layout = config('layup.frontend.layout', 'app');
+        $path = resource_path("views/components/{$layout}.blade.php");
+
+        if (! File::exists($path)) {
+            return;
+        }
+
+        $contents = File::get($path);
+
+        if (str_contains($contents, '@layupScripts')) {
+            $this->reportPass('@layupScripts directive found in layout');
+        } else {
+            $this->reportWarn("Layout [{$layout}] does not include @layupScripts -- interactive widgets (accordion, tabs, countdown, etc.) will not function");
         }
     }
 
@@ -160,7 +250,7 @@ class DoctorCommand extends Command
             $this->reportPass('All registered widgets have Blade views');
         } else {
             foreach ($missing as $type) {
-                $this->reportFail("Widget '{$type}' has no Blade view");
+                $this->reportFail("Widget '{$type}' has no Blade view (expected: resources/views/vendor/layup/components/{$type}.blade.php)");
             }
         }
     }
@@ -213,6 +303,34 @@ class DoctorCommand extends Command
         }
     }
 
+    protected function checkSafelistInTailwind(): void
+    {
+        if (! config('layup.safelist.enabled')) {
+            return;
+        }
+
+        $safelistPath = config('layup.safelist.path', 'storage/layup-safelist.txt');
+
+        // Check Tailwind v4 (app.css)
+        $cssPath = resource_path('css/app.css');
+        $tailwindConfig = base_path('tailwind.config.js');
+        $found = false;
+
+        if (file_exists($cssPath) && str_contains(file_get_contents($cssPath), 'layup-safelist')) {
+            $found = true;
+        }
+
+        if (! $found && file_exists($tailwindConfig) && str_contains(file_get_contents($tailwindConfig), 'layup-safelist')) {
+            $found = true;
+        }
+
+        if ($found) {
+            $this->reportPass('Safelist referenced in Tailwind config');
+        } else {
+            $this->reportWarn("Safelist not found in app.css or tailwind.config.js -- dynamic classes will be missing from compiled CSS");
+        }
+    }
+
     protected function checkUploadDisk(): void
     {
         $disk = config('layup.uploads.disk', 'public');
@@ -237,6 +355,10 @@ class DoctorCommand extends Command
             $drafts = $modelClass::where('status', 'draft')->count();
 
             $this->info("  Pages: {$published} published, {$drafts} drafts");
+
+            if ($drafts > 0 && $published === 0) {
+                $this->reportWarn('All pages are drafts -- publish at least one page to see it on the frontend');
+            }
         } catch (\Throwable) {
             // Table may not exist yet
         }
