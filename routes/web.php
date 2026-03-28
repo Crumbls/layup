@@ -34,8 +34,21 @@ $route->group(function () use ($prefix) {
     Route::get($prefix, PageController::class)
         ->name('layup.page.index');
 
+    // Build a negative-lookahead so the catch-all never swallows
+    // framework or Filament panel paths when running at the root.
+    $slugPattern = '.*';
+
+    if ($prefix === '' || $prefix === '/') {
+        $excluded = \Crumbls\Layup\Support\RouteExclusions::gather();
+
+        if ($excluded !== []) {
+            $escaped = array_map(fn (string $path): string => preg_quote($path, '/'), $excluded);
+            $slugPattern = '(?!' . implode('|', $escaped) . ').*';
+        }
+    }
+
     // Wildcard catch-all for nested slugs
     Route::get("{$prefix}/{slug}", PageController::class)
-        ->where('slug', '.*')
+        ->where('slug', $slugPattern)
         ->name('layup.page.show');
 });

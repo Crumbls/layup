@@ -92,24 +92,26 @@ class ContentValidator
     {
         $warnings = [];
 
+        if (! $this->strict) {
+            return $warnings;
+        }
+
         // Try widget-declared rules first
-        if ($this->strict) {
-            $registry = app(WidgetRegistry::class);
-            $class = $registry->get($type);
+        $registry = app(WidgetRegistry::class);
+        $class = $registry->get($type);
 
-            if ($class) {
-                $rules = $class::getValidationRules();
+        if ($class) {
+            $rules = $class::getValidationRules();
 
-                if ($rules !== []) {
-                    foreach ($rules as $field => $rule) {
-                        if (str_contains($rule, 'required') && empty($data[$field])) {
-                            $label = str_replace('_', ' ', $field);
-                            $warnings[] = "missing required field \"{$label}\".";
-                        }
+            if ($rules !== []) {
+                foreach ($rules as $field => $rule) {
+                    if (str_contains($rule, 'required') && empty($data[$field])) {
+                        $label = str_replace('_', ' ', $field);
+                        $warnings[] = "missing required field \"{$label}\".";
                     }
-
-                    return $warnings;
                 }
+
+                return $warnings;
             }
         }
 

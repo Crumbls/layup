@@ -36,7 +36,7 @@ trait HandlesWidgets
 
                 return $widget['data'] ?? [];
             })
-            ->schema(function (array $arguments) use ($registry): array {
+            ->form(function (array $arguments) use ($registry): array {
                 $widget = $this->findWidget(
                     $arguments['rowId'] ?? null,
                     $arguments['columnId'] ?? null,

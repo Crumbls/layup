@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class InstallCommand extends Command
 {
@@ -26,6 +27,13 @@ class InstallCommand extends Command
         // Run migrations
         $this->call('migrate');
         $this->info(__('layup::commands.migrations_completed'));
+
+        // Ensure frontend layout component exists
+        $this->ensureLayoutExists();
+
+        // Publish Filament assets (includes our CSS)
+        $this->call('filament:assets');
+        $this->info(__('layup::commands.assets_published'));
 
         // Generate safelist
         $this->callSilent('layup:safelist');
@@ -57,5 +65,24 @@ class InstallCommand extends Command
         $this->newLine();
 
         return self::SUCCESS;
+    }
+
+    protected function ensureLayoutExists(): void
+    {
+        $layout = config('layup.frontend.layout', 'app');
+        $path = resource_path("views/components/{$layout}.blade.php");
+
+        if (File::exists($path)) {
+            $this->info(__('layup::commands.layout_exists', ['layout' => $layout]));
+
+            return;
+        }
+
+        $stub = __DIR__ . '/../../../stubs/app-layout.blade.php.stub';
+
+        File::ensureDirectoryExists(dirname($path));
+        File::copy($stub, $path);
+
+        $this->info(__('layup::commands.layout_created', ['layout' => $layout]));
     }
 }
