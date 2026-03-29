@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -52,9 +53,8 @@ class FeatureListWidget extends BaseWidget
                     'dot' => __('layup::widgets.feature-list.dot'),
                     'number' => __('layup::widgets.feature-list.1_numbered'), ])
                 ->default('check'),
-            TextInput::make('icon_color')
+            ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.feature-list.icon_color'))
-                ->type('color')
                 ->default('#22c55e'),
             Select::make('layout')
                 ->label(__('layup::widgets.feature-list.layout'))

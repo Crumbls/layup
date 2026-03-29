@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 
@@ -47,9 +48,8 @@ class TimelineWidget extends BaseWidget
                 ])
                 ->defaultItems(3)
                 ->columnSpanFull(),
-            TextInput::make('line_color')
+            ColorPicker::make('line_color')
                 ->label(__('layup::widgets.timeline.line_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

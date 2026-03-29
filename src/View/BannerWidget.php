@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -50,13 +51,11 @@ class BannerWidget extends BaseWidget
                 ->label(__('layup::widgets.banner.background_image'))
                 ->image()
                 ->directory('layup/banners'),
-            TextInput::make('bg_color')
+            ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.banner.background_color'))
-                ->type('color')
                 ->default('#1e40af'),
-            TextInput::make('text_color_banner')
+            ColorPicker::make('text_color_banner')
                 ->label(__('layup::widgets.banner.text_color'))
-                ->type('color')
                 ->default('#ffffff'),
             Select::make('height')
                 ->label(__('layup::widgets.banner.height'))

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -71,9 +72,8 @@ class PricingToggleWidget extends BaseWidget
                 ])
                 ->defaultItems(3)
                 ->columnSpanFull(),
-            TextInput::make('accent_color')
+            ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.pricing-toggle.accent_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

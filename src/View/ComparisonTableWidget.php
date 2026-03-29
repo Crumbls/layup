@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 
@@ -55,9 +56,8 @@ class ComparisonTableWidget extends BaseWidget
                 ])
                 ->defaultItems(5)
                 ->columnSpanFull(),
-            TextInput::make('highlight_color')
+            ColorPicker::make('highlight_color')
                 ->label(__('layup::widgets.comparison-table.highlight_color_column_a'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

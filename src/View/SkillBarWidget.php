@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 
@@ -37,7 +38,7 @@ class SkillBarWidget extends BaseWidget
                 ->schema([
                     TextInput::make('name')->label(__('layup::widgets.skill-bar.skill_name'))->required(),
                     TextInput::make('percent')->label(__('layup::widgets.skill-bar.percentage'))->numeric()->minValue(0)->maxValue(100)->required(),
-                    TextInput::make('color')->label(__('layup::widgets.skill-bar.bar_color'))->type('color')->default('#3b82f6'),
+                    ColorPicker::make('color')->label(__('layup::widgets.skill-bar.bar_color'))->default('#3b82f6'),
                 ])
                 ->defaultItems(3)
                 ->columnSpanFull(),

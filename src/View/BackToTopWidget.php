@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -32,13 +33,11 @@ class BackToTopWidget extends BaseWidget
     public static function getContentFormSchema(): array
     {
         return [
-            TextInput::make('bg_color')
+            ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.back-to-top.background_color'))
-                ->type('color')
                 ->default('#3b82f6'),
-            TextInput::make('text_color_btn')
+            ColorPicker::make('text_color_btn')
                 ->label(__('layup::widgets.back-to-top.icon_color'))
-                ->type('color')
                 ->default('#ffffff'),
             Select::make('position')
                 ->label(__('layup::widgets.back-to-top.position'))

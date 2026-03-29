@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -57,9 +58,8 @@ class NewsletterWidget extends BaseWidget
                 ->options(['inline' => __('layup::widgets.newsletter.inline_side_by_side'),
                     'stacked' => __('layup::widgets.newsletter.stacked'), ])
                 ->default('inline'),
-            TextInput::make('button_color')
+            ColorPicker::make('button_color')
                 ->label(__('layup::widgets.newsletter.button_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

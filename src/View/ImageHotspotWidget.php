@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
@@ -66,9 +67,8 @@ class ImageHotspotWidget extends BaseWidget
                 ])
                 ->defaultItems(0)
                 ->columnSpanFull(),
-            TextInput::make('pin_color')
+            ColorPicker::make('pin_color')
                 ->label(__('layup::widgets.image-hotspot.pin_color'))
-                ->type('color')
                 ->default('#ef4444'),
         ];
     }

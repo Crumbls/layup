@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -36,10 +37,8 @@ class IconWidget extends BaseWidget
                 ->label(__('layup::widgets.icon.icon_name'))
                 ->required()
                 ->placeholder(__('layup::widgets.icon.e_g_heroicon_o_heart')),
-            TextInput::make('color')
-                ->label(__('layup::widgets.icon.color'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('color')
+                ->label(__('layup::widgets.icon.color')),
             Select::make('size')
                 ->label(__('layup::widgets.icon.size'))
                 ->options(['1.5rem' => __('layup::widgets.icon.small'),

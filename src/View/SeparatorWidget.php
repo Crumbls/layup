@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 
 class SeparatorWidget extends BaseWidget
 {
@@ -41,9 +41,8 @@ class SeparatorWidget extends BaseWidget
                     'wave' => __('layup::widgets.separator.wave'),
                     'fade' => __('layup::widgets.separator.fade_gradient'), ])
                 ->default('line'),
-            TextInput::make('color')
+            ColorPicker::make('color')
                 ->label(__('layup::widgets.separator.color'))
-                ->type('color')
                 ->default('#d1d5db'),
             Select::make('width')
                 ->label(__('layup::widgets.separator.width'))

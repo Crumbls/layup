@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 
@@ -42,9 +43,8 @@ class ProgressCircleWidget extends BaseWidget
             TextInput::make('title')
                 ->label(__('layup::widgets.progress-circle.title'))
                 ->nullable(),
-            TextInput::make('color')
+            ColorPicker::make('color')
                 ->label(__('layup::widgets.progress-circle.circle_color'))
-                ->type('color')
                 ->default('#3b82f6'),
             TextInput::make('size')
                 ->label(__('layup::widgets.progress-circle.size_px'))

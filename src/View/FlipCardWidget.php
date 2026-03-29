@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -38,9 +39,8 @@ class FlipCardWidget extends BaseWidget
             TextInput::make('front_description')
                 ->label(__('layup::widgets.flip-card.front_description'))
                 ->nullable(),
-            TextInput::make('front_bg')
+            ColorPicker::make('front_bg')
                 ->label(__('layup::widgets.flip-card.front_background'))
-                ->type('color')
                 ->default('#3b82f6'),
             TextInput::make('back_title')
                 ->label(__('layup::widgets.flip-card.back_title'))
@@ -48,9 +48,8 @@ class FlipCardWidget extends BaseWidget
             TextInput::make('back_description')
                 ->label(__('layup::widgets.flip-card.back_description'))
                 ->nullable(),
-            TextInput::make('back_bg')
+            ColorPicker::make('back_bg')
                 ->label(__('layup::widgets.flip-card.back_background'))
-                ->type('color')
                 ->default('#1e40af'),
             TextInput::make('link_url')
                 ->label(__('layup::widgets.flip-card.link_url_back'))

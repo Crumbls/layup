@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Crumbls\Layup\Forms\Components\SpacingPicker;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Field;
@@ -213,10 +214,8 @@ abstract class BaseView extends Component
     public static function getDesignFormSchema(): array
     {
         return [
-            TextInput::make('text_color')
-                ->label(__('layup::widgets.shared.text_color'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('text_color')
+                ->label(__('layup::widgets.shared.text_color')),
             Select::make('text_align')
                 ->label(__('layup::widgets.shared.text_alignment'))
                 ->options([
@@ -273,10 +272,8 @@ abstract class BaseView extends Component
                 ])
                 ->default('')
                 ->nullable(),
-            TextInput::make('border_color')
-                ->label(__('layup::widgets.shared.border_color'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('border_color')
+                ->label(__('layup::widgets.shared.border_color')),
             Select::make('box_shadow')
                 ->label(__('layup::widgets.shared.box_shadow'))
                 ->options([
@@ -308,10 +305,8 @@ abstract class BaseView extends Component
                 ->nullable(),
             SpacingPicker::advanced('padding', __('layup::widgets.shared.padding')),
             SpacingPicker::advanced('margin', __('layup::widgets.shared.margin')),
-            TextInput::make('background_color')
-                ->label(__('layup::widgets.shared.background_color'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('background_color')
+                ->label(__('layup::widgets.shared.background_color')),
         ];
     }
 

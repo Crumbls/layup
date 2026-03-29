@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -47,10 +48,8 @@ class BarCounterWidget extends BaseWidget
                         ->suffix('%')
                         ->required()
                         ->default(50),
-                    TextInput::make('color')
-                        ->label(__('layup::widgets.bar-counter.color'))
-                        ->type('color')
-                        ->nullable(),
+                    ColorPicker::make('color')
+                        ->label(__('layup::widgets.bar-counter.color')),
                 ])
                 ->defaultItems(3)
                 ->columnSpanFull(),

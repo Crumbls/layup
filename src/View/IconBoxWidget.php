@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -46,13 +47,11 @@ class IconBoxWidget extends BaseWidget
                 ->label(__('layup::widgets.icon-box.link_url'))
                 ->url()
                 ->nullable(),
-            TextInput::make('icon_bg')
+            ColorPicker::make('icon_bg')
                 ->label(__('layup::widgets.icon-box.icon_background_color'))
-                ->type('color')
                 ->default('#eff6ff'),
-            TextInput::make('icon_color')
+            ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.icon-box.icon_color'))
-                ->type('color')
                 ->default('#3b82f6'),
             Select::make('alignment')
                 ->label(__('layup::widgets.icon-box.alignment'))

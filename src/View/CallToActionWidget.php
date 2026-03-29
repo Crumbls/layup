@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -55,14 +56,10 @@ class CallToActionWidget extends BaseWidget
             Toggle::make('new_tab')
                 ->label(__('layup::widgets.cta.open_in_new_tab'))
                 ->default(false),
-            TextInput::make('bg_color')
-                ->label(__('layup::widgets.cta.background_color'))
-                ->type('color')
-                ->nullable(),
-            TextInput::make('text_color_cta')
-                ->label(__('layup::widgets.cta.text_color'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('bg_color')
+                ->label(__('layup::widgets.cta.background_color')),
+            ColorPicker::make('text_color_cta')
+                ->label(__('layup::widgets.cta.text_color')),
         ];
     }
 

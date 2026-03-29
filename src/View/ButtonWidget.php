@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -56,22 +57,14 @@ class ButtonWidget extends BaseWidget
             Toggle::make('new_tab')
                 ->label(__('layup::widgets.button.open_in_new_tab'))
                 ->default(false),
-            TextInput::make('bg_color')
-                ->label(__('layup::widgets.button.custom_background_color'))
-                ->type('color')
-                ->nullable(),
-            TextInput::make('text_color_override')
-                ->label(__('layup::widgets.button.custom_text_color'))
-                ->type('color')
-                ->nullable(),
-            TextInput::make('hover_bg_color')
-                ->label(__('layup::widgets.button.hover_background_color'))
-                ->type('color')
-                ->nullable(),
-            TextInput::make('hover_text_color')
-                ->label(__('layup::widgets.button.hover_text_color'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('bg_color')
+                ->label(__('layup::widgets.button.custom_background_color')),
+            ColorPicker::make('text_color_override')
+                ->label(__('layup::widgets.button.custom_text_color')),
+            ColorPicker::make('hover_bg_color')
+                ->label(__('layup::widgets.button.hover_background_color')),
+            ColorPicker::make('hover_text_color')
+                ->label(__('layup::widgets.button.hover_text_color')),
         ];
     }
 

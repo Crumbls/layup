@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 
 class DividerWidget extends BaseWidget
 {
@@ -46,10 +46,9 @@ class DividerWidget extends BaseWidget
                     '3px' => __('layup::widgets.divider.thick_3px'),
                     '4px' => __('layup::widgets.divider.heavy_4px'), ])
                 ->default('1px'),
-            TextInput::make('color')
+            ColorPicker::make('color')
                 ->label(__('layup::widgets.divider.color'))
-                ->default('#e5e7eb')
-                ->type('color'),
+                ->default('#e5e7eb'),
             Select::make('width')
                 ->label(__('layup::widgets.divider.width'))
                 ->options(['100%' => __('layup::widgets.divider.full'),

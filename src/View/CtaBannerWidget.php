@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 
 class CtaBannerWidget extends BaseWidget
@@ -35,8 +36,8 @@ class CtaBannerWidget extends BaseWidget
             TextInput::make('subtitle')->label(__('layup::widgets.cta-banner.subtitle'))->nullable(),
             TextInput::make('button_text')->label(__('layup::widgets.cta-banner.button_text'))->default('Get Started'),
             TextInput::make('button_url')->label(__('layup::widgets.cta-banner.button_url'))->url()->default('#'),
-            TextInput::make('bg_color')->label(__('layup::widgets.cta-banner.background_color'))->type('color')->default('#3b82f6'),
-            TextInput::make('text_color_banner')->label(__('layup::widgets.cta-banner.text_color'))->type('color')->default('#ffffff'),
+            ColorPicker::make('bg_color')->label(__('layup::widgets.cta-banner.background_color'))->default('#3b82f6'),
+            ColorPicker::make('text_color_banner')->label(__('layup::widgets.cta-banner.text_color'))->default('#ffffff'),
         ];
     }
 

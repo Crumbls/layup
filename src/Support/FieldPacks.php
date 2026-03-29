@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Support;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -55,14 +56,10 @@ class FieldPacks
     public static function colorPair(string $colorA, string $colorB): array
     {
         return [
-            TextInput::make("{$colorA}_color")
-                ->label(ucfirst(str_replace('_', ' ', $colorA)) . ' color')
-                ->type('color')
-                ->nullable(),
-            TextInput::make("{$colorB}_color")
-                ->label(ucfirst(str_replace('_', ' ', $colorB)) . ' color')
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make("{$colorA}_color")
+                ->label(ucfirst(str_replace('_', ' ', $colorA)) . ' color'),
+            ColorPicker::make("{$colorB}_color")
+                ->label(ucfirst(str_replace('_', ' ', $colorB)) . ' color'),
         ];
     }
 
@@ -74,22 +71,14 @@ class FieldPacks
     public static function hoverColors(string $prefix): array
     {
         return [
-            TextInput::make("{$prefix}_bg_color")
-                ->label(__('layup::widgets.shared.background_color'))
-                ->type('color')
-                ->nullable(),
-            TextInput::make("{$prefix}_hover_bg_color")
-                ->label('Hover background color')
-                ->type('color')
-                ->nullable(),
-            TextInput::make("{$prefix}_text_color")
-                ->label(__('layup::widgets.shared.text_color'))
-                ->type('color')
-                ->nullable(),
-            TextInput::make("{$prefix}_hover_text_color")
-                ->label('Hover text color')
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make("{$prefix}_bg_color")
+                ->label(__('layup::widgets.shared.background_color')),
+            ColorPicker::make("{$prefix}_hover_bg_color")
+                ->label('Hover background color'),
+            ColorPicker::make("{$prefix}_text_color")
+                ->label(__('layup::widgets.shared.text_color')),
+            ColorPicker::make("{$prefix}_hover_text_color")
+                ->label('Hover text color'),
         ];
     }
 }

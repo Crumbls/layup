@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -75,9 +76,8 @@ class HeroWidget extends BaseWidget
                     '75vh' => __('layup::widgets.hero.three_quarter_screen'),
                     '100vh' => __('layup::widgets.hero.full_screen'), ])
                 ->default('auto'),
-            TextInput::make('overlay_color')
+            ColorPicker::make('overlay_color')
                 ->label(__('layup::widgets.hero.overlay_color'))
-                ->type('color')
                 ->default('#000000'),
             TextInput::make('overlay_opacity')
                 ->label(__('layup::widgets.hero.overlay_opacity_0_100'))

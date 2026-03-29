@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -48,9 +49,8 @@ class ListWidget extends BaseWidget
                     'arrow' => __('layup::widgets.list.arrows'),
                     'none' => __('layup::widgets.list.no_markers'), ])
                 ->default('bullet'),
-            TextInput::make('icon_color')
+            ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.list.marker_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

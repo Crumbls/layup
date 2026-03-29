@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -52,9 +53,8 @@ class AnimatedHeadingWidget extends BaseWidget
                     'circle' => __('layup::widgets.animated-heading.circle'),
                     'strikethrough' => __('layup::widgets.animated-heading.strikethrough'), ])
                 ->default('highlight'),
-            TextInput::make('accent_color')
+            ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.animated-heading.accent_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

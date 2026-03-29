@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -50,9 +51,8 @@ class StarRatingWidget extends BaseWidget
                 ->label(__('layup::widgets.star-rating.size'))
                 ->options(['sm' => __('layup::widgets.star-rating.small'), 'md' => __('layup::widgets.star-rating.medium'), 'lg' => __('layup::widgets.star-rating.large')])
                 ->default('md'),
-            TextInput::make('color')
+            ColorPicker::make('color')
                 ->label(__('layup::widgets.star-rating.star_color'))
-                ->type('color')
                 ->default('#facc15'),
         ];
     }

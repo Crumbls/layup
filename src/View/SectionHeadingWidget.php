@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -37,7 +38,7 @@ class SectionHeadingWidget extends BaseWidget
             TextInput::make('subtitle')->label(__('layup::widgets.section-heading.subtitle'))->nullable(),
             Select::make('alignment')->label(__('layup::widgets.section-heading.alignment'))->options(['left' => __('layup::widgets.section-heading.left'), 'center' => __('layup::widgets.section-heading.center'), 'right' => __('layup::widgets.section-heading.right')])->default('center'),
             Toggle::make('show_divider')->label(__('layup::widgets.section-heading.show_divider'))->default(true),
-            TextInput::make('divider_color')->label(__('layup::widgets.section-heading.divider_color'))->type('color')->default('#3b82f6'),
+            ColorPicker::make('divider_color')->label(__('layup::widgets.section-heading.divider_color'))->default('#3b82f6'),
             Select::make('heading_tag')->label(__('layup::widgets.section-heading.heading_tag'))->options(['h1' => __('layup::widgets.section-heading.h1'), 'h2' => __('layup::widgets.section-heading.h2'), 'h3' => __('layup::widgets.section-heading.h3')])->default('h2'),
         ];
     }

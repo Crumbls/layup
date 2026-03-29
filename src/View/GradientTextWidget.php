@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -40,18 +41,14 @@ class GradientTextWidget extends BaseWidget
                 ->label(__('layup::widgets.gradient-text.html_tag'))
                 ->options(['h1' => __('layup::widgets.gradient-text.h1'), 'h2' => __('layup::widgets.gradient-text.h2'), 'h3' => __('layup::widgets.gradient-text.h3'), 'h4' => __('layup::widgets.gradient-text.h4'), 'p' => __('layup::widgets.gradient-text.paragraph'), 'span' => __('layup::widgets.gradient-text.span')])
                 ->default('h2'),
-            TextInput::make('from_color')
+            ColorPicker::make('from_color')
                 ->label(__('layup::widgets.gradient-text.from_color'))
-                ->type('color')
                 ->default('#667eea'),
-            TextInput::make('to_color')
+            ColorPicker::make('to_color')
                 ->label(__('layup::widgets.gradient-text.to_color'))
-                ->type('color')
                 ->default('#764ba2'),
-            TextInput::make('via_color')
-                ->label(__('layup::widgets.gradient-text.via_color_optional'))
-                ->type('color')
-                ->nullable(),
+            ColorPicker::make('via_color')
+                ->label(__('layup::widgets.gradient-text.via_color_optional')),
             Select::make('direction')
                 ->label(__('layup::widgets.gradient-text.direction'))
                 ->options(['to right' => __('layup::widgets.gradient-text.left_right'),

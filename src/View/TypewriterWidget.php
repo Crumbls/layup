@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -59,9 +60,8 @@ class TypewriterWidget extends BaseWidget
             Toggle::make('loop')
                 ->label(__('layup::widgets.typewriter.loop'))
                 ->default(true),
-            TextInput::make('cursor_color')
+            ColorPicker::make('cursor_color')
                 ->label(__('layup::widgets.typewriter.cursor_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

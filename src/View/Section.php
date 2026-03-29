@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -50,9 +51,8 @@ class Section extends BaseView
                 ->label(__('layup::widgets.section.background_gradient'))
                 ->placeholder(__('layup::widgets.section.background_gradient_placeholder'))
                 ->nullable(),
-            TextInput::make('overlay_color')
+            ColorPicker::make('overlay_color')
                 ->label(__('layup::widgets.section.overlay_color'))
-                ->type('color')
                 ->default('#000000'),
             TextInput::make('overlay_opacity')
                 ->label(__('layup::widgets.section.overlay_opacity'))

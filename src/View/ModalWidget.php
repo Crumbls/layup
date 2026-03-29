@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -51,9 +52,8 @@ class ModalWidget extends BaseWidget
                     'lg' => __('layup::widgets.modal.large_800px'),
                     'xl' => __('layup::widgets.modal.extra_large_1000px'), ])
                 ->default('md'),
-            TextInput::make('trigger_bg_color')
+            ColorPicker::make('trigger_bg_color')
                 ->label(__('layup::widgets.modal.trigger_button_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

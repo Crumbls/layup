@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -52,9 +53,8 @@ class BlockquoteWidget extends BaseWidget
                     'large' => __('layup::widgets.blockquote.large_quote'),
                     'centered' => __('layup::widgets.blockquote.centered'), ])
                 ->default('border-left'),
-            TextInput::make('accent_color')
+            ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.blockquote.accent_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

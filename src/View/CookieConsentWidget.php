@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -50,9 +51,8 @@ class CookieConsentWidget extends BaseWidget
             TextInput::make('policy_text')
                 ->label(__('layup::widgets.cookie-consent.policy_link_text'))
                 ->default('Privacy Policy'),
-            TextInput::make('bg_color')
+            ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.cookie-consent.background_color'))
-                ->type('color')
                 ->default('#1f2937'),
             Select::make('position')
                 ->label(__('layup::widgets.cookie-consent.position'))

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -50,9 +51,8 @@ class StepProcessWidget extends BaseWidget
                 ->options(['vertical' => __('layup::widgets.step-process.vertical'),
                     'horizontal' => __('layup::widgets.step-process.horizontal'), ])
                 ->default('horizontal'),
-            TextInput::make('accent_color')
+            ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.step-process.accent_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }

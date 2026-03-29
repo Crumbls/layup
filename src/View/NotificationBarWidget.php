@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 
@@ -44,13 +45,11 @@ class NotificationBarWidget extends BaseWidget
                 ->label(__('layup::widgets.notification-bar.link_url'))
                 ->url()
                 ->nullable(),
-            TextInput::make('bg_color')
+            ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.notification-bar.background_color'))
-                ->type('color')
                 ->default('#3b82f6'),
-            TextInput::make('text_color_bar')
+            ColorPicker::make('text_color_bar')
                 ->label(__('layup::widgets.notification-bar.text_color'))
-                ->type('color')
                 ->default('#ffffff'),
             Toggle::make('dismissible')
                 ->label(__('layup::widgets.notification-bar.dismissible'))

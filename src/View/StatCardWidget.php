@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\View;
 
+use Crumbls\Layup\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -52,9 +53,8 @@ class StatCardWidget extends BaseWidget
                     'neutral' => __('layup::widgets.stat-card.neutral_gray'), ])
                 ->default('')
                 ->nullable(),
-            TextInput::make('accent_color')
+            ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.stat-card.accent_color'))
-                ->type('color')
                 ->default('#3b82f6'),
         ];
     }
