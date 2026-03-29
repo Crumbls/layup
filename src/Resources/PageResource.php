@@ -9,6 +9,7 @@ use Crumbls\Layup\Forms\Components\LayupBuilder;
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Resources\PageResource\Pages;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -22,6 +23,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -101,43 +104,56 @@ class PageResource extends Resource
                     ]),
             ])
             ->recordActions([
-                EditAction::make(),
-                Action::make('duplicate')
-                    ->label(__('layup::resource.duplicate'))
-                    ->icon('heroicon-o-document-duplicate')
-                    ->color('gray')
-                    ->requiresConfirmation()
-                    ->action(function (Page $record): void {
-                        $modelClass = config('layup.pages.model', Page::class);
-                        $modelClass::create([
-                            'title' => $record->title . ' ' . __('layup::resource.copy_suffix'),
-                            'slug' => $record->slug . '-copy-' . Str::random(4),
-                            'content' => $record->content,
-                            'meta' => $record->meta,
-                            'status' => 'draft',
-                        ]);
-                    }),
-                Action::make('export')
-                    ->label(__('layup::resource.export'))
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->color('gray')
-                    ->action(function (Page $record) {
-                        $json = json_encode([
-                            'title' => $record->title,
-                            'slug' => $record->slug,
-                            'content' => $record->content,
-                            'meta' => $record->meta,
-                            'exported_at' => now()->toIso8601String(),
-                            'layup_version' => '1.0',
-                        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                ActionGroup::make([
 
-                        return response()->streamDownload(
-                            fn () => print ($json),
-                            Str::slug($record->title) . '.json',
-                            ['Content-Type' => 'application/json'],
-                        );
-                    }),
-                DeleteAction::make(),
+                    Action::make('view')
+                        ->visible(function (Model $record) {
+                            return $record->status == 'published';
+                        })
+                        ->url(function (Model $record) {
+                            return Route::has('layup.page.show') ? route('layup.page.show', $record->slug) : null;
+                        })
+                        ->icon('heroicon-o-eye')
+                        ->openUrlInNewTab(),
+                    EditAction::make(),
+                    Action::make('duplicate')
+                        ->label(__('layup::resource.duplicate'))
+                        ->icon('heroicon-o-document-duplicate')
+                        ->color('gray')
+                        ->requiresConfirmation()
+                        ->action(function (Page $record): void {
+                            $modelClass = config('layup.pages.model', Page::class);
+                            $modelClass::create([
+                                'title' => $record->title . ' ' . __('layup::resource.copy_suffix'),
+                                'slug' => $record->slug . '-copy-' . Str::random(4),
+                                'content' => $record->content,
+                                'meta' => $record->meta,
+                                'status' => 'draft',
+                            ]);
+                        }),
+                    Action::make('export')
+                        ->label(__('layup::resource.export'))
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->color('gray')
+                        ->action(function (Page $record) {
+                            $json = json_encode([
+                                'title' => $record->title,
+                                'slug' => $record->slug,
+                                'content' => $record->content,
+                                'meta' => $record->meta,
+                                'exported_at' => now()->toIso8601String(),
+                                'layup_version' => '1.0',
+                            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+                            return response()->streamDownload(
+                                fn () => print ($json),
+                                Str::slug($record->title) . '.json',
+                                ['Content-Type' => 'application/json'],
+                            );
+                        }),
+                    DeleteAction::make(),
+                ]),
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

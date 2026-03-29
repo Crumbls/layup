@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 $prefix = config('layup.frontend.prefix', 'pages');
 $middleware = config('layup.frontend.middleware', ['web']);
 $domain = config('layup.frontend.domain');
-
 $route = Route::middleware($middleware);
 
 if ($domain) {
