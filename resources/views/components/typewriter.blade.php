@@ -9,7 +9,7 @@
     $cursorColor = $data['cursor_color'] ?? '#3b82f6';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
-     class="text-3xl font-bold {{ $vis }} {{ $data['class'] ?? '' }}"
+     class="text-2xl md:text-3xl font-bold {{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
      x-data="{

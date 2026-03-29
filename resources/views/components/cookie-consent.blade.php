@@ -7,7 +7,7 @@
      class="fixed {{ $pos }} left-0 right-0 z-50 px-4 py-4"
      style="background-color: {{ $bg }}"
 >
-    <div class="container mx-auto flex flex-wrap items-center justify-between gap-4">
+    <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
         <p class="text-white text-sm flex-1">
             {{ $data['message'] ?? '' }}
             @if(!empty($data['policy_url']))

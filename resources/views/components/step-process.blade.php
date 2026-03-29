@@ -10,7 +10,7 @@
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
-    <div class="{{ $isHorizontal ? 'flex items-start' : 'space-y-6' }}">
+    <div class="{{ $isHorizontal ? 'flex flex-col md:flex-row items-start' : 'space-y-6' }}">
         @foreach($steps as $i => $step)
             <div class="{{ $isHorizontal ? 'flex-1 text-center relative' : 'flex gap-4' }}">
                 {{-- Number circle --}}
@@ -20,7 +20,7 @@
                 </div>
                 {{-- Connector line (horizontal) --}}
                 @if($isHorizontal && !$loop->last)
-                    <div class="absolute top-5 left-[calc(50%+20px)] right-[calc(-50%+20px)] h-0.5" style="background-color: {{ $color }}; opacity: 0.3"></div>
+                    <div class="hidden md:block absolute top-5 left-[calc(50%+20px)] right-[calc(-50%+20px)] h-0.5" style="background-color: {{ $color }}; opacity: 0.3"></div>
                 @endif
                 <div class="{{ $isHorizontal ? 'mt-3' : '' }}">
                     @if(!empty($step['title']))

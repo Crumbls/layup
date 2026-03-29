@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $orientation = ($data['orientation'] ?? 'horizontal') === 'vertical' ? 'flex-col' : 'flex-row flex-wrap';
+    $orientation = ($data['orientation'] ?? 'horizontal') === 'vertical' ? 'flex-col' : 'flex-row flex-wrap gap-y-2';
     $style = $data['style'] ?? 'links';
     $itemClass = match($style) {
         'pills' => 'px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors',

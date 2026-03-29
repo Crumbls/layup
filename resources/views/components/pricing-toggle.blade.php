@@ -24,7 +24,16 @@
     </div>
 
     {{-- Plans --}}
-    <div style="display:grid;grid-template-columns:repeat({{ min(count($plans), 4) }},1fr);gap:1.5rem">
+    @php
+        $ptCols = min(count($plans), 4);
+        $ptId = 'layup-pt-' . md5(uniqid('pt', true));
+    @endphp
+    <style>
+        #{{ $ptId }} { display:grid; grid-template-columns:1fr; gap:1.5rem; }
+        @media(min-width:640px) { #{{ $ptId }} { grid-template-columns:repeat(2,1fr); } }
+        @media(min-width:1024px) { #{{ $ptId }} { grid-template-columns:repeat({{ $ptCols }},1fr); } }
+    </style>
+    <div id="{{ $ptId }}">
         @foreach($plans as $plan)
             <div class="border dark:border-gray-700 rounded-xl p-6 text-center {{ !empty($plan['featured']) ? 'ring-2 relative' : '' }}" @if(!empty($plan['featured'])) style="ring-color: {{ $color }}" @endif>
                 @if(!empty($plan['featured']))

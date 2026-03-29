@@ -1,14 +1,21 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $cols = $data['columns'] ?? 3;
+    $testimId = 'layup-ts-' . md5(uniqid('ts', true));
 @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+<style>
+    #{{ $testimId }} { display:grid; grid-template-columns:1fr; gap:1.5rem; }
+    @media(min-width:640px) { #{{ $testimId }} { grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1024px) { #{{ $testimId }} { grid-template-columns:repeat({{ $cols }},1fr); } }
+</style>
+<div id="{{ $testimId }}"
+     @if(!empty($data['id'])) data-block-id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="display:grid;grid-template-columns:repeat({{ $cols }},1fr);gap:1.5rem; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     @foreach(($data['testimonials'] ?? []) as $t)
-        <div class="border dark:border-gray-700 rounded-xl p-5">
+        <div class="border dark:border-gray-700 rounded-xl p-4 md:p-5">
             @if(!empty($t['rating']))
                 <div class="text-yellow-400 mb-2">@for($i=0;$i<(int)$t['rating'];$i++)★@endfor</div>
             @endif

@@ -21,7 +21,13 @@
     @if($posts->isEmpty())
         <p class="text-gray-500 dark:text-gray-400 text-center py-8">{{ $data['empty_message'] ?? __('layup::frontend.post_list.no_posts') }}</p>
     @else
-        <div style="display:grid;grid-template-columns:repeat({{ $cols }},1fr);gap:1.5rem">
+        @php $plId = 'layup-pl-' . md5(uniqid('pl', true)); @endphp
+        <style>
+            #{{ $plId }} { display:grid; grid-template-columns:1fr; gap:1.5rem; }
+            @media(min-width:640px) { #{{ $plId }} { grid-template-columns:repeat(2,1fr); } }
+            @media(min-width:1024px) { #{{ $plId }} { grid-template-columns:repeat({{ $cols }},1fr); } }
+        </style>
+        <div id="{{ $plId }}">
             @foreach($posts as $post)
                 <article class="border dark:border-gray-700 rounded-lg overflow-hidden">
                     @if(method_exists($post, 'getFeaturedImageUrl') && $post->getFeaturedImageUrl())

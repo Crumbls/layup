@@ -3,10 +3,19 @@
     $lightbox = !empty($data['lightbox']);
     $showCaptions = !empty($data['show_captions']);
     $captions = $showCaptions ? array_map('trim', explode("\n", $data['captions_text'] ?? '')) : [];
+    $galCols = $data['columns'] ?? 3;
+    $galGap = $data['gap'] ?? '0.5rem';
+    $galId = 'layup-gal-' . md5(uniqid('gal', true));
 @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+<style>
+    #{{ $galId }} { display:grid; grid-template-columns:1fr; gap:{{ $galGap }}; }
+    @media(min-width:640px) { #{{ $galId }} { grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1024px) { #{{ $galId }} { grid-template-columns:repeat({{ $galCols }},1fr); } }
+</style>
+<div id="{{ $galId }}"
+     @if(!empty($data['id'])) data-block-id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="display:grid;grid-template-columns:repeat({{ $data['columns'] ?? 3 }},1fr);gap:{{ $data['gap'] ?? '0.5rem' }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
      @if($lightbox) x-data="layupLightbox()" @endif
 >

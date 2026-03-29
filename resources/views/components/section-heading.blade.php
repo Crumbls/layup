@@ -2,7 +2,7 @@
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $align = match($data['alignment'] ?? 'center') { 'left' => 'text-left', 'right' => 'text-right', default => 'text-center' };
     $tag = $data['heading_tag'] ?? 'h2';
-    $sizeClass = match($tag) { 'h1' => 'text-4xl', 'h3' => 'text-2xl', default => 'text-3xl' };
+    $sizeClass = match($tag) { 'h1' => 'text-2xl md:text-4xl', 'h3' => 'text-lg md:text-2xl', default => 'text-xl md:text-3xl' };
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="{{ $align }} {{ $vis }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     <{{ $tag }} class="{{ $sizeClass }} font-bold mb-2">{{ $data['heading'] ?? '' }}</{{ $tag }}>

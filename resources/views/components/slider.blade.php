@@ -12,7 +12,7 @@
                     style="background-image:url('{{ asset('storage/' . $slide['image']) }}');background-size:cover;background-position:center"
                 @endif
             >
-                <div class="max-w-2xl mx-auto text-center p-8">
+                <div class="max-w-2xl mx-auto text-center p-4 md:p-8">
                     @if(!empty($slide['heading']))
                         <h3 class="text-2xl font-bold mb-2">{{ $slide['heading'] }}</h3>
                     @endif

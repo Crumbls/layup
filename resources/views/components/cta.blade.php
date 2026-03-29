@@ -1,6 +1,6 @@
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="rounded-xl p-8 text-center {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }} @if(!empty($data['bg_color']))background-color: {{ $data['bg_color'] }};@else background-color: #f9fafb;@endif @if(!empty($data['text_color_cta']))color: {{ $data['text_color_cta'] }};@endif" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="rounded-xl p-4 md:p-8 text-center {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }} @if(!empty($data['bg_color']))background-color: {{ $data['bg_color'] }};@else background-color: #f9fafb;@endif @if(!empty($data['text_color_cta']))color: {{ $data['text_color_cta'] }};@endif" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @if(!empty($data['title']))
-        <h2 class="text-2xl font-bold mb-3">{{ $data['title'] }}</h2>
+        <h2 class="text-xl md:text-2xl font-bold mb-3">{{ $data['title'] }}</h2>
     @endif
     @if(!empty($data['content']))
         <div class="prose max-w-2xl mx-auto mb-6 text-gray-600 dark:text-gray-300">

@@ -32,6 +32,7 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Widget search tags** -- additional terms for the builder's widget picker
 - **Widget asset declaration** -- declare JS/CSS dependencies per widget
 - **Widget auto-discovery** — scans `App\Layup\Widgets` for custom widgets
+- **Global theme system** — CSS custom properties for colors, fonts, and border radius with Filament panel inheritance
 - **Configurable model** — swap the Page model per dashboard
 - **`HasLayupContent` trait** -- add Layup rendering to any Eloquent model
 - **`<x-layup-widget>` component** -- render individual widgets in any Blade template
@@ -668,6 +669,135 @@ This copies `layup.js` to `resources/js/vendor/layup.js` where you can modify it
 | `layupCounter` | Number Counter | `(target, animate)` |
 | `layupBarCounter` | Bar Counter | `(percent, animate)` |
 | `layupLightbox` | Gallery | none |
+
+## Theme
+
+Layup includes a global theme system that outputs CSS custom properties and utility classes on the frontend. Widgets use these variables for colors, fonts, and border radius so your pages stay visually consistent.
+
+### How It Works
+
+The `@layupScripts` directive (already in your layout) outputs a `<style>` block with `:root` custom properties and matching utility classes:
+
+```css
+:root {
+    --layup-primary: #3b82f6;
+    --layup-secondary: #6b7280;
+    --layup-accent: #f59e0b;
+    --layup-success: #22c55e;
+    --layup-warning: #f59e0b;
+    --layup-danger: #ef4444;
+}
+.layup-bg-primary { background-color: var(--layup-primary); }
+.layup-text-primary { color: var(--layup-primary); }
+.layup-border-primary { border-color: var(--layup-primary); }
+.layup-hover-bg-primary:hover { background-color: var(--layup-primary); }
+.layup-hover-text-primary:hover { color: var(--layup-primary); }
+/* ... same for every color */
+```
+
+Widgets reference these as `var(--layup-primary)` in inline styles or `layup-bg-primary` as class names.
+
+### Configuring Colors
+
+By default, Layup inherits colors from your Filament panel. If your panel uses `->colors([...])`, those are picked up automatically with no extra configuration.
+
+To override or extend colors, use the plugin fluent API in your panel provider:
+
+```php
+use Crumbls\Layup\LayupPlugin;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->plugins([
+            LayupPlugin::make()
+                ->colors([
+                    'primary' => '#e11d48',
+                    'secondary' => '#6366f1',
+                    'accent' => '#f59e0b',
+                ]),
+        ]);
+}
+```
+
+Values you pass to `->colors()` merge with (and override) the inherited panel colors.
+
+### Configuring Fonts
+
+```php
+LayupPlugin::make()
+    ->fonts([
+        'heading' => 'Playfair Display, serif',
+        'body' => 'Inter, sans-serif',
+    ])
+```
+
+This generates `--layup-font-heading` and `--layup-font-body` custom properties, plus `.layup-font-heading` and `.layup-font-body` utility classes.
+
+### Configuring Border Radius
+
+```php
+LayupPlugin::make()
+    ->borderRadius('0.5rem')
+```
+
+Generates `--layup-radius` and a `.layup-rounded` utility class.
+
+### Opting Out of Panel Color Inheritance
+
+If you don't want Layup to pull colors from the Filament panel:
+
+```php
+LayupPlugin::make()
+    ->withoutPanelColors()
+    ->colors([
+        'primary' => '#3b82f6',
+        'secondary' => '#6b7280',
+    ])
+```
+
+Without `->colors()` and with `->withoutPanelColors()`, the built-in defaults are used (blue primary, gray secondary, amber accent).
+
+### Full Example
+
+```php
+LayupPlugin::make()
+    ->colors([
+        'primary' => '#e11d48',
+        'secondary' => '#6366f1',
+        'accent' => '#f59e0b',
+        'success' => '#22c55e',
+    ])
+    ->fonts([
+        'heading' => 'Playfair Display, serif',
+        'body' => 'Inter, sans-serif',
+    ])
+    ->borderRadius('0.75rem')
+```
+
+### Using Theme Variables in Custom Widgets
+
+Reference theme variables in your Blade views:
+
+```blade
+{{-- Inline style --}}
+<div style="background-color: var(--layup-primary)">...</div>
+
+{{-- Utility class --}}
+<button class="layup-bg-primary layup-hover-bg-accent text-white">Click</button>
+```
+
+The generated utility classes follow the pattern `layup-{property}-{color}`:
+
+| Class Pattern | CSS |
+|---------------|-----|
+| `layup-bg-{name}` | `background-color: var(--layup-{name})` |
+| `layup-text-{name}` | `color: var(--layup-{name})` |
+| `layup-border-{name}` | `border-color: var(--layup-{name})` |
+| `layup-hover-bg-{name}:hover` | `background-color: var(--layup-{name})` |
+| `layup-hover-text-{name}:hover` | `color: var(--layup-{name})` |
+| `layup-font-{name}` | `font-family: var(--layup-font-{name})` |
+| `layup-rounded` | `border-radius: var(--layup-radius)` |
 
 ## Rendering content from a model field
 

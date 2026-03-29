@@ -8,7 +8,7 @@
             <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                 <tr>
                     @foreach($data['headers'] as $header)
-                        <th class="px-4 py-3 font-semibold">{{ is_array($header) ? ($header['text'] ?? '') : $header }}</th>
+                        <th class="px-2 py-2 md:px-4 md:py-3 font-semibold">{{ is_array($header) ? ($header['text'] ?? '') : $header }}</th>
                     @endforeach
                 </tr>
             </thead>
@@ -17,7 +17,7 @@
             @foreach(($data['rows'] ?? []) as $index => $row)
                 <tr class="{{ !empty($data['striped']) && $index % 2 === 1 ? 'bg-gray-50 dark:bg-gray-800' : '' }} border-b border-gray-200 dark:border-gray-700">
                     @foreach(($row['cells'] ?? []) as $cell)
-                        <td class="px-4 py-3">{{ is_array($cell) ? ($cell['text'] ?? '') : $cell }}</td>
+                        <td class="px-2 py-2 md:px-4 md:py-3">{{ is_array($cell) ? ($cell['text'] ?? '') : $cell }}</td>
                     @endforeach
                 </tr>
             @endforeach

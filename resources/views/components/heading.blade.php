@@ -1,10 +1,10 @@
 <{{ $data['level'] ?? 'h2' }}
     @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
     class="{{ match($data['level'] ?? 'h2') {
-        'h1' => 'text-4xl font-bold',
-        'h2' => 'text-3xl font-bold',
-        'h3' => 'text-2xl font-semibold',
-        'h4' => 'text-xl font-semibold',
+        'h1' => 'text-2xl md:text-4xl font-bold',
+        'h2' => 'text-xl md:text-3xl font-bold',
+        'h3' => 'text-lg md:text-2xl font-semibold',
+        'h4' => 'text-lg md:text-xl font-semibold',
         'h5' => 'text-lg font-medium',
         'h6' => 'text-base font-medium',
         default => 'text-3xl font-bold',

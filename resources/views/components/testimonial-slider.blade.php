@@ -23,11 +23,11 @@
 >
     <div class="relative overflow-hidden">
         @foreach($testimonials as $i => $t)
-            <div x-show="current === {{ $i }}" x-transition.opacity class="text-center px-8 py-6">
+            <div x-show="current === {{ $i }}" x-transition.opacity class="text-center px-4 py-4 md:px-8 md:py-6">
                 @if(!empty($t['rating']))
                     <div class="text-yellow-400 text-xl mb-3">@for($s = 0; $s < (int)$t['rating']; $s++)★@endfor</div>
                 @endif
-                <blockquote class="text-lg italic text-gray-700 dark:text-gray-200 mb-4 max-w-2xl mx-auto">"{{ $t['quote'] ?? '' }}"</blockquote>
+                <blockquote class="text-base md:text-lg italic text-gray-700 dark:text-gray-200 mb-4 max-w-2xl mx-auto">"{{ $t['quote'] ?? '' }}"</blockquote>
                 <div class="flex items-center justify-center gap-3">
                     @if(!empty($t['avatar']))
                         <img src="{{ asset('storage/' . $t['avatar']) }}" alt="" class="w-12 h-12 rounded-full object-cover" />

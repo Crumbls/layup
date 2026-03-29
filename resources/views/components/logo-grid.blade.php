@@ -12,7 +12,13 @@
     @if(!empty($data['title']))
         <p class="text-center text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-6">{{ $data['title'] }}</p>
     @endif
-    <div style="display:grid;grid-template-columns:repeat({{ $cols }},1fr);gap:2rem;align-items:center;justify-items:center">
+    @php $lgId = 'layup-lg-' . md5(uniqid('lg', true)); @endphp
+    <style>
+        #{{ $lgId }} { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; align-items:center; justify-items:center; }
+        @media(min-width:640px) { #{{ $lgId }} { grid-template-columns:repeat(3,1fr); gap:1.5rem; } }
+        @media(min-width:1024px) { #{{ $lgId }} { grid-template-columns:repeat({{ $cols }},1fr); gap:2rem; } }
+    </style>
+    <div id="{{ $lgId }}">
         @foreach(($data['logos'] ?? []) as $logo)
             @php
                 $logoSrc = is_array($logo) ? ($logo['src'] ?? $logo['image'] ?? '') : $logo;

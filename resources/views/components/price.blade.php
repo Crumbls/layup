@@ -1,10 +1,10 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $sizeClass = match($data['size'] ?? 'lg') {
-        'sm' => 'text-2xl',
-        'md' => 'text-3xl',
-        'xl' => 'text-6xl',
-        default => 'text-4xl',
+        'sm' => 'text-xl md:text-2xl',
+        'md' => 'text-2xl md:text-3xl',
+        'xl' => 'text-4xl md:text-6xl',
+        default => 'text-2xl md:text-4xl',
     };
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

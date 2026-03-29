@@ -8,7 +8,7 @@
     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }} @if($style === 'border-left')border-left: 4px solid {{ $color }}; padding-left: 1.5rem;@endif"
     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
-    <p class="@if($style === 'large') text-2xl @else text-lg @endif italic text-gray-700 dark:text-gray-200 mb-2">
+    <p class="@if($style === 'large') text-lg md:text-2xl @else text-lg @endif italic text-gray-700 dark:text-gray-200 mb-2">
         @if($style === 'large')<span style="color: {{ $color }}; font-size: 2em; line-height: 0; vertical-align: -0.3em">❝</span> @endif{{ $data['quote'] ?? '' }}
     </p>
     @if(!empty($data['attribution']) || !empty($data['source']))

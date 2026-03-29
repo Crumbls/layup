@@ -1,19 +1,26 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $cols = $data['columns'] ?? 3;
+    $tgId = 'layup-tg-' . md5(uniqid('tg', true));
 @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+<style>
+    #{{ $tgId }} { display:grid; grid-template-columns:1fr; gap:1rem; }
+    @media(min-width:640px) { #{{ $tgId }} { grid-template-columns:repeat(2,1fr); gap:1.5rem; } }
+    @media(min-width:1024px) { #{{ $tgId }} { grid-template-columns:repeat({{ $cols }},1fr); gap:2rem; } }
+</style>
+<div id="{{ $tgId }}"
+     @if(!empty($data['id'])) data-block-id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="display:grid;grid-template-columns:repeat({{ $cols }},1fr);gap:2rem; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     @foreach(($data['members'] ?? []) as $member)
         <div class="text-center">
             @php $photoSrc = $member['photo'] ?? $member['image'] ?? ''; @endphp
             @if(!empty($photoSrc))
-                <img src="{{ str_starts_with($photoSrc, 'http') ? $photoSrc : asset('storage/' . $photoSrc) }}" alt="{{ $member['name'] ?? '' }}" class="w-24 h-24 rounded-full object-cover mx-auto mb-3" />
+                <img src="{{ str_starts_with($photoSrc, 'http') ? $photoSrc : asset('storage/' . $photoSrc) }}" alt="{{ $member['name'] ?? '' }}" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover mx-auto mb-3" />
             @else
-                <div class="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 mx-auto mb-3 flex items-center justify-center text-gray-400 dark:text-gray-500 text-2xl">👤</div>
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200 dark:bg-gray-700 mx-auto mb-3 flex items-center justify-center text-gray-400 dark:text-gray-500 text-2xl">👤</div>
             @endif
             @if(!empty($member['name']))
                 <div class="font-semibold">{{ $member['name'] }}</div>

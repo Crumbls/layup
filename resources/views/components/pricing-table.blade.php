@@ -1,4 +1,4 @@
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="border rounded-xl p-6 {{ !empty($data['featured']) ? 'layup-border-primary ring-2 ring-[var(--layup-primary)] relative' : 'border-gray-200 dark:border-gray-700' }} {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="border rounded-xl p-4 md:p-6{{ !empty($data['featured']) ? 'layup-border-primary ring-2 ring-[var(--layup-primary)] relative' : 'border-gray-200 dark:border-gray-700' }} {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @if(!empty($data['featured']))
         <div class="absolute -top-3 left-1/2 -translate-x-1/2 layup-bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">{{ $data['badge_text'] ?? __('layup::frontend.pricing_table.popular') }}</div>
     @endif
@@ -11,7 +11,7 @@
     @if(!empty($data['price']))
         <div class="text-center mb-6">
             <span class="text-sm text-gray-500 dark:text-gray-400 align-top">{{ $data['currency'] ?? '$' }}</span>
-            <span class="text-4xl font-bold">{{ $data['price'] }}</span>
+            <span class="text-2xl md:text-4xl font-bold">{{ $data['price'] }}</span>
             @if(!empty($data['period']))
                 <span class="text-sm text-gray-500 dark:text-gray-400">/{{ $data['period_custom'] ?? $data['period'] }}</span>
             @endif

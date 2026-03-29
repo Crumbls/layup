@@ -2,10 +2,17 @@
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $cols = $data['columns'] ?? 4;
     $style = $data['style'] ?? 'plain';
+    $metId = 'layup-met-' . md5(uniqid('met', true));
 @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+<style>
+    #{{ $metId }} { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+    @media(min-width:640px) { #{{ $metId }} { grid-template-columns:repeat(2,1fr); gap:1.5rem; } }
+    @media(min-width:1024px) { #{{ $metId }} { grid-template-columns:repeat({{ $cols }},1fr); } }
+</style>
+<div id="{{ $metId }}"
+     @if(!empty($data['id'])) data-block-id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="display:grid;grid-template-columns:repeat({{ $cols }},1fr);gap:1.5rem; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     @foreach(($data['metrics'] ?? []) as $m)

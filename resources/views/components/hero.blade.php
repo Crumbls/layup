@@ -11,7 +11,7 @@
     };
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
-     class="relative flex flex-col justify-center {{ $alignClass }} px-8 py-16 overflow-hidden {{ $vis }} {{ $data['class'] ?? '' }}"
+     class="relative flex flex-col justify-center {{ $alignClass }} px-4 py-8 md:px-8 md:py-16 overflow-hidden {{ $vis }} {{ $data['class'] ?? '' }}"
      style="min-height: {{ $height }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
@@ -32,12 +32,12 @@
             <div class="prose mb-6 {{ !empty($data['background_image']) ? 'text-white/90' : '' }}">{!! $data['description'] !!}</div>
         @endif
         @if(!empty($data['primary_button_text']) || !empty($data['secondary_button_text']))
-            <div class="flex gap-4 {{ $align === 'center' ? 'justify-center' : ($align === 'right' ? 'justify-end' : '') }}">
+            <div class="flex flex-col sm:flex-row gap-4 {{ $align === 'center' ? 'justify-center' : ($align === 'right' ? 'justify-end' : '') }}">
                 @if(!empty($data['primary_button_text']))
-                    <a href="{{ $data['primary_button_url'] ?? '#' }}" class="layup-bg-primary text-white font-semibold px-8 py-3 rounded-lg layup-hover-bg-primary transition-colors">{{ $data['primary_button_text'] }}</a>
+                    <a href="{{ $data['primary_button_url'] ?? '#' }}" class="layup-bg-primary text-white font-semibold px-5 py-2.5 md:px-8 md:py-3 rounded-lg layup-hover-bg-primary transition-colors">{{ $data['primary_button_text'] }}</a>
                 @endif
                 @if(!empty($data['secondary_button_text']))
-                    <a href="{{ $data['secondary_button_url'] ?? '#' }}" class="border-2 border-current font-semibold px-8 py-3 rounded-lg hover:opacity-80 transition-opacity {{ !empty($data['background_image']) ? 'text-white' : '' }}">{{ $data['secondary_button_text'] }}</a>
+                    <a href="{{ $data['secondary_button_url'] ?? '#' }}" class="border-2 border-current font-semibold px-5 py-2.5 md:px-8 md:py-3 rounded-lg hover:opacity-80 transition-opacity {{ !empty($data['background_image']) ? 'text-white' : '' }}">{{ $data['secondary_button_text'] }}</a>
                 @endif
             </div>
         @endif

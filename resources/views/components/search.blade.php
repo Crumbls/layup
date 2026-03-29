@@ -8,14 +8,14 @@
 @endphp
 <form action="{{ $data['action'] ?? '/search' }}" method="GET"
       @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
-      class="flex {{ $vis }} {{ $data['class'] ?? '' }}"
+      class="flex flex-col sm:flex-row {{ $vis }} {{ $data['class'] ?? '' }}"
       style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
       {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     <input type="search" name="{{ $data['param'] ?? 'q' }}"
            placeholder="{{ $data['placeholder'] ?? __('layup::frontend.search.placeholder') }}"
-           class="flex-1 border border-gray-300 dark:border-gray-600 rounded-l-lg {{ $sizeClass }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white" />
-    <button type="submit" class="layup-bg-primary text-white rounded-r-lg {{ $sizeClass }} layup-hover-bg-primary transition-colors px-4">
+           class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-r-none sm:rounded-l-lg {{ $sizeClass }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white" />
+    <button type="submit" class="layup-bg-primary text-white rounded-lg sm:rounded-l-none sm:rounded-r-lg {{ $sizeClass }} layup-hover-bg-primary transition-colors px-4">
         🔍
     </button>
 </form>

@@ -3,10 +3,17 @@
     $cols = $data['columns'] ?? 3;
     $gap = $data['gap'] ?? '0.5rem';
     $rounded = !empty($data['rounded']);
+    $masId = 'layup-mas-' . md5(uniqid('mas', true));
 @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+<style>
+    #{{ $masId }} { columns:1; column-gap:{{ $gap }}; }
+    @media(min-width:640px) { #{{ $masId }} { columns:2; } }
+    @media(min-width:1024px) { #{{ $masId }} { columns:{{ $cols }}; } }
+</style>
+<div id="{{ $masId }}"
+     @if(!empty($data['id'])) data-block-id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="columns: {{ $cols }}; column-gap: {{ $gap }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     @foreach(($data['images'] ?? []) as $image)
