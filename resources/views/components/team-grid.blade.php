@@ -23,7 +23,7 @@
             @endif
             @if(!empty($member['linkedin']) || !empty($member['twitter']))
                 <div class="flex justify-center gap-2 mt-2 text-sm text-gray-400 dark:text-gray-500">
-                    @if(!empty($member['linkedin']))<a href="{{ $member['linkedin'] }}" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400">{{ __('layup::frontend.team_grid.linkedin') }}</a>@endif
+                    @if(!empty($member['linkedin']))<a href="{{ $member['linkedin'] }}" target="_blank" class="layup-hover-text-primary">{{ __('layup::frontend.team_grid.linkedin') }}</a>@endif
                     @if(!empty($member['twitter']))<a href="{{ $member['twitter'] }}" target="_blank" class="hover:text-blue-400 dark:hover:text-blue-300">{{ __('layup::frontend.team_grid.twitter') }}</a>@endif
                 </div>
             @endif

@@ -32,13 +32,13 @@
                             <time class="text-xs text-gray-400 dark:text-gray-500">{{ $post->published_at->format('M j, Y') }}</time>
                         @endif
                         <h3 class="font-semibold mt-1">
-                            @if($post->slug)<a href="{{ url($post->slug) }}" class="hover:text-blue-600 dark:hover:text-blue-400">{{ $post->title }}</a>@else{{ $post->title }}@endif
+                            @if($post->slug)<a href="{{ url($post->slug) }}" class="layup-hover-text-primary">{{ $post->title }}</a>@else{{ $post->title }}@endif
                         </h3>
                         @if(!empty($data['show_excerpt']) && ($post->excerpt ?? null))
                             <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">{{ \Illuminate\Support\Str::limit($post->excerpt, 120) }}</p>
                         @endif
                         @if(!empty($data['read_more_text']) && $post->slug)
-                            <a href="{{ url($post->slug) }}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">{{ $data['read_more_text'] }}</a>
+                            <a href="{{ url($post->slug) }}" class="text-sm layup-text-primary hover:underline mt-2 inline-block">{{ $data['read_more_text'] }}</a>
                         @endif
                     </div>
                 </article>

@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $layout = $data['layout'] ?? 'inline';
-    $btnColor = $data['button_color'] ?? '#3b82f6';
+    $btnColor = $data['button_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-center {{ $vis }} {{ $data['class'] ?? '' }}"
@@ -21,7 +21,7 @@
               @submit.prevent="fetch($el.action, { method: 'POST', body: new FormData($el) }).then(() => submitted = true).catch(() => submitted = true)">
             <input type="email" name="email" required
                    placeholder="{{ $data['placeholder'] ?? __('layup::frontend.newsletter.email_placeholder') }}"
-                   class="{{ $layout === 'inline' ? 'flex-1' : 'w-full' }} border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 outline-none" />
+                   class="{{ $layout === 'inline' ? 'flex-1' : 'w-full' }} border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[var(--layup-primary)] focus:border-[var(--layup-primary)] outline-none" />
             <button type="submit"
                     class="text-white font-medium px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity {{ $layout === 'stacked' ? 'w-full' : '' }}"
                     style="background-color: {{ $btnColor }}">

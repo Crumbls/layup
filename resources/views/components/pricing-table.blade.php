@@ -1,6 +1,6 @@
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="border rounded-xl p-6 {{ !empty($data['featured']) ? 'border-blue-500 ring-2 ring-blue-500 relative' : 'border-gray-200 dark:border-gray-700' }} {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="border rounded-xl p-6 {{ !empty($data['featured']) ? 'layup-border-primary ring-2 ring-[var(--layup-primary)] relative' : 'border-gray-200 dark:border-gray-700' }} {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @if(!empty($data['featured']))
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">{{ $data['badge_text'] ?? __('layup::frontend.pricing_table.popular') }}</div>
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 layup-bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">{{ $data['badge_text'] ?? __('layup::frontend.pricing_table.popular') }}</div>
     @endif
     @if(!empty($data['title']))
         <h3 class="text-lg font-bold text-center mb-1">{{ $data['title'] }}</h3>
@@ -34,7 +34,7 @@
         </ul>
     @endif
     @if(!empty($data['button_text']))
-        <a href="{{ $data['button_url'] ?? '#' }}" class="block text-center w-full py-2.5 rounded font-medium transition-colors {{ !empty($data['featured']) ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
+        <a href="{{ $data['button_url'] ?? '#' }}" class="block text-center w-full py-2.5 rounded font-medium transition-colors {{ !empty($data['featured']) ? 'layup-bg-primary text-white layup-hover-bg-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700' }}">
             {{ $data['button_text'] }}
         </a>
     @endif

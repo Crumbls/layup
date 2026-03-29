@@ -16,7 +16,7 @@
     <div>
         @if(!empty($data['title']))
             @if(!empty($data['link_url']))
-                <a href="{{ $data['link_url'] }}" class="font-bold text-lg hover:text-blue-600 dark:hover:text-blue-400">{{ $data['title'] }}</a>
+                <a href="{{ $data['link_url'] }}" class="font-bold text-lg layup-hover-text-primary">{{ $data['title'] }}</a>
             @else
                 <h3 class="font-bold text-lg">{{ $data['title'] }}</h3>
             @endif

@@ -20,7 +20,7 @@
                         <div class="prose dark:prose-invert mb-4">{!! $slide['content'] !!}</div>
                     @endif
                     @if(!empty($slide['button_text']))
-                        <a href="{{ $slide['button_url'] ?? '#' }}" class="inline-block bg-blue-600 text-white px-5 py-2.5 rounded font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">{{ $slide['button_text'] }}</a>
+                        <a href="{{ $slide['button_url'] ?? '#' }}" class="inline-block layup-bg-primary text-white px-5 py-2.5 rounded font-medium layup-hover-bg-primary transition-colors">{{ $slide['button_text'] }}</a>
                     @endif
                 </div>
             </div>
@@ -37,7 +37,7 @@
     @if(($data['dots'] ?? true) && count($data['slides'] ?? []) > 1)
         <div class="flex justify-center gap-1.5 mt-3">
             @foreach(($data['slides'] ?? []) as $index => $slide)
-                <button @click="goTo({{ $index }})" class="w-2 h-2 rounded-full transition-colors" :class="isActive({{ $index }}) ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'"></button>
+                <button @click="goTo({{ $index }})" class="w-2 h-2 rounded-full transition-colors" :class="isActive({{ $index }}) ? 'layup-bg-primary' : 'bg-gray-300 dark:bg-gray-600'"></button>
             @endforeach
         </div>
     @endif

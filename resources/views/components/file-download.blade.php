@@ -11,6 +11,6 @@
         @if(!empty($data['file_size']))<div class="text-xs text-gray-400 dark:text-gray-500 mt-1">{{ $data['file_size'] }}</div>@endif
     </div>
     @if(!empty($data['file']))
-        <a href="{{ asset('storage/' . $data['file']) }}" download class="bg-blue-600 dark:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">{{ $data['button_text'] ?? __('layup::frontend.file_download.download') }}</a>
+        <a href="{{ asset('storage/' . $data['file']) }}" download class="layup-bg-primary text-white text-sm font-medium px-4 py-2 rounded-lg layup-hover-bg-primary transition-colors">{{ $data['button_text'] ?? __('layup::frontend.file_download.download') }}</a>
     @endif
 </div>

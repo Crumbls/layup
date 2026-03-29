@@ -15,6 +15,7 @@ use Crumbls\Layup\Console\Commands\ListWidgetsCommand;
 use Crumbls\Layup\Console\Commands\MakeControllerCommand;
 use Crumbls\Layup\Console\Commands\MakeWidgetCommand;
 use Crumbls\Layup\Console\Commands\SearchCommand;
+use Crumbls\Layup\Support\LayupTheme;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Crumbls\Layup\View\Components\LayupWidgetComponent;
 use Filament\Support\Assets\Css;
@@ -29,7 +30,8 @@ class LayupServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/layup.php', 'layup');
 
-        $this->app->singleton(WidgetRegistry::class, fn (): \Crumbls\Layup\Support\WidgetRegistry => new WidgetRegistry);
+        $this->app->singleton(WidgetRegistry::class, fn (): WidgetRegistry => new WidgetRegistry);
+        $this->app->singleton(LayupTheme::class, fn (): LayupTheme => new LayupTheme);
     }
 
     public function boot(): void
@@ -94,7 +96,8 @@ class LayupServiceProvider extends ServiceProvider
 
         Blade::component('layup-widget', LayupWidgetComponent::class);
 
-        Blade::directive('layupScripts', fn (): string => "<?php if(config('layup.frontend.include_scripts', true)): ?>"
+        Blade::directive('layupScripts', fn (): string => "<?php echo '<style>' . app(\Crumbls\Layup\Support\LayupTheme::class)->toCss() . '</style>'; ?>"
+            . "<?php if(config('layup.frontend.include_scripts', true)): ?>"
             . '<script>' . file_get_contents(__DIR__ . '/../resources/js/layup.js') . '</script>'
             . '<?php endif; ?>');
 

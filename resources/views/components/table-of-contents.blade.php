@@ -30,7 +30,7 @@
     <{{ $numbered ? 'ol' : 'ul' }} x-show="open" {{ $collapsible ? 'x-collapse' : '' }} class="{{ $numbered ? 'list-decimal' : 'list-disc' }} pl-5 space-y-1 text-sm">
         <template x-for="item in items" :key="item.id">
             <li :class="item.level === 'h3' ? 'ml-4' : (item.level === 'h4' ? 'ml-8' : '')">
-                <a :href="'#' + item.id" x-text="item.text" class="text-blue-600 dark:text-blue-400 hover:underline"></a>
+                <a :href="'#' + item.id" x-text="item.text" class="layup-text-primary hover:underline"></a>
             </li>
         </template>
     </{{ $numbered ? 'ol' : 'ul' }}>

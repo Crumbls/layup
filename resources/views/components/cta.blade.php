@@ -10,9 +10,9 @@
     @if(!empty($data['button_text']))
         @php
             $btnClass = match($data['button_style'] ?? 'primary') {
-                'secondary' => 'bg-gray-600 dark:bg-gray-700 text-white hover:bg-gray-700 dark:hover:bg-gray-600',
+                'secondary' => 'layup-bg-secondary text-white layup-hover-bg-secondary',
                 'outline' => 'border-2 border-current hover:bg-white/10 dark:hover:bg-black/10',
-                default => 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-600',
+                default => 'layup-bg-primary text-white layup-hover-bg-primary',
             };
         @endphp
         <a href="{{ $data['button_url'] ?? '#' }}" class="inline-block font-medium px-6 py-3 rounded transition-colors {{ $btnClass }}" @if(!empty($data['new_tab'])) target="_blank" rel="noopener noreferrer" @endif>

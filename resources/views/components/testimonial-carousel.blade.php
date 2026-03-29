@@ -30,7 +30,7 @@
     @if(count($testimonials) > 1)
         <div class="flex justify-center gap-2 mt-4">
             @foreach($testimonials as $i => $t)
-                <button @click="goTo({{ $i }})" :class="isActive({{ $i }}) ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'" class="w-2.5 h-2.5 rounded-full transition-colors"></button>
+                <button @click="goTo({{ $i }})" :class="isActive({{ $i }}) ? 'layup-bg-primary' : 'bg-gray-300 dark:bg-gray-600'" class="w-2.5 h-2.5 rounded-full transition-colors"></button>
             @endforeach
         </div>
     @endif

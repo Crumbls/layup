@@ -1,5 +1,5 @@
 @php
-    $bg = $data['bg_color'] ?? '#3b82f6';
+    $bg = $data['bg_color'] ?? 'var(--layup-primary)';
     $tc = $data['text_color_btn'] ?? '#ffffff';
     $pos = ($data['position'] ?? 'right') === 'left' ? 'left: 1.5rem' : 'right: 1.5rem';
     $sizeClass = match($data['size'] ?? 'md') {

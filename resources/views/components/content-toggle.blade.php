@@ -6,5 +6,5 @@
      x-data="{ open: {{ !empty($data['start_open']) ? 'true' : 'false' }} }"
 >
     <div x-show="open" x-collapse class="prose">{!! $data['content'] ?? '' !!}</div>
-    <button @click="open = !open" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium mt-2" x-text="open ? '{{ $data['hide_text'] ?? __('layup::frontend.content_toggle.show_less') }}' : '{{ $data['show_text'] ?? __('layup::frontend.content_toggle.show_more') }}'"></button>
+    <button @click="open = !open" class="layup-text-primary hover:underline text-sm font-medium mt-2" x-text="open ? '{{ $data['hide_text'] ?? __('layup::frontend.content_toggle.show_less') }}' : '{{ $data['show_text'] ?? __('layup::frontend.content_toggle.show_more') }}'"></button>
 </div>
