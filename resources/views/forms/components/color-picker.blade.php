@@ -2,70 +2,72 @@
     $swatches = $getSwatches();
     $allowCustom = $getAllowCustom();
     $statePath = $getStatePath();
-    $contrastColors = [];
-    foreach ($swatches as $name => $hex) {
-        $contrastColors[$name] = $field->getContrastColor($hex);
-    }
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     <div
         x-data="{
             state: $wire.$entangle('{{ $statePath }}'),
-            pick(hex) {
+            customColor: null,
+            presets: @js($swatches),
+            init() {
+                if (this.state && !this.matchesPreset(this.state)) {
+                    this.customColor = this.state
+                }
+            },
+            matchesPreset(val) {
+                if (!val) return false
+                let v = val.toLowerCase()
+                return Object.values(this.presets).some(h => h.toLowerCase() === v)
+            },
+            pickPreset(hex) {
                 this.state = this.state === hex ? null : hex
             },
-            isPreset() {
-                if (!this.state) return false
-                return Object.values(@js($swatches)).some(
-                    h => h.toLowerCase() === this.state.toLowerCase()
-                )
+            onCustomInput(e) {
+                this.customColor = e.target.value
+                this.state = e.target.value
             }
         }"
-        class="flex flex-wrap items-center gap-1.5"
+        style="display: flex; flex-wrap: wrap; gap: 6px;"
     >
         @foreach($swatches as $name => $hex)
             <button
                 type="button"
-                x-on:click="pick('{{ $hex }}')"
-                class="relative w-7 h-7 rounded-full border-2 transition-all duration-100 focus:outline-none"
-                x-bind:class="state && state.toLowerCase() === '{{ strtolower($hex) }}' ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-110'"
-                style="background-color: {{ $hex }}"
-                title="{{ ucfirst($name) }}"
+                x-on:click="pickPreset('{{ $hex }}')"
+                x-bind:style="state && state.toLowerCase() === '{{ strtolower($hex) }}'
+                    ? 'display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 9999px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 150ms; background: color-mix(in oklab, {{ $hex }} 12%, transparent); color: var(--gray-950); box-shadow: 0 0 0 2px {{ $hex }};'
+                    : 'display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 9999px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 150ms; background: var(--gray-100); color: var(--gray-700);'"
             >
-                <span
-                    x-show="state && state.toLowerCase() === '{{ strtolower($hex) }}'"
-                    x-cloak
-                    class="absolute inset-0 flex items-center justify-center"
-                >
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" style="color: {{ $contrastColors[$name] }}">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </span>
+                <span style="display: block; width: 20px; height: 20px; border-radius: 50%; background-color: {{ $hex }}; flex-shrink: 0;"></span>
+                {{ ucfirst($name) }}
             </button>
         @endforeach
 
         @if($allowCustom)
             <label
-                class="relative w-7 h-7 rounded-full border-2 transition-all duration-100 cursor-pointer overflow-hidden"
-                x-bind:class="state && !isPreset() ? 'border-gray-900 dark:border-white scale-110' : 'border-transparent hover:scale-110'"
-                title="Custom"
+                x-bind:style="customColor && state === customColor
+                    ? 'display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 9999px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 150ms; background: color-mix(in oklab, ' + customColor + ' 12%, transparent); color: var(--gray-950); box-shadow: 0 0 0 2px ' + customColor + ';'
+                    : 'display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 9999px; border: none; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 150ms; background: var(--gray-100); color: var(--gray-700);'"
             >
-                <span
-                    x-show="!state || isPreset()"
-                    class="absolute inset-0 rounded-full"
-                    style="background: conic-gradient(#ef4444, #f59e0b, #22c55e, #3b82f6, #8b5cf6, #ef4444)"
-                ></span>
-                <span
-                    x-show="state && !isPreset()"
-                    x-cloak
-                    class="absolute inset-0 rounded-full"
-                    x-bind:style="'background-color: ' + state"
-                ></span>
+                <span style="position: relative; display: block; width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; overflow: hidden;">
+                    <span
+                        x-show="!(customColor && state === customColor)"
+                        style="position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(#ef4444, #f59e0b, #22c55e, #3b82f6, #8b5cf6, #ef4444);"
+                    ></span>
+                    <span
+                        x-show="customColor && state === customColor"
+                        x-cloak
+                        style="position: absolute; inset: 0; border-radius: 50%;"
+                        x-bind:style="'position: absolute; inset: 0; border-radius: 50%; background-color: ' + customColor"
+                    ></span>
+                </span>
+                <span x-show="!(customColor && state === customColor)">Custom</span>
+                <span x-show="customColor && state === customColor" x-cloak x-text="customColor" style="font-family: ui-monospace, monospace;"></span>
                 <input
                     type="color"
-                    x-model="state"
-                    class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    x-bind:value="customColor || '#000000'"
+                    x-on:input="onCustomInput($event)"
+                    style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"
                 />
             </label>
         @endif

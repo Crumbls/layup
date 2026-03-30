@@ -15,6 +15,8 @@ class LayupTheme
         'danger' => '#ef4444',
     ];
 
+    protected array $darkColors = [];
+
     protected array $fonts = [];
 
     protected ?string $borderRadius = null;
@@ -22,6 +24,13 @@ class LayupTheme
     public function colors(array $colors): static
     {
         $this->colors = array_merge($this->colors, $colors);
+
+        return $this;
+    }
+
+    public function darkColors(array $colors): static
+    {
+        $this->darkColors = array_merge($this->darkColors, $colors);
 
         return $this;
     }
@@ -48,6 +57,20 @@ class LayupTheme
     public function getColor(string $name): ?string
     {
         return $this->colors[$name] ?? null;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getDarkColors(): array
+    {
+        $dark = [];
+
+        foreach ($this->colors as $name => $hex) {
+            $dark[$name] = $this->darkColors[$name] ?? $this->lightenForDark($hex);
+        }
+
+        return $dark;
     }
 
     public function getFonts(): array
@@ -82,6 +105,16 @@ class LayupTheme
         $lines[] = '}';
         $lines[] = '';
 
+        $darkColors = $this->getDarkColors();
+        $lines[] = '.dark {';
+
+        foreach ($darkColors as $name => $value) {
+            $lines[] = "    --layup-{$name}: {$value};";
+        }
+
+        $lines[] = '}';
+        $lines[] = '';
+
         foreach ($this->colors as $name => $value) {
             $lines[] = ".layup-bg-{$name} { background-color: var(--layup-{$name}); }";
             $lines[] = ".layup-text-{$name} { color: var(--layup-{$name}); }";
@@ -99,6 +132,83 @@ class LayupTheme
         }
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * Auto-lighten a hex color for dark mode by boosting its HSL lightness.
+     */
+    protected function lightenForDark(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2)) / 255;
+        $g = hexdec(substr($hex, 2, 2)) / 255;
+        $b = hexdec(substr($hex, 4, 2)) / 255;
+
+        $max = max($r, $g, $b);
+        $min = min($r, $g, $b);
+        $l = ($max + $min) / 2;
+
+        if ($max === $min) {
+            $h = $s = 0.0;
+        } else {
+            $d = $max - $min;
+            $s = $l > 0.5 ? $d / (2 - $max - $min) : $d / ($max + $min);
+
+            $h = match ($max) {
+                $r => (($g - $b) / $d + ($g < $b ? 6 : 0)) / 6,
+                $g => (($b - $r) / $d + 2) / 6,
+                default => (($r - $g) / $d + 4) / 6,
+            };
+        }
+
+        $targetL = min(0.85, $l + 0.25);
+
+        return $this->hslToHex($h, $s, $targetL);
+    }
+
+    protected function hslToHex(float $h, float $s, float $l): string
+    {
+        if ($s === 0.0) {
+            $r = $g = $b = $l;
+        } else {
+            $q = $l < 0.5 ? $l * (1 + $s) : $l + $s - $l * $s;
+            $p = 2 * $l - $q;
+            $r = $this->hueToRgb($p, $q, $h + 1 / 3);
+            $g = $this->hueToRgb($p, $q, $h);
+            $b = $this->hueToRgb($p, $q, $h - 1 / 3);
+        }
+
+        return sprintf('#%02x%02x%02x', (int) round($r * 255), (int) round($g * 255), (int) round($b * 255));
+    }
+
+    protected function hueToRgb(float $p, float $q, float $t): float
+    {
+        if ($t < 0) {
+            $t += 1;
+        }
+
+        if ($t > 1) {
+            $t -= 1;
+        }
+
+        if ($t < 1 / 6) {
+            return $p + ($q - $p) * 6 * $t;
+        }
+
+        if ($t < 1 / 2) {
+            return $q;
+        }
+
+        if ($t < 2 / 3) {
+            return $p + ($q - $p) * (2 / 3 - $t) * 6;
+        }
+
+        return $p;
     }
 
     /**

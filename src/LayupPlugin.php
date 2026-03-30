@@ -25,6 +25,9 @@ class LayupPlugin implements Plugin
     /** @var array<string, string> Theme color overrides (name => hex) */
     protected array $themeColors = [];
 
+    /** @var array<string, string> Dark mode color overrides (name => hex) */
+    protected array $themeDarkColors = [];
+
     /** @var array<string, string> Theme font overrides (name => font-family) */
     protected array $themeFonts = [];
 
@@ -95,6 +98,18 @@ class LayupPlugin implements Plugin
     }
 
     /**
+     * Set dark mode color overrides. Colors not specified here are auto-lightened.
+     *
+     * @param  array<string, string>  $colors  e.g. ['primary' => '#fb7185']
+     */
+    public function darkColors(array $colors): static
+    {
+        $this->themeDarkColors = array_merge($this->themeDarkColors, $colors);
+
+        return $this;
+    }
+
+    /**
      * Set theme fonts.
      *
      * @param  array<string, string>  $fonts  e.g. ['heading' => 'Playfair Display, serif', 'body' => 'Inter, sans-serif']
@@ -157,6 +172,10 @@ class LayupPlugin implements Plugin
 
         if ($this->themeFonts !== []) {
             $theme->fonts($this->themeFonts);
+        }
+
+        if ($this->themeDarkColors !== []) {
+            $theme->darkColors($this->themeDarkColors);
         }
 
         if ($this->themeBorderRadius !== null) {
