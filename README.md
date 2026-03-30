@@ -2,6 +2,8 @@
 
 A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style editor with rows, columns, and 95 extensible widgets — all using native Filament form components.
 
+**[Live Sandbox](https://sandbox.crumbls.com)** — try the editor without installing anything.
+
 ![Layup Showcase](layup-showcase.jpg)
 
 ## Features
