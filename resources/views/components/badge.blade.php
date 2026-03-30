@@ -11,7 +11,7 @@
         default => 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100',
     };
     $infoStyle = $variant === 'info'
-        ? 'background-color: color-mix(in oklab, var(--layup-primary) 15%, transparent); color: var(--layup-primary);'
+        ? 'background-color: color-mix(in oklab, var(--layup-primary) 15%, transparent); color: var(--layup-on-surface);'
         : '';
     $sizeClass = match($size) {
         'sm' => 'text-xs px-2 py-0.5',

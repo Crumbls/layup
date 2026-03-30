@@ -8,7 +8,7 @@
         default   => '',
     };
     $infoStyle = $type === 'info' || !in_array($type, ['success', 'warning', 'danger'])
-        ? 'background-color: color-mix(in oklab, var(--layup-primary) 10%, transparent); border-color: var(--layup-primary); color: var(--layup-primary);'
+        ? 'background-color: color-mix(in oklab, var(--layup-primary) 10%, transparent); border-color: var(--layup-primary); color: var(--layup-on-surface);'
         : '';
     $icon = match($type) {
         'success' => '✓',

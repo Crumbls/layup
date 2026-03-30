@@ -9,7 +9,7 @@
         default => '',
     };
     $infoStyle = $v === 'info' || $v === ''
-        ? 'background-color: color-mix(in oklab, var(--layup-primary) 10%, transparent); border-color: color-mix(in oklab, var(--layup-primary) 40%, transparent); color: var(--layup-primary);'
+        ? 'background-color: color-mix(in oklab, var(--layup-primary) 10%, transparent); border-color: color-mix(in oklab, var(--layup-primary) 40%, transparent); color: var(--layup-on-surface);'
         : '';
     $icons = match($v) {
         'tip' => '💚', 'warning' => '⚠️', 'important' => '❗', 'note' => '📝', default => '💡',
