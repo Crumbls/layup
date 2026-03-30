@@ -42,8 +42,7 @@ class SeparatorWidget extends BaseWidget
                     'fade' => __('layup::widgets.separator.fade_gradient'), ])
                 ->default('line'),
             ColorPicker::make('color')
-                ->label(__('layup::widgets.separator.color'))
-                ->default('#d1d5db'),
+                ->label(__('layup::widgets.separator.color')),
             Select::make('width')
                 ->label(__('layup::widgets.separator.width'))
                 ->options(['25%' => __('layup::widgets.separator.25'),
@@ -65,7 +64,7 @@ class SeparatorWidget extends BaseWidget
     {
         return [
             'style' => 'line',
-            'color' => '#d1d5db',
+            'color' => null,
             'width' => '50%',
             'spacing' => '2rem',
         ];

@@ -1,5 +1,5 @@
 @php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="rounded-xl px-4 py-6 md:px-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6 {{ $vis }} {{ $data['class'] ?? '' }}" style="background-color: {{ $data['bg_color'] ?? 'var(--layup-primary)' }}; color: {{ $data['text_color_banner'] ?? '#fff' }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="rounded-xl px-4 py-6 md:px-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6 {{ $vis }} {{ $data['class'] ?? '' }}" style="background-color: {{ $data['bg_color'] ?? 'var(--layup-primary)' }}; color: {{ $data['text_color_banner'] ?? 'var(--layup-on-primary)' }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     <div>
         <div class="text-lg md:text-2xl font-bold">{{ $data['heading'] ?? '' }}</div>
         @if(!empty($data['subtitle']))<div class="opacity-80 mt-1">{{ $data['subtitle'] }}</div>@endif

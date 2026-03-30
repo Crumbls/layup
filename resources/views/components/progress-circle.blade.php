@@ -17,7 +17,7 @@
 >
     <svg width="{{ $size }}" height="{{ $size }}" class="inline-block">
         <circle cx="{{ $size/2 }}" cy="{{ $size/2 }}" r="{{ $radius }}"
-                fill="none" stroke="#e5e7eb" stroke-width="{{ $stroke }}" />
+                fill="none" stroke="var(--layup-border)" stroke-width="{{ $stroke }}" />
         <circle cx="{{ $size/2 }}" cy="{{ $size/2 }}" r="{{ $radius }}"
                 fill="none" stroke="{{ $color }}" stroke-width="{{ $stroke }}"
                 stroke-linecap="round"

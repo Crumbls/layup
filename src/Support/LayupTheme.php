@@ -94,6 +94,16 @@ class LayupTheme
             $lines[] = "    --layup-{$name}: {$value};";
         }
 
+        foreach ($this->colors as $name => $value) {
+            $contrast = $this->contrastColor($value);
+            $lines[] = "    --layup-on-{$name}: {$contrast};";
+        }
+
+        $lines[] = '    --layup-surface: #ffffff;';
+        $lines[] = '    --layup-on-surface: #111827;';
+        $lines[] = '    --layup-border: #e5e7eb;';
+        $lines[] = '    --layup-muted: #6b7280;';
+
         if ($this->borderRadius !== null) {
             $lines[] = "    --layup-radius: {$this->borderRadius};";
         }
@@ -111,6 +121,16 @@ class LayupTheme
         foreach ($darkColors as $name => $value) {
             $lines[] = "    --layup-{$name}: {$value};";
         }
+
+        foreach ($darkColors as $name => $value) {
+            $contrast = $this->contrastColor($value);
+            $lines[] = "    --layup-on-{$name}: {$contrast};";
+        }
+
+        $lines[] = '    --layup-surface: #1f2937;';
+        $lines[] = '    --layup-on-surface: #f9fafb;';
+        $lines[] = '    --layup-border: #374151;';
+        $lines[] = '    --layup-muted: #9ca3af;';
 
         $lines[] = '}';
         $lines[] = '';
@@ -132,6 +152,30 @@ class LayupTheme
         }
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * Return black or white depending on which contrasts better against the given color.
+     */
+    protected function contrastColor(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        if (! preg_match('/^[0-9a-fA-F]{6}$/', $hex)) {
+            return '#ffffff';
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        $luminance = ($r * 299 + $g * 587 + $b * 114) / 1000;
+
+        return $luminance > 128 ? '#000000' : '#ffffff';
     }
 
     /**

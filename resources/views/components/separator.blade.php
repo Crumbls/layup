@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $style = $data['style'] ?? 'line';
-    $color = $data['color'] ?? '#d1d5db';
+    $color = $data['color'] ?? 'var(--layup-border)';
     $width = $data['width'] ?? '50%';
     $spacing = $data['spacing'] ?? '2rem';
 @endphp

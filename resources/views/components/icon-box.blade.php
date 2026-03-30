@@ -2,7 +2,7 @@
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $align = $data['alignment'] ?? 'top';
     $isTop = $align === 'top';
-    $iconBg = $data['icon_bg'] ?? '#eff6ff';
+    $iconBg = $data['icon_bg'] ?? 'color-mix(in oklab, var(--layup-primary) 10%, var(--layup-surface))';
     $iconColor = $data['icon_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

@@ -2,7 +2,7 @@
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $rating = (float)($data['rating'] ?? 5);
     $max = (int)($data['max'] ?? 5);
-    $color = $data['color'] ?? '#facc15';
+    $color = $data['color'] ?? 'var(--layup-warning)';
     $sizeClass = match($data['size'] ?? 'md') {
         'sm' => 'text-lg',
         'lg' => 'text-3xl',

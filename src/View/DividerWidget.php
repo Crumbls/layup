@@ -47,8 +47,7 @@ class DividerWidget extends BaseWidget
                     '4px' => __('layup::widgets.divider.heavy_4px'), ])
                 ->default('1px'),
             ColorPicker::make('color')
-                ->label(__('layup::widgets.divider.color'))
-                ->default('#e5e7eb'),
+                ->label(__('layup::widgets.divider.color')),
             Select::make('width')
                 ->label(__('layup::widgets.divider.width'))
                 ->options(['100%' => __('layup::widgets.divider.full'),
@@ -71,7 +70,7 @@ class DividerWidget extends BaseWidget
         return [
             'style' => 'solid',
             'weight' => '1px',
-            'color' => '#e5e7eb',
+            'color' => null,
             'width' => '100%',
             'spacing' => '1rem',
         ];

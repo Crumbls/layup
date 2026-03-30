@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $bg = $data['bg_color'] ?? 'var(--layup-primary)';
-    $tc = $data['text_color_banner'] ?? '#ffffff';
+    $tc = $data['text_color_banner'] ?? 'var(--layup-on-primary)';
     $height = $data['height'] ?? 'auto';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

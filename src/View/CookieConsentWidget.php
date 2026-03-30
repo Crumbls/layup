@@ -52,8 +52,7 @@ class CookieConsentWidget extends BaseWidget
                 ->label(__('layup::widgets.cookie-consent.policy_link_text'))
                 ->default('Privacy Policy'),
             ColorPicker::make('bg_color')
-                ->label(__('layup::widgets.cookie-consent.background_color'))
-                ->default('#1f2937'),
+                ->label(__('layup::widgets.cookie-consent.background_color')),
             Select::make('position')
                 ->label(__('layup::widgets.cookie-consent.position'))
                 ->options(['bottom' => __('layup::widgets.cookie-consent.bottom'),
@@ -70,7 +69,7 @@ class CookieConsentWidget extends BaseWidget
             'decline_text' => 'Decline',
             'policy_url' => '',
             'policy_text' => 'Privacy Policy',
-            'bg_color' => '#1f2937',
+            'bg_color' => null,
             'position' => 'bottom',
         ];
     }

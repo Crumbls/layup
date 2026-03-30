@@ -48,8 +48,7 @@ class IconBoxWidget extends BaseWidget
                 ->url()
                 ->nullable(),
             ColorPicker::make('icon_bg')
-                ->label(__('layup::widgets.icon-box.icon_background_color'))
-                ->default('#eff6ff'),
+                ->label(__('layup::widgets.icon-box.icon_background_color')),
             ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.icon-box.icon_color'))
                 ->default(null),
@@ -67,7 +66,7 @@ class IconBoxWidget extends BaseWidget
             'title' => '',
             'description' => '',
             'link_url' => '',
-            'icon_bg' => '#eff6ff',
+            'icon_bg' => null,
             'icon_color' => null,
             'alignment' => 'top',
         ];

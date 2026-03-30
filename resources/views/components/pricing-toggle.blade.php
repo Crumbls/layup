@@ -12,7 +12,7 @@
     {{-- Toggle --}}
     <div class="flex items-center justify-center gap-3 mb-8">
         <span class="text-sm font-medium" :class="!annual ? 'opacity-100' : 'opacity-50'">{{ $data['monthly_label'] ?? __('layup::frontend.pricing_toggle.monthly') }}</span>
-        <button @click="annual = !annual" class="relative w-14 h-7 rounded-full transition-colors" :style="annual ? 'background-color: {{ $color }}' : 'background-color: #d1d5db'">
+        <button @click="annual = !annual" class="relative w-14 h-7 rounded-full transition-colors" :style="annual ? 'background-color: {{ $color }}' : 'background-color: var(--layup-border)'">
             <span class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform" :class="annual ? 'translate-x-7' : ''"></span>
         </button>
         <span class="text-sm font-medium" :class="annual ? 'opacity-100' : 'opacity-50'">

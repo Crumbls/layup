@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $bg = $data['bg_color'] ?? 'var(--layup-primary)';
-    $textColor = $data['text_color_bar'] ?? '#ffffff';
+    $textColor = $data['text_color_bar'] ?? 'var(--layup-on-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="py-3 px-4 text-center text-sm {{ $vis }} {{ $data['class'] ?? '' }}"

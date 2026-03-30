@@ -52,8 +52,7 @@ class StarRatingWidget extends BaseWidget
                 ->options(['sm' => __('layup::widgets.star-rating.small'), 'md' => __('layup::widgets.star-rating.medium'), 'lg' => __('layup::widgets.star-rating.large')])
                 ->default('md'),
             ColorPicker::make('color')
-                ->label(__('layup::widgets.star-rating.star_color'))
-                ->default('#facc15'),
+                ->label(__('layup::widgets.star-rating.star_color')),
         ];
     }
 
@@ -64,7 +63,7 @@ class StarRatingWidget extends BaseWidget
             'max' => '5',
             'label' => '',
             'size' => 'md',
-            'color' => '#facc15',
+            'color' => null,
         ];
     }
 
