@@ -33,6 +33,7 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Widget asset declaration** -- declare JS/CSS dependencies per widget
 - **Widget auto-discovery** — scans `App\Layup\Widgets` for custom widgets
 - **Global theme system** — CSS custom properties for colors, fonts, and border radius with Filament panel inheritance
+- **Dark mode theme support** -- automatic color lightening with manual overrides
 - **Configurable model** — swap the Page model per dashboard
 - **`HasLayupContent` trait** -- add Layup rendering to any Eloquent model
 - **`<x-layup-widget>` component** -- render individual widgets in any Blade template
@@ -775,6 +776,41 @@ LayupPlugin::make()
     ->borderRadius('0.75rem')
 ```
 
+### Dark Mode
+
+By default, Layup automatically generates lightened variants of your configured colors for dark mode. No extra configuration is required -- the CSS output includes both a `:root {}` block and a `.dark {}` block, and the lightened variants are applied automatically when the `.dark` class is present on the `<html>` element.
+
+To override specific dark mode colors instead of relying on the auto-lightened variants, use `->darkColors()` on the plugin:
+
+```php
+LayupPlugin::make()
+    ->colors([
+        'primary' => '#e11d48',
+        'secondary' => '#6366f1',
+    ])
+    ->darkColors([
+        'primary' => '#fb7185',
+    ])
+```
+
+In this example, `primary` uses the manually specified value in dark mode while `secondary` falls back to its auto-lightened variant.
+
+The generated CSS output follows this structure:
+
+```css
+:root {
+    --layup-primary: #e11d48;
+    --layup-secondary: #6366f1;
+}
+
+.dark {
+    --layup-primary: #fb7185;      /* manual override */
+    --layup-secondary: #a5b4fc;    /* auto-lightened */
+}
+```
+
+Widgets that reference `var(--layup-primary)` pick up the correct value for light or dark mode automatically with no additional changes needed.
+
 ### Using Theme Variables in Custom Widgets
 
 Reference theme variables in your Blade views:
@@ -798,6 +834,41 @@ The generated utility classes follow the pattern `layup-{property}-{color}`:
 | `layup-hover-text-{name}:hover` | `color: var(--layup-{name})` |
 | `layup-font-{name}` | `font-family: var(--layup-font-{name})` |
 | `layup-rounded` | `border-radius: var(--layup-radius)` |
+
+### ColorPicker Field
+
+Layup provides a `ColorPicker` form field for use in widget schemas. It renders a button group of swatches sourced from the active `LayupTheme`, plus a "Custom" option that opens a native color input.
+
+```php
+use Crumbls\Layup\Forms\Components\ColorPicker;
+
+ColorPicker::make('bg_color')
+    ->label('Background')
+```
+
+The swatches are automatically populated from the configured theme colors, so they stay in sync with your `->colors()` settings without any additional configuration.
+
+**Override swatches**
+
+Pass your own set of labeled color values to replace the auto-sourced theme swatches:
+
+```php
+ColorPicker::make('bg_color')
+    ->label('Background')
+    ->swatches([
+        'Red'  => '#ef4444',
+        'Blue' => '#3b82f6',
+    ])
+```
+
+**Disable the custom color input**
+
+```php
+ColorPicker::make('bg_color')
+    ->allowCustom(false)
+```
+
+All built-in widgets and FieldPacks use `ColorPicker` internally for any color field in their Design tabs, so the field is available by default wherever you build widget schemas.
 
 ## Rendering content from a model field
 
