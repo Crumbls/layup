@@ -13,8 +13,8 @@
        {{ match($data['style'] ?? 'primary') {
            'primary'   => 'layup-bg-primary text-white layup-hover-bg-primary',
            'secondary' => 'layup-bg-secondary text-white layup-hover-bg-secondary',
-           'outline'   => 'border layup-border-primary layup-text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20',
-           'ghost'     => 'layup-text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20',
+           'outline'   => 'border layup-border-primary layup-text-primary hover:bg-gray-100 dark:hover:bg-gray-800',
+           'ghost'     => 'layup-text-primary hover:bg-gray-100 dark:hover:bg-gray-800',
            default     => 'layup-bg-primary text-white layup-hover-bg-primary',
        } }}
        {{ match($data['size'] ?? 'md') {

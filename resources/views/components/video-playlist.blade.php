@@ -21,7 +21,7 @@
         </div>
         <div class="space-y-1">
             @foreach($videos as $i => $video)
-                <button @click="active = {{ $i }}" class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg transition-colors" :class="active === {{ $i }} ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : 'hover:bg-gray-50 dark:hover:bg-gray-800'">
+                <button @click="active = {{ $i }}" class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg transition-colors" :class="active === {{ $i }} ? '' : 'hover:bg-gray-50 dark:hover:bg-gray-800'" :style="active === {{ $i }} ? 'background-color: color-mix(in oklab, var(--layup-primary) 10%, transparent); color: var(--layup-primary);' : ''">
                     <span class="text-sm font-mono text-gray-400 dark:text-gray-500">{{ $i + 1 }}</span>
                     <span class="font-medium">{{ $video['title'] ?? '' }}</span>
                     @if(!empty($video['duration']))<span class="ml-auto text-xs text-gray-400 dark:text-gray-500">{{ $video['duration'] }}</span>@endif

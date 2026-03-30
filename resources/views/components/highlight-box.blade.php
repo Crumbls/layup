@@ -6,15 +6,18 @@
         'warning' => 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-600 text-yellow-800 dark:text-yellow-200',
         'important' => 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-600 text-red-800 dark:text-red-200',
         'note' => 'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200',
-        default => 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-600 text-blue-800 dark:text-blue-200',
+        default => '',
     };
+    $infoStyle = $v === 'info' || $v === ''
+        ? 'background-color: color-mix(in oklab, var(--layup-primary) 10%, transparent); border-color: color-mix(in oklab, var(--layup-primary) 40%, transparent); color: var(--layup-primary);'
+        : '';
     $icons = match($v) {
         'tip' => '💚', 'warning' => '⚠️', 'important' => '❗', 'note' => '📝', default => '💡',
     };
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="border-l-4 rounded-r-lg p-4 {{ $styles }} {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     style="{{ $infoStyle }} {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     <div class="flex gap-2 items-start">

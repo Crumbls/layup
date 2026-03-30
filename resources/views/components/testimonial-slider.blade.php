@@ -44,7 +44,7 @@
         <div class="flex justify-center gap-2 mt-4">
             <button @click="prev()" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-xl">‹</button>
             @foreach($testimonials as $i => $t)
-                <button @click="current = {{ $i }}" class="w-2 h-2 rounded-full transition-colors" :class="current === {{ $i }} ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'"></button>
+                <button @click="current = {{ $i }}" class="w-2 h-2 rounded-full transition-colors" :class="current === {{ $i }} ? '' : 'bg-gray-300 dark:bg-gray-600'" :style="current === {{ $i }} ? 'background-color: var(--layup-primary);' : ''"></button>
             @endforeach
             <button @click="next()" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-xl">›</button>
         </div>

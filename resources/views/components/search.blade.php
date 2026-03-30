@@ -14,7 +14,7 @@
 >
     <input type="search" name="{{ $data['param'] ?? 'q' }}"
            placeholder="{{ $data['placeholder'] ?? __('layup::frontend.search.placeholder') }}"
-           class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-r-none sm:rounded-l-lg {{ $sizeClass }} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white" />
+           class="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg sm:rounded-r-none sm:rounded-l-lg {{ $sizeClass }} focus:outline-none focus:ring-2 focus:ring-[var(--layup-primary)] focus:border-[var(--layup-primary)] dark:bg-gray-800 dark:text-white" />
     <button type="submit" class="layup-bg-primary text-white rounded-lg sm:rounded-l-none sm:rounded-r-lg {{ $sizeClass }} layup-hover-bg-primary transition-colors px-4">
         🔍
     </button>

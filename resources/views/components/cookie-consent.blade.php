@@ -11,7 +11,7 @@
         <p class="text-white text-sm flex-1">
             {{ $data['message'] ?? '' }}
             @if(!empty($data['policy_url']))
-                <a href="{{ $data['policy_url'] }}" class="underline text-blue-300 hover:text-blue-200">{{ $data['policy_text'] ?? __('layup::frontend.cookie_consent.privacy_policy') }}</a>
+                <a href="{{ $data['policy_url'] }}" class="underline" style="color: var(--layup-primary);">{{ $data['policy_text'] ?? __('layup::frontend.cookie_consent.privacy_policy') }}</a>
             @endif
         </p>
         <div class="flex gap-2">
