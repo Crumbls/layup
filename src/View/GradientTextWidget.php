@@ -42,11 +42,9 @@ class GradientTextWidget extends BaseWidget
                 ->options(['h1' => __('layup::widgets.gradient-text.h1'), 'h2' => __('layup::widgets.gradient-text.h2'), 'h3' => __('layup::widgets.gradient-text.h3'), 'h4' => __('layup::widgets.gradient-text.h4'), 'p' => __('layup::widgets.gradient-text.paragraph'), 'span' => __('layup::widgets.gradient-text.span')])
                 ->default('h2'),
             ColorPicker::make('from_color')
-                ->label(__('layup::widgets.gradient-text.from_color'))
-                ->default('#667eea'),
+                ->label(__('layup::widgets.gradient-text.from_color')),
             ColorPicker::make('to_color')
-                ->label(__('layup::widgets.gradient-text.to_color'))
-                ->default('#764ba2'),
+                ->label(__('layup::widgets.gradient-text.to_color')),
             ColorPicker::make('via_color')
                 ->label(__('layup::widgets.gradient-text.via_color_optional')),
             Select::make('direction')
@@ -65,8 +63,8 @@ class GradientTextWidget extends BaseWidget
         return [
             'text' => '',
             'tag' => 'h2',
-            'from_color' => '#667eea',
-            'to_color' => '#764ba2',
+            'from_color' => null,
+            'to_color' => null,
             'via_color' => '',
             'direction' => 'to right',
         ];

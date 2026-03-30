@@ -1,8 +1,8 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $tag = $data['tag'] ?? 'h2';
-    $from = $data['from_color'] ?? '#667eea';
-    $to = $data['to_color'] ?? '#764ba2';
+    $from = $data['from_color'] ?? 'var(--layup-primary)';
+    $to = $data['to_color'] ?? 'var(--layup-accent)';
     $via = $data['via_color'] ?? '';
     $dir = $data['direction'] ?? 'to right';
     $gradient = $via ? "linear-gradient({$dir}, {$from}, {$via}, {$to})" : "linear-gradient({$dir}, {$from}, {$to})";
