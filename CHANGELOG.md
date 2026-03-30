@@ -33,6 +33,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Global theme system with CSS custom properties (`--layup-primary`, `--layup-secondary`, `--layup-accent`, `--layup-success`, `--layup-warning`, `--layup-danger`)
+- Semantic theme variables: `--layup-on-{color}` (auto-contrast), `--layup-surface`, `--layup-on-surface`, `--layup-border`, `--layup-muted` with light/dark variants
+- Dark mode theme support with automatic color lightening and `->darkColors()` manual overrides
+- Custom `ColorPicker` form field with theme-aware swatches and native color picker fallback
+- Theme color configuration via `LayupPlugin::make()->colors()`, `->darkColors()`, `->fonts()`, `->borderRadius()`
+- Filament panel color inheritance (automatic, opt out with `->withoutPanelColors()`)
+- `ThemeResolver` ensures theme is hydrated on frontend routes where Filament panels don't boot
+- 19 new tests for LayupTheme (dark colors, auto-lightening, CSS output) and ColorPicker field
+- Mobile-responsive layouts for all 47 widget blade templates
+- Theme system documentation in README with full API reference
+
+### Changed
+- All 37 widget color fields replaced with new `ColorPicker` component (swatches + custom picker)
+- All hardcoded hex color defaults in widget PHP classes set to `null`; Blade views fall back to CSS variables
+- All hardcoded Tailwind blue, green, red, and yellow classes replaced with theme CSS variable equivalents
+- Alert, highlight-box, badge, changelog variants now derive from `--layup-success`, `--layup-warning`, `--layup-danger`
+- Star ratings, checkmarks, required asterisks, success messages all use theme variables
+- Cookie consent uses `--layup-on-secondary` for contrast-safe text
+- Testimonial border uses inline style for overridability instead of `layup-border-primary` class
+- Gradient text defaults to `--layup-primary` / `--layup-accent` instead of hardcoded purple/blue
+- Grids (feature-grid, gallery, logo-grid, team-grid, metric, post-list, pricing-toggle, masonry, text-columns) collapse to 1-2 columns on mobile via scoped media query style blocks
+- Flex layouts (hero buttons, blurb, step-process, icon-box, search, file-download, cookie-consent) stack vertically on mobile
+- Heading sizes scale down responsively (h1: `text-2xl md:text-4xl`, h2: `text-xl md:text-3xl`, etc.)
+- Padding reduced on mobile across banner, CTA, hero, slider, testimonials, flip-card, image-card, tabs, table cells
+- Hotspot/image-hotspot tooltips capped to viewport width on mobile
+- Lottie widget uses `max-width` + `width: 100%` instead of fixed width
+- `FieldPacks::colorPair()` and `FieldPacks::hoverColors()` now use `ColorPicker` instead of `TextInput`
+
+### Fixed
+- Theme colors not loading on frontend routes (panel boot never fires outside admin)
+- Info callout text unreadable when using primary color as body text (now uses `--layup-on-surface`)
+
 - 75 built-in widgets across Content, Media, Interactive, Layout, and Advanced categories
 - Flex-based 12-column grid with responsive breakpoints (sm/md/lg/xl)
 - Visual span picker for click-to-set column widths per breakpoint
