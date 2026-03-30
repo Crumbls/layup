@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Render slider rich content as unescaped HTML ([4187fbd](https://github.com/Crumbls/layup/commit/4187fbd679d4ae19a556f3df97834cfbad996598))
 * Slider slides now fill parent height with absolute positioning ([7823822](https://github.com/Crumbls/layup/commit/7823822c73928fb889b1364b4941a9ad5b05a10e))
 
-## [1.2.0](https://github.com/Crumbls/layup/compare/v1.1.2...v1.2.0) (2026-03-29)
+## [1.2.1](https://github.com/Crumbls/layup/compare/v1.2.0...v1.2.1) (2026-03-29)
 
 ### Added
 - Global theme system with CSS custom properties (`--layup-primary`, `--layup-secondary`, `--layup-accent`, `--layup-success`, `--layup-warning`, `--layup-danger`)
