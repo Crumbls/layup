@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $color = $data['accent_color'] ?? '#3b82f6';
+    $color = $data['accent_color'] ?? 'var(--layup-primary)';
     $plans = $data['plans'] ?? [];
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

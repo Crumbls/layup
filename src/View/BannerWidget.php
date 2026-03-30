@@ -53,7 +53,7 @@ class BannerWidget extends BaseWidget
                 ->directory('layup/banners'),
             ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.banner.background_color'))
-                ->default('#1e40af'),
+                ->default(null),
             ColorPicker::make('text_color_banner')
                 ->label(__('layup::widgets.banner.text_color'))
                 ->default('#ffffff'),
@@ -72,7 +72,7 @@ class BannerWidget extends BaseWidget
             'cta_text' => '',
             'cta_url' => '',
             'bg_image' => '',
-            'bg_color' => '#1e40af',
+            'bg_color' => null,
             'text_color_banner' => '#ffffff',
             'height' => 'auto',
         ];

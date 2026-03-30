@@ -6,7 +6,7 @@
         'xl' => '1000px',
         default => '600px',
     };
-    $btnBg = $data['trigger_bg_color'] ?? '#3b82f6';
+    $btnBg = $data['trigger_bg_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"

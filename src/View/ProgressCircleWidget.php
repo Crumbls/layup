@@ -45,7 +45,7 @@ class ProgressCircleWidget extends BaseWidget
                 ->nullable(),
             ColorPicker::make('color')
                 ->label(__('layup::widgets.progress-circle.circle_color'))
-                ->default('#3b82f6'),
+                ->default(null),
             TextInput::make('size')
                 ->label(__('layup::widgets.progress-circle.size_px'))
                 ->numeric()
@@ -65,7 +65,7 @@ class ProgressCircleWidget extends BaseWidget
         return [
             'percent' => 75,
             'title' => '',
-            'color' => '#3b82f6',
+            'color' => null,
             'size' => 120,
             'stroke_width' => 8,
             'animate' => true,

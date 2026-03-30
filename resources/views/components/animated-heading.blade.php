@@ -2,7 +2,7 @@
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $tag = $data['tag'] ?? 'h2';
     $effect = $data['effect'] ?? 'highlight';
-    $color = $data['accent_color'] ?? '#3b82f6';
+    $color = $data['accent_color'] ?? 'var(--layup-primary)';
     $decoration = match($effect) {
         'underline' => "border-bottom: 3px solid {$color}; padding-bottom: 2px",
         'circle' => "border: 2px solid {$color}; border-radius: 9999px; padding: 0.1em 0.3em",

@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $color = $data['line_color'] ?? '#3b82f6';
+    $color = $data['line_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="relative {{ $vis }} {{ $data['class'] ?? '' }}"

@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $pinColor = $data['pin_color'] ?? '#ef4444';
+    $pinColor = $data['pin_color'] ?? 'var(--layup-danger)';
 @endphp
 @if(!empty($data['image']))
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

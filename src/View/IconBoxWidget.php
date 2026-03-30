@@ -52,7 +52,7 @@ class IconBoxWidget extends BaseWidget
                 ->default('#eff6ff'),
             ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.icon-box.icon_color'))
-                ->default('#3b82f6'),
+                ->default(null),
             Select::make('alignment')
                 ->label(__('layup::widgets.icon-box.alignment'))
                 ->options(['left' => __('layup::widgets.icon-box.left'), 'center' => __('layup::widgets.icon-box.center'), 'top' => __('layup::widgets.icon-box.top_icon_above')])
@@ -68,7 +68,7 @@ class IconBoxWidget extends BaseWidget
             'description' => '',
             'link_url' => '',
             'icon_bg' => '#eff6ff',
-            'icon_color' => '#3b82f6',
+            'icon_color' => null,
             'alignment' => 'top',
         ];
     }

@@ -15,7 +15,7 @@
                  x-intersect.once="setTimeout(() => width = {{ $skill['percent'] ?? 0 }}, 100)"
             >
                 <div class="h-full rounded-full transition-all duration-1000 ease-out"
-                     :style="'width: ' + width + '%; background-color: {{ $skill['color'] ?? '#3b82f6' }}'"></div>
+                     :style="'width: ' + width + '%; background-color: {{ $skill['color'] ?? 'var(--layup-primary)' }}'"></div>
             </div>
         </div>
     @endforeach

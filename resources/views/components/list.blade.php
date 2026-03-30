@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $style = $data['style'] ?? 'bullet';
-    $color = $data['icon_color'] ?? '#3b82f6';
+    $color = $data['icon_color'] ?? 'var(--layup-primary)';
     $marker = match($style) {
         'check' => '✓',
         'arrow' => '→',

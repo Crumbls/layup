@@ -58,7 +58,7 @@ class ComparisonTableWidget extends BaseWidget
                 ->columnSpanFull(),
             ColorPicker::make('highlight_color')
                 ->label(__('layup::widgets.comparison-table.highlight_color_column_a'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -68,7 +68,7 @@ class ComparisonTableWidget extends BaseWidget
             'column_a' => 'Us',
             'column_b' => 'Them',
             'rows' => [],
-            'highlight_color' => '#3b82f6',
+            'highlight_color' => null,
         ];
     }
 

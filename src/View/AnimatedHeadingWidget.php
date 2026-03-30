@@ -55,7 +55,7 @@ class AnimatedHeadingWidget extends BaseWidget
                 ->default('highlight'),
             ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.animated-heading.accent_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -67,7 +67,7 @@ class AnimatedHeadingWidget extends BaseWidget
             'after_text' => '',
             'tag' => 'h2',
             'effect' => 'highlight',
-            'accent_color' => '#3b82f6',
+            'accent_color' => null,
         ];
     }
 

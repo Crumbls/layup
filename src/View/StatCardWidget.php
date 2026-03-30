@@ -55,7 +55,7 @@ class StatCardWidget extends BaseWidget
                 ->nullable(),
             ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.stat-card.accent_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -66,7 +66,7 @@ class StatCardWidget extends BaseWidget
             'label' => '',
             'description' => '',
             'trend' => '',
-            'accent_color' => '#3b82f6',
+            'accent_color' => null,
         ];
     }
 

@@ -5,7 +5,7 @@
     $stroke = (int)($data['stroke_width'] ?? 8);
     $radius = ($size - $stroke) / 2;
     $circumference = 2 * M_PI * $radius;
-    $color = $data['color'] ?? '#3b82f6';
+    $color = $data['color'] ?? 'var(--layup-primary)';
     $animate = ($data['animate'] ?? true) ? 'true' : 'false';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

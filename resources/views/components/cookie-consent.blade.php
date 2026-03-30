@@ -1,5 +1,5 @@
 @php
-    $bg = $data['bg_color'] ?? '#1f2937';
+    $bg = $data['bg_color'] ?? 'var(--layup-secondary)';
     $pos = ($data['position'] ?? 'bottom') === 'top' ? 'top-0' : 'bottom-0';
 @endphp
 <div x-data="{ show: !localStorage.getItem('layup_cookie_consent') }"

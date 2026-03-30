@@ -6,7 +6,7 @@
     $speed = $data['speed'] ?? 100;
     $pause = $data['pause'] ?? 2000;
     $loop = !empty($data['loop']);
-    $cursorColor = $data['cursor_color'] ?? '#3b82f6';
+    $cursorColor = $data['cursor_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-2xl md:text-3xl font-bold {{ $vis }} {{ $data['class'] ?? '' }}"

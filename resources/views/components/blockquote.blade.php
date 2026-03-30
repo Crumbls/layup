@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $style = $data['style'] ?? 'border-left';
-    $color = $data['accent_color'] ?? '#3b82f6';
+    $color = $data['accent_color'] ?? 'var(--layup-primary)';
 @endphp
 <blockquote @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
     class="@if($style === 'centered') text-center @endif {{ $vis }} {{ $data['class'] ?? '' }}"

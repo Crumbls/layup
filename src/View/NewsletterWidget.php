@@ -60,7 +60,7 @@ class NewsletterWidget extends BaseWidget
                 ->default('inline'),
             ColorPicker::make('button_color')
                 ->label(__('layup::widgets.newsletter.button_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -74,7 +74,7 @@ class NewsletterWidget extends BaseWidget
             'submit_text' => 'Subscribe',
             'success_message' => "You're in! Check your inbox.",
             'layout' => 'inline',
-            'button_color' => '#3b82f6',
+            'button_color' => null,
         ];
     }
 

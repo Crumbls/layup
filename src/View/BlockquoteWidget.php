@@ -55,7 +55,7 @@ class BlockquoteWidget extends BaseWidget
                 ->default('border-left'),
             ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.blockquote.accent_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -66,7 +66,7 @@ class BlockquoteWidget extends BaseWidget
             'attribution' => '',
             'source' => '',
             'style' => 'border-left',
-            'accent_color' => '#3b82f6',
+            'accent_color' => null,
         ];
     }
 

@@ -69,7 +69,7 @@ class ImageHotspotWidget extends BaseWidget
                 ->columnSpanFull(),
             ColorPicker::make('pin_color')
                 ->label(__('layup::widgets.image-hotspot.pin_color'))
-                ->default('#ef4444'),
+                ->default(null),
         ];
     }
 
@@ -78,7 +78,7 @@ class ImageHotspotWidget extends BaseWidget
         return [
             'image' => '',
             'hotspots' => [],
-            'pin_color' => '#ef4444',
+            'pin_color' => null,
         ];
     }
 

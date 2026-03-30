@@ -55,7 +55,7 @@ class FeatureListWidget extends BaseWidget
                 ->default('check'),
             ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.feature-list.icon_color'))
-                ->default('#22c55e'),
+                ->default(null),
             Select::make('layout')
                 ->label(__('layup::widgets.feature-list.layout'))
                 ->options(['list' => __('layup::widgets.feature-list.vertical_list'),
@@ -74,7 +74,7 @@ class FeatureListWidget extends BaseWidget
                 ['title' => 'Feature Three', 'description' => 'One more awesome capability.'],
             ],
             'icon_style' => 'check',
-            'icon_color' => '#22c55e',
+            'icon_color' => null,
             'layout' => 'list',
         ];
     }

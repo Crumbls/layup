@@ -53,7 +53,7 @@ class StepProcessWidget extends BaseWidget
                 ->default('horizontal'),
             ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.step-process.accent_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -66,7 +66,7 @@ class StepProcessWidget extends BaseWidget
                 ['title' => 'Step 3', 'description' => 'Launch'],
             ],
             'layout' => 'horizontal',
-            'accent_color' => '#3b82f6',
+            'accent_color' => null,
         ];
     }
 

@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $color = $data['accent_color'] ?? '#3b82f6';
+    $color = $data['accent_color'] ?? 'var(--layup-primary)';
     $trendColor = match($data['trend'] ?? '') {
         'up' => 'text-green-600',
         'down' => 'text-red-600',

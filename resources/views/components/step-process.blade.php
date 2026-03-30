@@ -2,7 +2,7 @@
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $steps = $data['steps'] ?? [];
     $layout = $data['layout'] ?? 'horizontal';
-    $color = $data['accent_color'] ?? '#3b82f6';
+    $color = $data['accent_color'] ?? 'var(--layup-primary)';
     $isHorizontal = $layout === 'horizontal';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

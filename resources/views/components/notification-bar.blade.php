@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $bg = $data['bg_color'] ?? '#3b82f6';
+    $bg = $data['bg_color'] ?? 'var(--layup-primary)';
     $textColor = $data['text_color_bar'] ?? '#ffffff';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

@@ -51,7 +51,7 @@ class ListWidget extends BaseWidget
                 ->default('bullet'),
             ColorPicker::make('icon_color')
                 ->label(__('layup::widgets.list.marker_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -60,7 +60,7 @@ class ListWidget extends BaseWidget
         return [
             'items' => ['First item', 'Second item', 'Third item'],
             'style' => 'bullet',
-            'icon_color' => '#3b82f6',
+            'icon_color' => null,
         ];
     }
 

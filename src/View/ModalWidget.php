@@ -54,7 +54,7 @@ class ModalWidget extends BaseWidget
                 ->default('md'),
             ColorPicker::make('trigger_bg_color')
                 ->label(__('layup::widgets.modal.trigger_button_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -65,7 +65,7 @@ class ModalWidget extends BaseWidget
             'title' => '',
             'body' => '',
             'size' => 'md',
-            'trigger_bg_color' => '#3b82f6',
+            'trigger_bg_color' => null,
         ];
     }
 

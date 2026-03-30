@@ -3,7 +3,7 @@
     $align = $data['alignment'] ?? 'top';
     $isTop = $align === 'top';
     $iconBg = $data['icon_bg'] ?? '#eff6ff';
-    $iconColor = $data['icon_color'] ?? '#3b82f6';
+    $iconColor = $data['icon_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="{{ $isTop ? 'text-center' : 'flex flex-col md:flex-row gap-4' }} {{ $vis }} {{ $data['class'] ?? '' }}"

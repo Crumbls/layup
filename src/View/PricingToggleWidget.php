@@ -74,7 +74,7 @@ class PricingToggleWidget extends BaseWidget
                 ->columnSpanFull(),
             ColorPicker::make('accent_color')
                 ->label(__('layup::widgets.pricing-toggle.accent_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -85,7 +85,7 @@ class PricingToggleWidget extends BaseWidget
             'annual_label' => 'Annual',
             'discount_badge' => 'Save 20%',
             'plans' => [],
-            'accent_color' => '#3b82f6',
+            'accent_color' => null,
         ];
     }
 

@@ -7,5 +7,5 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="{{ $align }} {{ $vis }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     <{{ $tag }} class="{{ $sizeClass }} font-bold mb-2">{{ $data['heading'] ?? '' }}</{{ $tag }}>
     @if(!empty($data['subtitle']))<p class="text-lg text-gray-500 dark:text-gray-400 mb-3">{{ $data['subtitle'] }}</p>@endif
-    @if(!empty($data['show_divider']))<div class="mx-auto mt-3 {{ $data['alignment'] === 'center' ? 'mx-auto' : ($data['alignment'] === 'right' ? 'ml-auto' : '') }}" style="width: 3rem; height: 3px; background-color: {{ $data['divider_color'] ?? '#3b82f6' }}"></div>@endif
+    @if(!empty($data['show_divider']))<div class="mx-auto mt-3 {{ $data['alignment'] === 'center' ? 'mx-auto' : ($data['alignment'] === 'right' ? 'ml-auto' : '') }}" style="width: 3rem; height: 3px; background-color: {{ $data['divider_color'] ?? 'var(--layup-primary)' }}"></div>@endif
 </div>

@@ -35,7 +35,7 @@ class BackToTopWidget extends BaseWidget
         return [
             ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.back-to-top.background_color'))
-                ->default('#3b82f6'),
+                ->default(null),
             ColorPicker::make('text_color_btn')
                 ->label(__('layup::widgets.back-to-top.icon_color'))
                 ->default('#ffffff'),
@@ -58,7 +58,7 @@ class BackToTopWidget extends BaseWidget
     public static function getDefaultData(): array
     {
         return [
-            'bg_color' => '#3b82f6',
+            'bg_color' => null,
             'text_color_btn' => '#ffffff',
             'position' => 'right',
             'size' => 'md',

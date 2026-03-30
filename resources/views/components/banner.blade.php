@@ -1,6 +1,6 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
-    $bg = $data['bg_color'] ?? '#1e40af';
+    $bg = $data['bg_color'] ?? 'var(--layup-primary)';
     $tc = $data['text_color_banner'] ?? '#ffffff';
     $height = $data['height'] ?? 'auto';
 @endphp

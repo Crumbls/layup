@@ -47,7 +47,7 @@ class NotificationBarWidget extends BaseWidget
                 ->nullable(),
             ColorPicker::make('bg_color')
                 ->label(__('layup::widgets.notification-bar.background_color'))
-                ->default('#3b82f6'),
+                ->default(null),
             ColorPicker::make('text_color_bar')
                 ->label(__('layup::widgets.notification-bar.text_color'))
                 ->default('#ffffff'),
@@ -63,7 +63,7 @@ class NotificationBarWidget extends BaseWidget
             'text' => '',
             'link_text' => '',
             'link_url' => '',
-            'bg_color' => '#3b82f6',
+            'bg_color' => null,
             'text_color_bar' => '#ffffff',
             'dismissible' => true,
         ];

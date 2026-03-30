@@ -1,7 +1,7 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $iconStyle = $data['icon_style'] ?? 'check';
-    $iconColor = $data['icon_color'] ?? '#22c55e';
+    $iconColor = $data['icon_color'] ?? 'var(--layup-success)';
     $layout = $data['layout'] ?? 'list';
     $gridClass = match($layout) {
         'grid-2' => 'grid grid-cols-1 md:grid-cols-2 gap-4',

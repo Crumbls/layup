@@ -62,7 +62,7 @@ class TypewriterWidget extends BaseWidget
                 ->default(true),
             ColorPicker::make('cursor_color')
                 ->label(__('layup::widgets.typewriter.cursor_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -75,7 +75,7 @@ class TypewriterWidget extends BaseWidget
             'speed' => 100,
             'pause' => 2000,
             'loop' => true,
-            'cursor_color' => '#3b82f6',
+            'cursor_color' => null,
         ];
     }
 

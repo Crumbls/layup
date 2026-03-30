@@ -41,7 +41,7 @@ class FlipCardWidget extends BaseWidget
                 ->nullable(),
             ColorPicker::make('front_bg')
                 ->label(__('layup::widgets.flip-card.front_background'))
-                ->default('#3b82f6'),
+                ->default(null),
             TextInput::make('back_title')
                 ->label(__('layup::widgets.flip-card.back_title'))
                 ->required(),
@@ -50,7 +50,7 @@ class FlipCardWidget extends BaseWidget
                 ->nullable(),
             ColorPicker::make('back_bg')
                 ->label(__('layup::widgets.flip-card.back_background'))
-                ->default('#1e40af'),
+                ->default(null),
             TextInput::make('link_url')
                 ->label(__('layup::widgets.flip-card.link_url_back'))
                 ->url()
@@ -76,10 +76,10 @@ class FlipCardWidget extends BaseWidget
         return [
             'front_title' => '',
             'front_description' => '',
-            'front_bg' => '#3b82f6',
+            'front_bg' => null,
             'back_title' => '',
             'back_description' => '',
-            'back_bg' => '#1e40af',
+            'back_bg' => null,
             'link_url' => '',
             'link_text' => 'Learn more',
             'direction' => 'horizontal',

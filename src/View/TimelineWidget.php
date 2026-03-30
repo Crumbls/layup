@@ -50,7 +50,7 @@ class TimelineWidget extends BaseWidget
                 ->columnSpanFull(),
             ColorPicker::make('line_color')
                 ->label(__('layup::widgets.timeline.line_color'))
-                ->default('#3b82f6'),
+                ->default(null),
         ];
     }
 
@@ -62,7 +62,7 @@ class TimelineWidget extends BaseWidget
                 ['date' => '2025', 'title' => 'Growth', 'description' => 'Scaled to 1000 users.'],
                 ['date' => '2026', 'title' => 'Today', 'description' => 'Serving customers worldwide.'],
             ],
-            'line_color' => '#3b82f6',
+            'line_color' => null,
         ];
     }
 

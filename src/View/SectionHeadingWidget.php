@@ -38,14 +38,14 @@ class SectionHeadingWidget extends BaseWidget
             TextInput::make('subtitle')->label(__('layup::widgets.section-heading.subtitle'))->nullable(),
             Select::make('alignment')->label(__('layup::widgets.section-heading.alignment'))->options(['left' => __('layup::widgets.section-heading.left'), 'center' => __('layup::widgets.section-heading.center'), 'right' => __('layup::widgets.section-heading.right')])->default('center'),
             Toggle::make('show_divider')->label(__('layup::widgets.section-heading.show_divider'))->default(true),
-            ColorPicker::make('divider_color')->label(__('layup::widgets.section-heading.divider_color'))->default('#3b82f6'),
+            ColorPicker::make('divider_color')->label(__('layup::widgets.section-heading.divider_color'))->default(null),
             Select::make('heading_tag')->label(__('layup::widgets.section-heading.heading_tag'))->options(['h1' => __('layup::widgets.section-heading.h1'), 'h2' => __('layup::widgets.section-heading.h2'), 'h3' => __('layup::widgets.section-heading.h3')])->default('h2'),
         ];
     }
 
     public static function getDefaultData(): array
     {
-        return ['heading' => '', 'subtitle' => '', 'alignment' => 'center', 'show_divider' => true, 'divider_color' => '#3b82f6', 'heading_tag' => 'h2'];
+        return ['heading' => '', 'subtitle' => '', 'alignment' => 'center', 'show_divider' => true, 'divider_color' => null, 'heading_tag' => 'h2'];
     }
 
     public static function getPreview(array $data): string
