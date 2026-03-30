@@ -38,7 +38,7 @@ class BackToTopWidget extends BaseWidget
                 ->default(null),
             ColorPicker::make('text_color_btn')
                 ->label(__('layup::widgets.back-to-top.icon_color'))
-                ->default('#ffffff'),
+                ->default(null),
             Select::make('position')
                 ->label(__('layup::widgets.back-to-top.position'))
                 ->options(['right' => __('layup::widgets.back-to-top.bottom_right'),
@@ -59,7 +59,7 @@ class BackToTopWidget extends BaseWidget
     {
         return [
             'bg_color' => null,
-            'text_color_btn' => '#ffffff',
+            'text_color_btn' => null,
             'position' => 'right',
             'size' => 'md',
             'show_after' => 300,

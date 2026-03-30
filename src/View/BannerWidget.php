@@ -56,7 +56,7 @@ class BannerWidget extends BaseWidget
                 ->default(null),
             ColorPicker::make('text_color_banner')
                 ->label(__('layup::widgets.banner.text_color'))
-                ->default('#ffffff'),
+                ->default(null),
             Select::make('height')
                 ->label(__('layup::widgets.banner.height'))
                 ->options(['auto' => __('layup::widgets.banner.auto'), '200px' => __('layup::widgets.banner.small'), '300px' => __('layup::widgets.banner.medium'), '400px' => __('layup::widgets.banner.large')])
@@ -73,7 +73,7 @@ class BannerWidget extends BaseWidget
             'cta_url' => '',
             'bg_image' => '',
             'bg_color' => null,
-            'text_color_banner' => '#ffffff',
+            'text_color_banner' => null,
             'height' => 'auto',
         ];
     }

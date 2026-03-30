@@ -50,7 +50,7 @@ class NotificationBarWidget extends BaseWidget
                 ->default(null),
             ColorPicker::make('text_color_bar')
                 ->label(__('layup::widgets.notification-bar.text_color'))
-                ->default('#ffffff'),
+                ->default(null),
             Toggle::make('dismissible')
                 ->label(__('layup::widgets.notification-bar.dismissible'))
                 ->default(true),
@@ -64,7 +64,7 @@ class NotificationBarWidget extends BaseWidget
             'link_text' => '',
             'link_url' => '',
             'bg_color' => null,
-            'text_color_bar' => '#ffffff',
+            'text_color_bar' => null,
             'dismissible' => true,
         ];
     }

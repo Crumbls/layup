@@ -37,13 +37,13 @@ class CtaBannerWidget extends BaseWidget
             TextInput::make('button_text')->label(__('layup::widgets.cta-banner.button_text'))->default('Get Started'),
             TextInput::make('button_url')->label(__('layup::widgets.cta-banner.button_url'))->url()->default('#'),
             ColorPicker::make('bg_color')->label(__('layup::widgets.cta-banner.background_color'))->default(null),
-            ColorPicker::make('text_color_banner')->label(__('layup::widgets.cta-banner.text_color'))->default('#ffffff'),
+            ColorPicker::make('text_color_banner')->label(__('layup::widgets.cta-banner.text_color')),
         ];
     }
 
     public static function getDefaultData(): array
     {
-        return ['heading' => '', 'subtitle' => '', 'button_text' => 'Get Started', 'button_url' => '#', 'bg_color' => null, 'text_color_banner' => '#ffffff'];
+        return ['heading' => '', 'subtitle' => '', 'button_text' => 'Get Started', 'button_url' => '#', 'bg_color' => null, 'text_color_banner' => null];
     }
 
     public static function getPreview(array $data): string
