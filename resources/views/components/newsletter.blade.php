@@ -29,7 +29,7 @@
             </button>
         </form>
     </template>
-    <div x-show="submitted" x-transition class="text-green-600 dark:text-green-400 font-semibold py-4">
+    <div x-show="submitted" x-transition class="font-semibold py-4" style="color: var(--layup-success);">
         ✓ {{ $data['success_message'] ?? __('layup::frontend.newsletter.subscribed') }}
     </div>
 </div>

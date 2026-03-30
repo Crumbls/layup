@@ -1,12 +1,12 @@
 @php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $color = $data['accent_color'] ?? 'var(--layup-primary)';
-    $trendColor = match($data['trend'] ?? '') {
-        'up' => 'text-green-600',
-        'down' => 'text-red-600',
-        'neutral' => 'text-gray-500',
-        default => 'text-gray-500',
+    $trendStyle = match($data['trend'] ?? '') {
+        'up'      => 'color: var(--layup-success);',
+        'down'    => 'color: var(--layup-danger);',
+        default   => '',
     };
+    $trendClass = in_array($data['trend'] ?? '', ['up', 'down']) ? '' : 'text-gray-500';
     $trendIcon = match($data['trend'] ?? '') {
         'up' => '↑',
         'down' => '↓',
@@ -22,7 +22,7 @@
     <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">{{ $data['label'] ?? '' }}</div>
     <div class="text-2xl md:text-3xl font-bold" style="color: {{ $color }}">{{ $data['value'] ?? '' }}</div>
     @if(!empty($data['description']))
-        <div class="text-sm mt-2 {{ $trendColor }}">
+        <div class="text-sm mt-2 {{ $trendClass }}" style="{{ $trendStyle }}">
             {{ $trendIcon }} {{ $data['description'] }}
         </div>
     @endif

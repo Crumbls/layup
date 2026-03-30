@@ -28,7 +28,7 @@
             </div>
         @endif
     </div>
-    <div x-show="expired" class="text-xl font-semibold text-green-600 dark:text-green-400">
+    <div x-show="expired" class="text-xl font-semibold" style="color: var(--layup-success);">
         {{ $data['expired_message'] ?? __('layup::frontend.countdown.time_is_up') }}
     </div>
 </div>

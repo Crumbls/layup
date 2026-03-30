@@ -17,7 +17,7 @@
     @foreach(($data['testimonials'] ?? []) as $t)
         <div class="border dark:border-gray-700 rounded-xl p-4 md:p-5">
             @if(!empty($t['rating']))
-                <div class="text-yellow-400 mb-2">@for($i=0;$i<(int)$t['rating'];$i++)★@endfor</div>
+                <div class="mb-2" style="color: var(--layup-warning);">@for($i=0;$i<(int)$t['rating'];$i++)★@endfor</div>
             @endif
             <p class="text-gray-700 dark:text-gray-200 mb-4 italic">"{{ $t['quote'] ?? '' }}"</p>
             <div>

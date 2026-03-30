@@ -7,8 +7,8 @@
     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
-    <span class="text-yellow-400 text-lg">★</span>
+    <span class="text-lg" style="color: var(--layup-warning);">★</span>
     <span class="font-bold">{{ $data['rating'] ?? '4.9' }}</span>
-    @if(!empty($data['badge_text']))<span class="text-xs font-semibold bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-0.5 rounded-full">{{ $data['badge_text'] }}</span>@endif
+    @if(!empty($data['badge_text']))<span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background-color: color-mix(in oklab, var(--layup-success) 15%, transparent); color: var(--layup-on-surface);">{{ $data['badge_text'] }}</span>@endif
     <span class="text-sm text-gray-500 dark:text-gray-400">{{ $data['review_count'] ?? '' }} reviews on {{ $data['platform'] ?? '' }}</span>
 </{{ $tag }}>

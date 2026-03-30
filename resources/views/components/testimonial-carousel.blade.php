@@ -13,7 +13,7 @@
     @foreach($testimonials as $i => $t)
         <div x-show="isActive({{ $i }})" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="text-center px-4 py-4 md:px-8 md:py-6">
             @if(!empty($t['rating']))
-                <div class="text-yellow-400 mb-3">@for($s = 0; $s < (int)$t['rating']; $s++)★@endfor</div>
+                <div class="mb-3" style="color: var(--layup-warning);">@for($s = 0; $s < (int)$t['rating']; $s++)★@endfor</div>
             @endif
             <p class="text-base md:text-lg italic text-gray-700 dark:text-gray-200 mb-4 max-w-2xl mx-auto">"{{ $t['quote'] ?? '' }}"</p>
             <div class="flex items-center justify-center gap-3">
