@@ -47,6 +47,7 @@ Layup handles the editor. Frontend rendering is opt-in and swappable. Use the bu
 - Nested rows (rows inside columns for complex layouts)
 - Global styles / design presets
 - Copy/paste widgets between pages
+- Migrate widget views from inline styles to a generated utility CSS layer -- currently many widgets apply theme colors and user overrides via inline `style` attributes. The long-term direction is a small generated stylesheet (similar to the safelist approach) that maps widget data to CSS classes, keeping markup clean and making styles cacheable, overridable, and inspectable in devtools
 
 ### Medium Term
 - Visual frontend preview (live iframe in the editor)
