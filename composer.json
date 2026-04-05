@@ -3,6 +3,12 @@
     "description": "A visual page builder plugin for Filament 5 — Divi-style grid layouts with extensible widgets.",
     "type": "library",
     "license": "MIT",
+    "homepage": "https://github.com/crumbls/layup",
+    "support": {
+        "docs": "https://crumbls.com/documentation/layup",
+        "source": "https://github.com/crumbls/layup",
+        "issues": "https://github.com/crumbls/layup/issues"
+    },
     "autoload": {
         "psr-4": {
             "Crumbls\\Layup\\": "src/"

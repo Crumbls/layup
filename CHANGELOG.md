@@ -5,6 +5,23 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2](https://github.com/Crumbls/layup/compare/v1.2.1...v1.2.2) (2026-04-05)
+
+### Added
+- Full documentation site in `docs/` following Spatie conventions (30 pages across 6 sections)
+- Getting Started guide: creating pages, adding widgets, saving and publishing
+- Widget reference pages for all 5 categories (Content, Media, Interactive, Layout, Advanced)
+- Configuration reference with all `config/layup.php` options
+- Grid system documentation (12-column grid, responsive spans, breakpoints, visibility)
+- Advanced guides: custom widgets, extending widgets, Tailwind safelist, revision history, page templates, frontend rendering, theme system, testing helpers, rendering content
+- API reference: Widget contract, models, service provider, support classes
+- `.gitattributes` to exclude docs, tests, and dev files from Composer dist installs
+- `homepage` and `support` URLs in `composer.json` for Packagist
+
+### Changed
+- README trimmed to concise overview with links to full documentation
+- Installation section updated with `layup:install` wizard and Filament prerequisite
+
 ## [1.0.6](https://github.com/Crumbls/layup/compare/v1.0.5...v1.0.6) (2026-03-10)
 
 
