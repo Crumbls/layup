@@ -190,13 +190,30 @@ return [
     */
     'frontend' => [
         'enabled' => true,
+
+        // URL prefix. Use '' or '/' to mount at the site root — these are the
+        // only values that activate auto-exclusion of Filament panel paths and
+        // framework routes. Other values (including null) are treated as a
+        // literal prefix with no auto-exclusion.
         'prefix' => 'pages',
+
         'middleware' => ['web'],
         'domain' => null,
+
+        // Blade component name passed to <x-dynamic-component>. Examples:
+        //   'app'          -> resources/views/components/app.blade.php
+        //   'layouts.app'  -> resources/views/components/layouts/app.blade.php
+        //   'layouts::app' -> resources/views/layouts/app.blade.php
+        //                    (Livewire anonymous namespace — use this with
+        //                    the Livewire starter kit)
         'layout' => 'app',
+
         'view' => 'layup::frontend.page',
         'max_width' => 'container',
         'include_scripts' => true,
+
+        // Additional paths to exclude from the root-mount catch-all.
+        // Only applied when 'prefix' is '' or '/'.
         'excluded_paths' => [],
     ],
 

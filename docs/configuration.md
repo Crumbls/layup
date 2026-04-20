@@ -87,14 +87,17 @@ The filesystem disk used for media uploads (images, files). Must be publicly acc
 ```
 
 - **enabled** -- register frontend routes for serving published pages
-- **prefix** -- URL prefix (e.g., `pages` makes URLs like `/pages/about`)
+- **prefix** -- URL prefix. Use `'pages'` for `/pages/about`, or `''` (or `'/'`) to mount at the site root. An empty/slash prefix activates auto-exclusion of Filament panel paths, Livewire, and other framework routes; other values (including `null`) skip that safeguard. See [Frontend Rendering > Serving pages at the site root](advanced/frontend-rendering.md#serving-pages-at-the-site-root).
 - **middleware** -- middleware applied to frontend routes
 - **domain** -- restrict routes to a specific domain
-- **layout** -- Blade component used as the page layout (e.g., `app` for `<x-app>`)
+- **layout** -- Blade component name passed to `<x-dynamic-component>`. Example values:
+    - `'app'` → `resources/views/components/app.blade.php`
+    - `'layouts.app'` → `resources/views/components/layouts/app.blade.php`
+    - `'layouts::app'` → `resources/views/layouts/app.blade.php` (Livewire anonymous namespace — use this with the Livewire starter kit)
 - **view** -- Blade view for rendering pages
 - **max_width** -- CSS class for page container width
 - **include_scripts** -- include Alpine.js animation scripts in frontend
-- **excluded_paths** -- slug patterns to exclude from Layup routing
+- **excluded_paths** -- additional paths to exclude from the root-mount catch-all (only applied when `prefix` is `''` or `'/'`)
 
 ## Safelist
 
