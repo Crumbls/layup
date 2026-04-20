@@ -76,6 +76,10 @@ class ButtonWidget extends BaseWidget
             'style' => 'primary',
             'size' => 'md',
             'new_tab' => false,
+            'bg_color' => null,
+            'text_color_override' => null,
+            'hover_bg_color' => null,
+            'hover_text_color' => null,
         ];
     }
 

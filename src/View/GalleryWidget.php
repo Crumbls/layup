@@ -78,6 +78,8 @@ class GalleryWidget extends BaseWidget
             'columns' => '3',
             'gap' => '0.5rem',
             'lightbox' => true,
+            'show_captions' => false,
+            'captions_text' => '',
         ];
     }
 

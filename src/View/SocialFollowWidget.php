@@ -80,6 +80,7 @@ class SocialFollowWidget extends BaseWidget
             'links' => [],
             'style' => 'icon',
             'new_tab' => true,
+            'icon_size' => 'md',
         ];
     }
 

@@ -70,6 +70,9 @@ class ImageWidget extends BaseWidget
             'src' => '',
             'alt' => '',
             'caption' => '',
+            'link_url' => '',
+            'link_new_tab' => false,
+            'hover_effect' => '',
         ];
     }
 

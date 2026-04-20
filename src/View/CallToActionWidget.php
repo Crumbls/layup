@@ -70,6 +70,10 @@ class CallToActionWidget extends BaseWidget
             'content' => '',
             'button_text' => 'Learn More',
             'button_url' => '#',
+            'button_style' => 'primary',
+            'new_tab' => false,
+            'bg_color' => null,
+            'text_color_cta' => null,
         ];
     }
 

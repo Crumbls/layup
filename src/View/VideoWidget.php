@@ -69,6 +69,7 @@ class VideoWidget extends BaseWidget
             'title' => '',
             'autoplay' => false,
             'loop' => false,
+            'privacy_enhanced' => false,
         ];
     }
 
