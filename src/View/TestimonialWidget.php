@@ -86,6 +86,8 @@ class TestimonialWidget extends BaseWidget
             'photo' => '',
             'url' => '',
             'style' => 'default',
+            'company' => '',
+            'rating' => '',
         ];
     }
 

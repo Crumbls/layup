@@ -74,6 +74,7 @@ class MapWidget extends BaseWidget
             'embed' => '',
             'height' => '300px',
             'zoom' => '13',
+            'map_type' => 'roadmap',
         ];
     }
 

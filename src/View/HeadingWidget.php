@@ -57,6 +57,7 @@ class HeadingWidget extends BaseWidget
         return [
             'content' => '',
             'level' => 'h2',
+            'link_url' => '',
         ];
     }
 

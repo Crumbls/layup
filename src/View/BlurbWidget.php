@@ -198,6 +198,7 @@ class BlurbWidget extends BaseWidget
             'image' => '',
             'layout' => 'top',
             'url' => '',
+            'text_alignment' => '',
         ];
     }
 

@@ -100,6 +100,7 @@ class PricingTableWidget extends BaseWidget
             'button_text' => 'Get Started',
             'button_url' => '#',
             'featured' => false,
+            'badge_text' => 'Popular',
         ];
     }
 
