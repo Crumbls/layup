@@ -5,6 +5,11 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3](https://github.com/Crumbls/layup/compare/v1.2.2...v1.2.3) (2026-04-19)
+
+### Fixed
+- `layup:install` failing with "Failed to open stream: No such file or directory" when installed from Packagist dist. The `/stubs` directory was marked `export-ignore` in `.gitattributes`, stripping the stub files (`app-layout.blade.php.stub`, `layup-widget.php.stub`, `layup-widget-view.blade.php.stub`, `layup-widget-test.php.stub`) from the distributed tarball. `InstallCommand`, `MakeWidgetCommand`, and `LayupServiceProvider::boot()` all reference these stubs at runtime, so they must ship with the package.
+
 ## [1.2.2](https://github.com/Crumbls/layup/compare/v1.2.1...v1.2.2) (2026-04-05)
 
 ### Added
