@@ -6,8 +6,9 @@ namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\WidgetRegistry;
-use Crumbls\Layup\View\BaseView;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Repeater;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -261,7 +262,7 @@ class DoctorCommand extends Command
         $allComplete = true;
 
         foreach ($registry->all() as $type => $class) {
-            $fieldNames = $this->extractFieldNames($class::getContentFormSchema());
+            $fieldNames = $this->extractTopLevelFieldNames($class::getContentFormSchema());
             $defaults = array_keys($class::getDefaultData());
             $missing = array_diff($fieldNames, $defaults);
 
@@ -392,20 +393,46 @@ class DoctorCommand extends Command
     }
 
     /**
+     * Extract only top-level field names from a form schema.
+     *
+     * Repeater and Builder treat their child components as per-row sub-schemas
+     * rather than sibling top-level data keys, so we do not descend into them.
+     * Layout containers (Section, Grid, Group, Fieldset, etc.) are still walked
+     * because their children are top-level siblings grouped for presentation only.
+     *
+     * @param  array<\Filament\Schemas\Components\Component>  $components
      * @return array<string>
      */
-    protected function extractFieldNames(array $components): array
+    private function extractTopLevelFieldNames(array $components): array
     {
         $names = [];
 
-        BaseView::walkComponents($components, function ($component) use (&$names): void {
+        foreach ($components as $component) {
             if (method_exists($component, 'getName')) {
                 $name = $component->getName();
+
                 if ($name !== null && $name !== '') {
                     $names[] = $name;
                 }
             }
-        });
+
+            if ($component instanceof Repeater || $component instanceof Builder) {
+                continue;
+            }
+
+            try {
+                $ref = new \ReflectionProperty($component, 'childComponents');
+                $children = $ref->getValue($component);
+
+                foreach ($children as $group) {
+                    if (is_array($group)) {
+                        $names = array_merge($names, $this->extractTopLevelFieldNames($group));
+                    }
+                }
+            } catch (\ReflectionException) {
+                // Component has no childComponents property -- skip.
+            }
+        }
 
         return $names;
     }
