@@ -3,9 +3,7 @@
 
 # Exclude from export (composer install --prefer-dist)
 /.github            export-ignore
-/docs               export-ignore
 /tests              export-ignore
-/stubs              export-ignore
 .gitattributes      export-ignore
 .gitignore          export-ignore
 AGENTS.md           export-ignore
