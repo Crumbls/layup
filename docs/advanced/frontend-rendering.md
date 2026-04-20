@@ -11,6 +11,9 @@ The `layout` config value is a Blade component name passed to `<x-dynamic-compon
 
 - `'app'` resolves to `resources/views/components/app.blade.php`
 - `'layouts.app'` resolves to `resources/views/components/layouts/app.blade.php`
+- `'layouts::app'` resolves to `resources/views/layouts/app.blade.php` (Livewire anonymous namespace)
+
+> **Using the Livewire starter kit?** Livewire v4 registers `layouts` as an anonymous component namespace pointing at `resources/views/layouts/`, and the starter kit ships its layout at `resources/views/layouts/app.blade.php`. Set `'layout' => 'layouts::app'` — the dot-notation form (`'layouts.app'`) resolves to a different path that does not exist in Livewire starter-kit projects.
 
 Your layout must accept a `title` slot and optionally a `meta` slot:
 
@@ -55,6 +58,8 @@ Layup automatically excludes Filament panel paths, Livewire, and other framework
     'excluded_paths' => ['blog', 'shop'],
 ],
 ```
+
+> **`prefix` values:** use `''` or `'/'` to mount at the site root — these are the only values that activate the Filament / framework path auto-exclusion. Any other string (e.g. `'pages'`) becomes a literal URL prefix. Setting `prefix` to `null` skips the auto-exclusion logic, so the `{slug}` catch-all can shadow unmatched admin URLs (for example, a Filament resource that has not been created yet). Prefer `''` over `null` when running at the root.
 
 ## Nested slugs
 
