@@ -5,6 +5,13 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3](https://github.com/Crumbls/layup/compare/v1.2.2...v1.2.3) (2026-04-20)
+
+
+### Bug Fixes
+
+* ship stubs/ in Composer dist tarball ([d603bb3](https://github.com/Crumbls/layup/commit/d603bb33b5b042baa1f586689e474c1d3be9eead))
+
 ## [1.2.3](https://github.com/Crumbls/layup/compare/v1.2.2...v1.2.3) (2026-04-19)
 
 ### Fixed
