@@ -75,6 +75,7 @@ return [
         'newsletter' => 'Newsletter Signup',
         'notification-bar' => 'Notification Bar',
         'number-counter' => 'Number Counter',
+        'page-title' => 'Page Title',
         'person' => 'Person',
         'post-list' => 'Post List',
         'price' => 'Price Display',
@@ -1651,6 +1652,10 @@ return [
         '3_45' => '3:45',
         'list_with_player' => 'List with player',
         '3_column_grid' => '3-Column Grid',
+    ],
+
+    'page-title' => [
+        'preview' => '[H1] {{ page.title }}',
     ],
 
 ];

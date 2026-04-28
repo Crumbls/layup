@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Models;
 
 use Crumbls\Layup\Concerns\HasLayupContent;
+use Crumbls\Layup\Concerns\HasNestedPath;
 use Crumbls\Layup\Support\ContentValidator;
 use Crumbls\Layup\Support\SafelistCollector;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,10 +15,38 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
-    use HasFactory, HasLayupContent, SoftDeletes;
+    use HasFactory, HasLayupContent, HasNestedPath, SoftDeletes;
 
     protected static function booted(): void
     {
+        static::creating(function (Page $page): void {
+            if ($page->author) {
+                return;
+            }
+
+            $user = auth()->user();
+            $page->author = $user?->name ?? $user?->email;
+        });
+
+        static::saving(function (Page $page): void {
+            // Existing-row safety net: any row going to "published" without
+            // a date gets one. This keeps legacy callers ("just publish it")
+            // working with no behavior change.
+            if ($page->status === 'published' && empty($page->published_at)) {
+                $page->published_at = now();
+            }
+
+            // Future-dated published pages are reclassified as scheduled,
+            // so the frontend stays hidden until the cron promotes them.
+            if (
+                $page->status === 'published'
+                && $page->published_at
+                && $page->published_at->isFuture()
+            ) {
+                $page->status = 'scheduled';
+            }
+        });
+
         static::saving(function (Page $page): bool {
             if (! $page->isDirty('content')) {
                 return true;
@@ -63,9 +92,14 @@ class Page extends Model
     protected $fillable = [
         'title',
         'slug',
+        'parent_id',
+        'path',
         'content',
         'status',
         'meta',
+        'author',
+        'published_at',
+        'featured_image',
     ];
 
     /**
@@ -82,6 +116,7 @@ class Page extends Model
         return [
             'content' => 'array',
             'meta' => 'array',
+            'published_at' => 'datetime',
         ];
     }
 
@@ -93,12 +128,24 @@ class Page extends Model
 
     public function scopePublished($query)
     {
-        return $query->where('status', 'published');
+        return $query
+            ->where('status', 'published')
+            ->where(function ($q): void {
+                // Defense in depth: even if a scheduled row leaks past the
+                // status check, the date gate keeps it off the frontend.
+                $q->whereNull('published_at')
+                    ->orWhere('published_at', '<=', now());
+            });
     }
 
     public function scopeDraft($query)
     {
         return $query->where('status', 'draft');
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('status', 'scheduled');
     }
 
     /*
@@ -154,7 +201,7 @@ class Page extends Model
             'url' => $this->getUrl(),
             'datePublished' => $this->created_at?->toIso8601String(),
             'dateModified' => $this->updated_at?->toIso8601String(),
-            'image' => $this->meta['image'] ?? null,
+            'image' => $this->getFeaturedImageUrl(),
         ]);
 
         // Article-specific fields
@@ -191,14 +238,14 @@ class Page extends Model
             ],
         ];
 
-        $slugParts = explode('/', $this->slug);
+        $pathParts = explode('/', (string) $this->path);
         $pos = 2;
         $prefix = config('layup.frontend.prefix', 'pages');
         $path = $prefix;
-        foreach ($slugParts as $i => $part) {
+        foreach ($pathParts as $i => $part) {
             $path .= '/' . $part;
             $item = ['@type' => 'ListItem', 'position' => $pos++, 'name' => ucfirst($part)];
-            if ($i < count($slugParts) - 1) {
+            if ($i < count($pathParts) - 1) {
                 $item['item'] = url(ltrim($path, '/'));
             }
             $breadcrumbs['itemListElement'][] = $item;
@@ -248,6 +295,28 @@ class Page extends Model
         }
 
         return $faqs;
+    }
+
+    /**
+     * Resolve the featured image to an absolute URL. Returns null if no
+     * image is set. Falls back to meta.image so legacy data keeps
+     * surfacing in OG tags until users move it to the dedicated field.
+     */
+    public function getFeaturedImageUrl(): ?string
+    {
+        $value = $this->featured_image ?? ($this->meta['image'] ?? null);
+
+        if (! $value) {
+            return null;
+        }
+
+        if (preg_match('#^https?://#', $value)) {
+            return $value;
+        }
+
+        $disk = config('layup.uploads.disk', 'public');
+
+        return \Illuminate\Support\Facades\Storage::disk($disk)->url($value);
     }
 
     /*
@@ -306,7 +375,7 @@ class Page extends Model
     {
         $prefix = config('layup.frontend.prefix', 'pages');
 
-        return url(ltrim("{$prefix}/{$this->slug}", '/'));
+        return url(ltrim("{$prefix}/{$this->path}", '/'));
     }
 
     /*

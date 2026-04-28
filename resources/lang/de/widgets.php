@@ -75,6 +75,7 @@ return [
         'newsletter' => 'Newsletter-Anmeldung',
         'notification-bar' => 'Benachrichtigungsleiste',
         'number-counter' => 'Zahlenzähler',
+        'page-title' => 'Seitentitel',
         'person' => 'Person',
         'post-list' => 'Beitragsliste',
         'price' => 'Preisanzeige',
@@ -1651,6 +1652,10 @@ return [
         '3_45' => '3:45',
         'list_with_player' => 'Liste mit Player',
         '3_column_grid' => '3-Spalten-Raster',
+    ],
+
+    'page-title' => [
+        'preview' => '[H1] {{ page.title }}',
     ],
 
 ];
