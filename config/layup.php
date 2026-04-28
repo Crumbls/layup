@@ -16,6 +16,7 @@ return [
         // Content
         \Crumbls\Layup\View\TextWidget::class,
         \Crumbls\Layup\View\HeadingWidget::class,
+        \Crumbls\Layup\View\PageTitleWidget::class,
         \Crumbls\Layup\View\BlurbWidget::class,
         \Crumbls\Layup\View\IconWidget::class,
         \Crumbls\Layup\View\AccordionWidget::class,
@@ -160,6 +161,13 @@ return [
         'table' => 'layup_pages',
         'model' => \Crumbls\Layup\Models\Page::class,
         'default_slug' => null,
+
+        /*
+        | Maximum nesting depth for parent → child page chains. Used by the
+        | HasNestedPath concern to reject deep trees and as a backstop for
+        | accidental cycles. Top-level pages count as depth 1.
+        */
+        'max_depth' => 10,
     ],
 
     /*
@@ -198,6 +206,71 @@ return [
         'max_width' => 'container',
         'include_scripts' => true,
         'excluded_paths' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Page Layout Containers
+    |--------------------------------------------------------------------------
+    |
+    | Named presets that wrap each non-full-width row. A page may override
+    | the global default by setting `meta.layout.container` to a preset key.
+    |
+    | Apps can extend this dictionary in their published config — add or
+    | override keys, supply custom Tailwind classes, and the new preset
+    | shows up automatically in the Page Settings modal and the safelist.
+    |
+    | The `default` key applies when a page has no explicit override.
+    | If `default` itself is null, layup falls back to `frontend.max_width`
+    | for backward compatibility.
+    |
+    */
+    /*
+    |--------------------------------------------------------------------------
+    | Scheduling
+    |--------------------------------------------------------------------------
+    |
+    | Layup auto-registers the layup:publish-scheduled command on the app's
+    | scheduler (every minute) so scheduled pages flip to "published" at
+    | their published_at time without any wiring. Set auto_publish to false
+    | to register the command yourself, e.g. on a single worker only.
+    |
+    */
+    'scheduling' => [
+        'auto_publish' => true,
+    ],
+
+    'page_layout' => [
+        'default' => 'container',
+        'default_template' => null, // null = use layup.frontend.view
+        /*
+        | View templates the user can pick per-page in the Page Settings
+        | modal. Each value is a Blade view name; the key is what gets
+        | stored in meta.layout.template. The package fallback is the
+        | global config('layup.frontend.view').
+        */
+        'templates' => [
+            // 'app.layouts.layup-landing' => 'Landing Page',
+            // 'app.layouts.layup-sidebar' => 'With Sidebar',
+        ],
+        'containers' => [
+            'container' => [
+                'label' => 'Container',
+                'classes' => 'container mx-auto px-4',
+            ],
+            'narrow' => [
+                'label' => 'Narrow',
+                'classes' => 'max-w-3xl mx-auto px-4',
+            ],
+            'wide' => [
+                'label' => 'Wide',
+                'classes' => 'max-w-7xl mx-auto px-4',
+            ],
+            'full' => [
+                'label' => 'Full width',
+                'classes' => 'w-full',
+            ],
+        ],
     ],
 
     /*

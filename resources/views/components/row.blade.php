@@ -1,6 +1,6 @@
 @php
     $fullWidth = !empty($data['full_width']);
-    $maxWidth = config('layup.frontend.max_width', 'container');
+    $maxWidth = \Crumbls\Layup\Support\PageLayout::resolve($page ?? null);
 @endphp
 <div
     @if(!empty($data['id']))id="{{ $data['id'] }}"@endif

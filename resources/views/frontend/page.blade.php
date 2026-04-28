@@ -11,9 +11,10 @@
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ $page->getMetaTitle() }}">
         <meta name="twitter:description" content="{{ $page->meta['description'] }}">
-        @if($page->meta['image'] ?? false)
-        <meta property="og:image" content="{{ $page->meta['image'] }}">
-        <meta name="twitter:image" content="{{ $page->meta['image'] }}">
+        @php($featuredImage = $page->getFeaturedImageUrl())
+        @if($featuredImage)
+        <meta property="og:image" content="{{ $featuredImage }}">
+        <meta name="twitter:image" content="{{ $featuredImage }}">
         @endif
         <link rel="canonical" href="{{ $page->getUrl() }}">
         @foreach($page->getStructuredData() as $schema)

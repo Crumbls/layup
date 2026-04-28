@@ -14,12 +14,14 @@ use Crumbls\Layup\Console\Commands\InstallCommand;
 use Crumbls\Layup\Console\Commands\ListWidgetsCommand;
 use Crumbls\Layup\Console\Commands\MakeControllerCommand;
 use Crumbls\Layup\Console\Commands\MakeWidgetCommand;
+use Crumbls\Layup\Console\Commands\PublishScheduledCommand;
 use Crumbls\Layup\Console\Commands\SearchCommand;
 use Crumbls\Layup\Support\LayupTheme;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Crumbls\Layup\View\Components\LayupWidgetComponent;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -32,6 +34,24 @@ class LayupServiceProvider extends ServiceProvider
 
         $this->app->singleton(WidgetRegistry::class, fn (): WidgetRegistry => new WidgetRegistry);
         $this->app->singleton(LayupTheme::class, fn (): LayupTheme => new LayupTheme);
+    }
+
+    /**
+     * Register the scheduled-publishing tick on the app's schedule unless
+     * the host app has opted out via config('layup.scheduling.auto_publish').
+     */
+    protected function registerSchedule(): void
+    {
+        if (! config('layup.scheduling.auto_publish', true)) {
+            return;
+        }
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('layup:publish-scheduled')
+                ->everyMinute()
+                ->withoutOverlapping()
+                ->runInBackground();
+        });
     }
 
     public function boot(): void
@@ -53,7 +73,10 @@ class LayupServiceProvider extends ServiceProvider
                 SearchCommand::class,
                 DoctorCommand::class,
                 DebugWidgetCommand::class,
+                PublishScheduledCommand::class,
             ]);
+
+            $this->registerSchedule();
         }
 
         if (config('layup.frontend.enabled', true)) {

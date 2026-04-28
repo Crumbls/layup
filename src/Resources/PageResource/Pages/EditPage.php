@@ -10,7 +10,6 @@ use Crumbls\Layup\Support\PageTemplate;
 use Crumbls\Layup\View\Row;
 use Filament\Actions;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -55,35 +54,10 @@ class EditPage extends EditRecord
                 ->icon('heroicon-o-cog-6-tooth')
                 ->color('gray')
                 ->modalWidth('md')
-                ->fillForm(fn (): array => [
-                    'title' => $this->record->title,
-                    'slug' => $this->record->slug,
-                    'status' => $this->record->status,
-                ])
-                ->schema([
-                    TextInput::make('title')
-                        ->label(__('layup::resource.title'))
-                        ->required()
-                        ->maxLength(255),
-                    TextInput::make('slug')
-                        ->label(__('layup::resource.slug'))
-                        ->required()
-                        ->maxLength(255)
-                        ->unique(
-                            config('layup.pages.model', Page::class),
-                            'slug',
-                            ignoreRecord: true,
-                        ),
-                    Select::make('status')
-                        ->label(__('layup::resource.status'))
-                        ->options([
-                            'draft' => __('layup::resource.draft'),
-                            'published' => __('layup::resource.published'),
-                        ])
-                        ->required(),
-                ])
+                ->fillForm(fn (): array => PageResource::settingsFillData($this->record))
+                ->schema(fn (): array => PageResource::settingsFormSchema($this->record))
                 ->action(function (array $data): void {
-                    $this->record->update($data);
+                    PageResource::applySettings($this->record, $data);
 
                     Notification::make()
                         ->success()
