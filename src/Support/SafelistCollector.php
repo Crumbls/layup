@@ -6,7 +6,6 @@ namespace Crumbls\Layup\Support;
 
 use Crumbls\Layup\Events\SafelistChanged;
 use Crumbls\Layup\Models\Page;
-use Crumbls\Layup\Support\PageLayout;
 
 /**
  * Collects all Tailwind CSS classes and inline styles used across
