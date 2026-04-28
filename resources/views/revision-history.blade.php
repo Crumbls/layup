@@ -1,50 +1,43 @@
-<div class="space-y-4">
+<div class="lyp-rev-list">
     @if($revisions->isEmpty())
-        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mx-auto mb-3 opacity-50">
+        <div class="lyp-rev-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-rev-empty-icon">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
             </svg>
-            <p class="text-sm">{{ __('layup::builder.no_revisions') }}</p>
+            <p>{{ __('layup::builder.no_revisions') }}</p>
         </div>
     @else
-        <div class="space-y-3">
+        <ul class="lyp-rev-items">
             @foreach($revisions as $revision)
-                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750 transition">
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-gray-400">
+                <li class="lyp-rev-item">
+                    <div class="lyp-rev-meta">
+                        <div class="lyp-rev-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-rev-icon">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                             </svg>
-                            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {{ $revision->created_at->format('M j, Y g:i A') }}
-                            </span>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">
-                                ({{ $revision->created_at->diffForHumans() }})
-                            </span>
+                            <span class="lyp-rev-date">{{ $revision->created_at->format('M j, Y g:i A') }}</span>
+                            <span class="lyp-rev-ago">({{ $revision->created_at->diffForHumans() }})</span>
                         </div>
-                        
+
                         @if($revision->note)
-                            <p class="text-xs text-gray-600 dark:text-gray-400 truncate">
-                                {{ $revision->note }}
-                            </p>
+                            <p class="lyp-rev-note">{{ $revision->note }}</p>
                         @endif
-                        
+
                         @if($revision->author)
-                            <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                                By: {{ $revision->author }}
-                            </p>
+                            <p class="lyp-rev-author">{{ __('layup::builder.by', ['name' => $revision->author]) }}</p>
                         @endif
-                        
-                        <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                            {{ count($revision->content['rows'] ?? []) }} row(s)
+
+                        <div class="lyp-rev-rows">
+                            {{ __('layup::builder.rows_count', ['count' => count($revision->content['rows'] ?? [])]) }}
                         </div>
                     </div>
-                    
+
                     <button
+                        type="button"
                         wire:click="restoreRevision({{ $revision->id }})"
                         wire:loading.attr="disabled"
                         wire:target="restoreRevision({{ $revision->id }})"
-                        class="ml-4 px-3 py-1.5 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="fi-btn fi-btn-color-primary fi-color-primary fi-size-sm fi-btn-size-sm lyp-rev-restore"
                         onclick="if(!confirm('{{ __('layup::builder.restore_confirm') }}')) { event.stopPropagation(); return false; }"
                     >
                         <span wire:loading.remove wire:target="restoreRevision({{ $revision->id }})">
@@ -54,14 +47,12 @@
                             {{ __('layup::builder.restoring') }}
                         </span>
                     </button>
-                </div>
+                </li>
             @endforeach
-        </div>
-        
+        </ul>
+
         @if($revisions->count() >= 50)
-            <div class="text-center text-xs text-gray-500 dark:text-gray-400 pt-2">
-                {{ __('layup::builder.showing_last_revisions') }}
-            </div>
+            <p class="lyp-rev-footnote">{{ __('layup::builder.showing_last_revisions') }}</p>
         @endif
     @endif
 </div>

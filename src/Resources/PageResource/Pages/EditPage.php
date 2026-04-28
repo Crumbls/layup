@@ -145,7 +145,8 @@ class EditPage extends EditRecord
 
         $this->record->update(['content' => $revision->content]);
         $this->pageContent = $revision->content;
-        $this->syncContent();
+
+        $this->refreshFormData(['content']);
 
         Notification::make()
             ->title(__('layup::notifications.revision_restored'))
