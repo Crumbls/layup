@@ -9,9 +9,9 @@ This section walks through the basics of building pages with Layup: creating pag
 
 Before starting, make sure you have:
 
-1. Installed the package and registered `LayupPlugin` in your panel provider (see [Installation](/docs/installation))
+1. Installed the package and registered `LayupPlugin` in your panel provider (see [Installation](/documentation/layup/v1/installation))
 2. Run migrations (`php artisan migrate`)
-3. Set up the Tailwind safelist (see [Installation](/docs/installation#tailwind-safelist-setup))
+3. Set up the Tailwind safelist (see [Installation](/documentation/layup/v1/installation#tailwind-safelist-setup))
 
 
 ## Quick start
