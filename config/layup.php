@@ -257,6 +257,36 @@ return [
         'auto_publish' => true,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | SEO Defaults
+    |--------------------------------------------------------------------------
+    |
+    | Layup emits standard meta tags (Open Graph, Twitter, canonical, JSON-LD)
+    | from the data each page already provides. These knobs let you set the
+    | site-wide fallbacks that don't belong on the page record itself.
+    |
+    | We deliberately don't ship anything that crosses into "SEO tool"
+    | territory — no scoring, no keyword analysis, no SERP previews. If you
+    | need that, reach for a dedicated tool.
+    |
+    */
+    'seo' => [
+        // Appended to every page's <title>, e.g. ' – Site Name'.
+        // null disables the suffix.
+        'title_suffix' => null,
+
+        // og:site_name fallback. null falls back to config('app.name').
+        'site_name' => null,
+
+        // Path or URL used when a page has no featured image.
+        // Path is resolved through layup.uploads.disk; absolute URLs pass through.
+        'default_og_image' => null,
+
+        // Label for the root crumb in BreadcrumbList JSON-LD.
+        'home_breadcrumb_label' => 'Home',
+    ],
+
     'page_layout' => [
         'default' => 'container',
         'default_template' => null, // null = use layup.frontend.view

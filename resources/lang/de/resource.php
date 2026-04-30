@@ -23,7 +23,10 @@ return [
     'page_details' => 'Seitendetails',
     'seo' => 'SEO',
     'meta_description' => 'Meta-Beschreibung',
+    'meta_description_help' => 'Wird von Suchmaschinen und sozialen Netzwerken verwendet. Etwa 150 Zeichen sind ideal.',
     'meta_keywords' => 'Meta-Schlüsselwörter',
+    'noindex' => 'Vor Suchmaschinen verbergen',
+    'noindex_help' => 'Fügt ein robots noindex,nofollow-Tag hinzu, damit diese Seite von Suchergebnissen und Crawlern ausgeschlossen wird.',
 
     // Status
     'draft' => 'Entwurf',

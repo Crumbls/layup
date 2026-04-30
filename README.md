@@ -19,7 +19,7 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Full Design tab** -- text color, alignment, font size, border, border radius, box shadow, opacity, background color, padding, margin
 - **Responsive visibility** -- show/hide per breakpoint on any element
 - **Entrance animations** -- fade in, slide up/down/left/right, zoom in (via Alpine x-intersect)
-- **Frontend rendering** -- configurable routes, layouts, and SEO meta (OG, Twitter Cards, canonical, JSON-LD)
+- **Frontend rendering** -- configurable routes, layouts, and SEO meta (OG, Twitter Cards, canonical, JSON-LD, breadcrumbs, robots, article timestamps)
 - **Tailwind safelist** -- automatic class collection for dynamic content
 - **Page templates** -- 5 built-in templates (blank, landing, about, contact, pricing) + save your own
 - **Content revisions** -- auto-save on content change, configurable max, restore from history

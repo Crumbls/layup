@@ -24,9 +24,10 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
@@ -86,17 +87,6 @@ class PageResource extends Resource
                     ->content(fn (?Model $record): HtmlString => self::renderPermalink($record))
                     ->columnSpanFull()
                     ->visible(fn (?Model $record): bool => (bool) $record),
-
-                Section::make(__('layup::resource.seo'))
-                    ->schema([
-                        TextInput::make('meta.description')
-                            ->label(__('layup::resource.meta_description'))
-                            ->maxLength(160),
-                        TextInput::make('meta.keywords')
-                            ->label(__('layup::resource.meta_keywords')),
-                    ])
-                    ->hidden()
-                    ->collapsed(),
 
                 LayupBuilder::make('content')
                     ->hiddenLabel(true)
@@ -372,6 +362,15 @@ class PageResource extends Resource
                 ->helperText(__('layup::resource.template_preset_help'))
                 ->visible(fn (): bool => PageLayout::templateOptions() !== [])
                 ->nullable(),
+            Textarea::make('meta_description')
+                ->label(__('layup::resource.meta_description'))
+                ->helperText(__('layup::resource.meta_description_help'))
+                ->maxLength(160)
+                ->rows(2)
+                ->nullable(),
+            Toggle::make('meta_noindex')
+                ->label(__('layup::resource.noindex'))
+                ->helperText(__('layup::resource.noindex_help')),
         ];
     }
 
@@ -390,6 +389,8 @@ class PageResource extends Resource
             'featured_image' => $record->featured_image,
             'container_preset' => $record->meta['layout']['container'] ?? null,
             'template_preset' => $record->meta['layout']['template'] ?? null,
+            'meta_description' => $record->meta['description'] ?? null,
+            'meta_noindex' => (bool) ($record->meta['noindex'] ?? false),
         ];
     }
 
@@ -402,7 +403,14 @@ class PageResource extends Resource
     {
         $containerPreset = $data['container_preset'] ?? null;
         $templatePreset = $data['template_preset'] ?? null;
-        unset($data['container_preset'], $data['template_preset']);
+        $metaDescription = $data['meta_description'] ?? null;
+        $metaNoindex = (bool) ($data['meta_noindex'] ?? false);
+        unset(
+            $data['container_preset'],
+            $data['template_preset'],
+            $data['meta_description'],
+            $data['meta_noindex'],
+        );
 
         $meta = $record->meta ?? [];
         $meta['layout'] = $meta['layout'] ?? [];
@@ -412,6 +420,14 @@ class PageResource extends Resource
 
         if (empty($meta['layout'])) {
             unset($meta['layout']);
+        }
+
+        self::setOrUnset($meta, 'description', $metaDescription);
+
+        if ($metaNoindex) {
+            $meta['noindex'] = true;
+        } else {
+            unset($meta['noindex']);
         }
 
         $data['meta'] = $meta;
