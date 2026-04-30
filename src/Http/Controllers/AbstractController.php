@@ -56,6 +56,11 @@ abstract class AbstractController extends Controller
             'layout' => $layout,
         ], $this->getViewData($request, $record, $sections));
 
+        // Share the record as a globally-available view variable so the
+        // <x-layup-seo /> component can resolve it from any layout —
+        // including custom host layouts that don't pass it explicitly.
+        view()->share('layupPage', $record);
+
         $response = response()->view($this->getView($request, $record), $viewData);
 
         $ttl = $this->getCacheTtl($request, $record);

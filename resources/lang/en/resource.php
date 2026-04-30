@@ -23,7 +23,10 @@ return [
     'page_details' => 'Page Details',
     'seo' => 'SEO',
     'meta_description' => 'Meta Description',
+    'meta_description_help' => 'Used by search engines and social shares. Around 150 characters works well.',
     'meta_keywords' => 'Meta Keywords',
+    'noindex' => 'Hide from search engines',
+    'noindex_help' => 'Adds a robots noindex,nofollow tag so this page is excluded from search results and crawlers.',
 
     // Status
     'draft' => 'Draft',

@@ -344,5 +344,35 @@ it('generates breadcrumb with nested slug', function (): void {
     $breadcrumbs = $schemas[1];
     expect($breadcrumbs['itemListElement'])->toHaveCount(3)
         ->and($breadcrumbs['itemListElement'][1]['name'])->toBe('Docs')
-        ->and($breadcrumbs['itemListElement'][2]['name'])->toBe('Getting-started');
+        // Leaf crumb uses the page's actual title rather than a title-
+        // cased slug segment.
+        ->and($breadcrumbs['itemListElement'][2]['name'])->toBe('Sub Page');
+});
+
+it('generates breadcrumbs from parent chain with real titles', function (): void {
+    $root = Page::create([
+        'title' => 'Documentation',
+        'slug' => 'docs',
+        'content' => ['rows' => []],
+        'status' => 'published',
+    ]);
+
+    $child = Page::create([
+        'title' => 'Getting Started',
+        'slug' => 'getting-started',
+        'parent_id' => $root->id,
+        'content' => ['rows' => []],
+        'status' => 'published',
+    ]);
+
+    $schemas = $child->getStructuredData();
+    $breadcrumbs = $schemas[1];
+
+    expect($breadcrumbs['itemListElement'])->toHaveCount(3)
+        ->and($breadcrumbs['itemListElement'][0]['name'])->toBe('Home')
+        ->and($breadcrumbs['itemListElement'][1]['name'])->toBe('Documentation')
+        ->and($breadcrumbs['itemListElement'][1])->toHaveKey('item')
+        ->and($breadcrumbs['itemListElement'][2]['name'])->toBe('Getting Started')
+        // Leaf crumb has no item (current page).
+        ->and($breadcrumbs['itemListElement'][2])->not->toHaveKey('item');
 });

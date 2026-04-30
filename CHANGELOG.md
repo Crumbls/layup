@@ -5,6 +5,30 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- New `<x-layup-seo />` Blade component. Drop it once into your layout's `<head>` and Layup emits the full meta block (description, OG, Twitter, canonical, robots, article timestamps, JSON-LD) on every layup-rendered request. On non-layup routes the component renders nothing, so it's safe in shared layouts.
+- `Crumbls\Layup\Http\Controllers\AbstractController` now shares the resolved record as `layupPage` in view scope, so the component resolves the page automatically on any host layout. Custom controllers can pass `:page="$myPage"` explicitly.
+- Page Settings modal exposes Meta Description (160-char) and a "Hide from search engines" toggle (`meta.noindex`).
+- New `layup.seo` config block: `title_suffix`, `site_name`, `default_og_image`, `home_breadcrumb_label`.
+- `og:locale`, `og:site_name`, `article:published_time`, `article:modified_time` emitted automatically.
+- BreadcrumbList JSON-LD walks the parent chain with real page titles when a parent_id is set; legacy slug-with-slashes pages still get a path-derived breadcrumb with the page's actual title at the leaf.
+- `tests/Feature/SeoMetaTest.php` adds render-level coverage, including a no-op assertion when `<x-layup-seo />` runs outside a Layup request.
+- `docs/advanced/seo-meta.md` documents the component, per-page settings, and config knobs.
+
+### Changed
+- SEO meta is now emitted on every published page. Previously the entire block was gated on `meta.description` being set, so pages without a description silently dropped all SEO meta.
+- Twitter card type is now `summary_large_image` when a featured image is present, `summary` otherwise. Was hardcoded to `summary`.
+- `og:type` is now `article` for pages with `published_at`, `website` otherwise. Was always implicitly `website`.
+- `getMetaTitle()` honors `layup.seo.title_suffix`.
+- `getFeaturedImageUrl()` falls back to `layup.seo.default_og_image` so social shares always have an image.
+- Removed the always-hidden SEO `Section` from `PageResource::form()`; description editing now lives in the Page Settings modal where it is actually visible.
+- Bundled reference layout (`resources/views/layouts/page.blade.php`) renders `<x-layup-seo />` instead of an undocumented `$meta` slot. The previous slot contract has been removed entirely; hosts whose layouts rendered `{{ $meta ?? '' }}` should swap it for `<x-layup-seo />` (the component is the only supported integration point).
+
+### Fixed
+- Editor-set page descriptions and Open Graph data now reach rendered HTML on host layouts. The previous slot pattern required host layouts to opt into an undocumented `meta` slot, and the bundled reference layout itself never rendered it — so vendor-publishing the layout produced zero SEO output regardless of editor input. Replacing the slot with a drop-in component eliminates the silent-failure mode.
+
 ## [1.2.3](https://github.com/Crumbls/layup/compare/v1.2.2...v1.2.3) (2026-04-19)
 
 ### Fixed

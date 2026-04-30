@@ -156,7 +156,16 @@ class Page extends Model
 
     public function getMetaTitle(): string
     {
-        return $this->meta['title'] ?? $this->title ?? '';
+        $title = $this->meta['title'] ?? $this->title ?? '';
+        $suffix = config('layup.seo.title_suffix');
+
+        if (! $title || ! $suffix) {
+            return (string) $title;
+        }
+
+        // Skip the suffix when the page title already ends with it,
+        // so editors who type the suffix manually don't get it twice.
+        return str_ends_with($title, $suffix) ? $title : $title . $suffix;
     }
 
     public function getMetaDescription(): ?string
@@ -229,31 +238,98 @@ class Page extends Model
             }
         }
 
-        // BreadcrumbList
-        $breadcrumbs = [
-            '@context' => 'https://schema.org',
-            '@type' => 'BreadcrumbList',
-            'itemListElement' => [
-                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => url('/')],
-            ],
-        ];
-
-        $pathParts = explode('/', (string) $this->path);
-        $pos = 2;
-        $prefix = config('layup.frontend.prefix', 'pages');
-        $path = $prefix;
-        foreach ($pathParts as $i => $part) {
-            $path .= '/' . $part;
-            $item = ['@type' => 'ListItem', 'position' => $pos++, 'name' => ucfirst($part)];
-            if ($i < count($pathParts) - 1) {
-                $item['item'] = url(ltrim($path, '/'));
-            }
-            $breadcrumbs['itemListElement'][] = $item;
-        }
-
-        $schemas[] = $breadcrumbs;
+        $schemas[] = $this->buildBreadcrumbList();
 
         return $schemas;
+    }
+
+    /**
+     * Build BreadcrumbList JSON-LD. Prefers walking the parent chain
+     * (real page titles); falls back to splitting the URL path with
+     * title-cased segments for legacy pages whose slug contains slashes
+     * but has no parent_id.
+     *
+     * @return array<string, mixed>
+     */
+    protected function buildBreadcrumbList(): array
+    {
+        $homeLabel = config('layup.seo.home_breadcrumb_label', 'Home');
+        $items = [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => $homeLabel, 'item' => url('/')],
+        ];
+
+        $chain = $this->collectAncestorChain();
+
+        if (count($chain) > 1) {
+            foreach ($chain as $i => $page) {
+                $isLast = $i === count($chain) - 1;
+                $item = [
+                    '@type' => 'ListItem',
+                    'position' => $i + 2,
+                    'name' => $page->title,
+                ];
+                if (! $isLast) {
+                    $item['item'] = $page->getUrl();
+                }
+                $items[] = $item;
+            }
+
+            return [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => $items,
+            ];
+        }
+
+        // Legacy fallback for slug-with-slashes pages: walk the path
+        // string and title-case each segment. We can't emit real titles
+        // here because intermediate segments may not have their own
+        // page records.
+        $pathParts = array_filter(explode('/', (string) $this->path));
+        if ($pathParts !== []) {
+            $prefix = config('layup.frontend.prefix', 'pages');
+            $accumulated = $prefix;
+
+            foreach (array_values($pathParts) as $i => $part) {
+                $accumulated .= '/' . $part;
+                $isLast = $i === count($pathParts) - 1;
+                $item = [
+                    '@type' => 'ListItem',
+                    'position' => $i + 2,
+                    'name' => $isLast ? $this->title : ucfirst($part),
+                ];
+                if (! $isLast) {
+                    $item['item'] = url(ltrim($accumulated, '/'));
+                }
+                $items[] = $item;
+            }
+        }
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $items,
+        ];
+    }
+
+    /**
+     * Walk parent_id up to the root, returning ancestors oldest-first
+     * (root first, $this last). Capped by layup.pages.max_depth.
+     *
+     * @return array<int, self>
+     */
+    protected function collectAncestorChain(): array
+    {
+        $chain = [];
+        $cursor = $this;
+        $guard = (int) config('layup.pages.max_depth', 10);
+
+        while ($cursor && $guard-- > 0) {
+            array_unshift($chain, $cursor);
+            $cursor = $cursor->parent;
+        }
+
+        return $chain;
     }
 
     /**
@@ -298,13 +374,15 @@ class Page extends Model
     }
 
     /**
-     * Resolve the featured image to an absolute URL. Returns null if no
-     * image is set. Falls back to meta.image so legacy data keeps
-     * surfacing in OG tags until users move it to the dedicated field.
+     * Resolve the featured image to an absolute URL. Falls back to
+     * meta.image (legacy field), then to layup.seo.default_og_image so
+     * social shares always have an image even on pages with none set.
      */
     public function getFeaturedImageUrl(): ?string
     {
-        $value = $this->featured_image ?? ($this->meta['image'] ?? null);
+        $value = $this->featured_image
+            ?? ($this->meta['image'] ?? null)
+            ?? config('layup.seo.default_og_image');
 
         if (! $value) {
             return null;

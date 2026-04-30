@@ -118,6 +118,7 @@ class LayupServiceProvider extends ServiceProvider
         ], 'layup-stubs');
 
         Blade::component('layup-widget', LayupWidgetComponent::class);
+        Blade::component('layup-seo', \Crumbls\Layup\View\Components\LayupSeo::class);
 
         Blade::directive('layupScripts', fn (): string => "<?php \Crumbls\Layup\Support\ThemeResolver::ensureBooted(); echo '<style>' . app(\Crumbls\Layup\Support\LayupTheme::class)->toCss() . '</style>'; ?>"
             . "<?php if(config('layup.frontend.include_scripts', true)): ?>"
