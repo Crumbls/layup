@@ -5,6 +5,13 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0](https://github.com/Crumbls/layup/compare/v1.2.3...v1.3.0) (2026-05-01)
+
+
+### Features
+
+* **core:** add option to hide layup "pages" resource in filament panel ([f6ddd9a](https://github.com/Crumbls/layup/commit/f6ddd9a7b4ced76b60b66168b348bd25324a3a3b))
+
 ## [Unreleased]
 
 ### Added
