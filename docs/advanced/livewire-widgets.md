@@ -181,6 +181,22 @@ class LiveCounter extends Component
 </div>
 ```
 
+#### Component format (Livewire 3 vs Livewire 4)
+
+The example above uses the **class-based** format -- a separate PHP class in `app/Livewire/` plus a Blade view in `resources/views/livewire/`. This is the only format Livewire 3 ships, and the format Layup's documentation assumes.
+
+Livewire 4 adds two more formats and `php artisan make:livewire` defaults to single-file components, **not** the class-based layout:
+
+| Flag | Output | Notes |
+|---|---|---|
+| `--class` | `app/Livewire/Foo.php` + `resources/views/livewire/foo.blade.php` | Matches the example above. Pass this flag in Livewire 4 if you want the two-file layout. |
+| `--sfc` (default in v4) | `resources/views/components/⚡foo.blade.php` | Single file with `<?php new class extends Component {} ?>` and the template inline. |
+| `--mfc` | `resources/views/components/foo/{foo.blade.php, foo.php, foo.js, foo.css}` | One directory per component. |
+
+All three formats work with `BaseLivewireWidget`. `<livewire:dynamic-component>` only requires that the alias or class name resolves to a registered Livewire component; it doesn't care how the component is authored. Pick the format that matches the rest of your project.
+
+If you run `php artisan make:livewire LiveCounter` in a Livewire 4 project and got an SFC by mistake, either delete it and pass `--class`, or use the SFC as-is and reference it by its kebab-case alias from `getLivewireComponent()`.
+
 Register the widget like any other:
 
 ```php
