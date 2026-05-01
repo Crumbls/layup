@@ -19,7 +19,7 @@ Three concerns live in three orthogonal places:
 
 Identity lives in either the widget class itself or, for widgets meant to ship in multiple render flavours, an identity trait. Rendering tech lives in the base class (`BaseBladeWidget` or `BaseLivewireWidget`). Data plumbing lives in `BaseView`, which both bases extend. The `Widget` contract (`Crumbls\Layup\Contracts\Widget`) is the interface both bases implement, so anywhere code accepts "a widget" it accepts either flavour.
 
-```
+```text
 Crumbls\Layup\Contracts\Widget               (interface, rendering-agnostic)
                 |
                 v
@@ -284,7 +284,7 @@ app(\Crumbls\Layup\Support\WidgetRegistry::class)
 
 `WidgetRegistry::register()` logs a warning when overriding an existing type so the swap is visible in logs:
 
-```
+```text
 Layup: Widget type 'newsletter' already registered by ... Overriding with ...
 ```
 

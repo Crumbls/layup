@@ -34,6 +34,25 @@ class HtmlableChild extends BaseView
     }
 }
 
+/**
+ * Custom Htmlable that intentionally does not define __toString(). Casting
+ * an instance with (string) would throw -- the helper must reach toHtml()
+ * via instanceof Htmlable instead.
+ */
+class HtmlableWithoutToStringChild extends BaseView
+{
+    public function render(): Htmlable
+    {
+        return new class implements Htmlable
+        {
+            public function toHtml(): string
+            {
+                return '<span data-marker="custom-htmlable">cust</span>';
+            }
+        };
+    }
+}
+
 class ViewChild extends BaseView
 {
     public function render(): \Illuminate\Contracts\View\View
@@ -68,6 +87,15 @@ it('coerces Htmlable-returning children into the concatenated string', function 
 
     expect($parent->renderChildrenToHtml())
         ->toBe('<span data-marker="htmlable">htm</span>');
+});
+
+it('handles Htmlable implementations that do not define __toString()', function (): void {
+    $parent = StringChild::make([], [
+        HtmlableWithoutToStringChild::make(),
+    ]);
+
+    expect($parent->renderChildrenToHtml())
+        ->toBe('<span data-marker="custom-htmlable">cust</span>');
 });
 
 it('coerces View-returning children into the concatenated string', function (): void {

@@ -97,15 +97,20 @@ abstract class BaseView extends Component
      *
      * Used by render() implementations that need a pre-rendered children
      * blob (e.g. when mounting a Livewire component and passing children
-     * through the slot). Each child's render() result is cast to string,
-     * which works for View, Htmlable, and string return types alike.
+     * through the slot). Htmlable results go through toHtml() so custom
+     * Htmlable implementations that don't define __toString() still work;
+     * View and string returns are handled by the (string) cast (concrete
+     * Illuminate\View\View defines __toString()).
      */
     public function renderChildrenToHtml(): string
     {
         $html = '';
 
         foreach ($this->children as $child) {
-            $html .= (string) $child->render();
+            $rendered = $child->render();
+            $html .= $rendered instanceof Htmlable
+                ? $rendered->toHtml()
+                : (string) $rendered;
         }
 
         return $html;
