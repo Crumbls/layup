@@ -18,6 +18,16 @@ Validation warnings are logged but do not block the save. This lets editors save
 
 Set the **Status** field to `published` to make the page live. Draft pages are only visible in the admin panel.
 
+### Scheduled publishing
+
+Set the status to `scheduled` and pick a future **Publish at** date and time. Layup auto-registers the `layup:publish-scheduled` console command on the application scheduler (every minute), so the page flips to `published` once its publish time arrives without any extra wiring -- as long as your app's scheduler is actually running (`php artisan schedule:work` in development, the standard cron in production).
+
+If you'd rather control the command yourself (for example, run it on a single worker), set `layup.scheduling.auto_publish` to `false` in `config/layup.php` and call `layup:publish-scheduled` from your own scheduler. The command supports `--dry-run` to preview which pages would be promoted:
+
+```bash
+php artisan layup:publish-scheduled --dry-run
+```
+
 ### Frontend routes
 
 When `frontend.enabled` is `true` in `config/layup.php` (the default), published pages are served at:

@@ -1,6 +1,6 @@
 # Layup
 
-A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style editor with rows, columns, and 95 extensible widgets -- all using native Filament form components.
+A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style editor with rows, columns, and 96 extensible widgets -- all using native Filament form components, with optional Livewire rendering for any widget that needs it.
 
 **[Documentation](https://crumbls.com/documentation/layup)** -- full documentation available online.
 
@@ -44,13 +44,16 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - **Testing helpers** -- factory states and assertions for custom widget development
 - **Developer tooling** -- `layup:doctor`, `layup:list-widgets`, `layup:search` commands
 - **Publishable stubs** -- customize `make-widget` scaffolding templates
-- **1,131 tests, 3,517 assertions**
+- **Dual-render widgets** -- Blade (default) or Livewire per widget, opt-in via `BaseLivewireWidget`
+- **Nested pages** -- parent → child page trees with breadcrumb-aware URL paths
+- **Scheduled publishing** -- pages flip from `scheduled` to `published` automatically at their `published_at` time
+- **1,168 tests, 3,649 assertions**
 
-### Built-in Widgets (95)
+### Built-in Widgets (96)
 
 | Category | Widgets |
 |----------|---------|
-| **Content** (57) | Text, Heading, Rich Text, Blurb, Icon, Icon Box, Icon List, Badge, Card, Alert, List, Blockquote, Banner, Section Heading, Accordion, Toggle, Tabs, Feature List, Feature Grid, Testimonial, Testimonial Carousel, Testimonial Grid, Testimonial Slider, Breadcrumbs, Person, Step Process, Team Grid, Logo Grid, Logo Slider, Avatar Group, Price, Metric, Social Proof, Image Text, Text Columns, Timeline, Animated Heading, Bar Counter, Highlight Box, Number Counter, Star Rating, Gradient Text, Typewriter, Quote Carousel, Marquee, Table of Contents, Stat Card, Changelog, Menu, Notification Bar, Table, Comparison Table, Skill Bar, Progress Circle, Post List, Hero, FAQ (with JSON-LD) |
+| **Content** (58) | Text, Heading, Page Title, Rich Text, Blurb, Icon, Icon Box, Icon List, Badge, Card, Alert, List, Blockquote, Banner, Section Heading, Accordion, Toggle, Tabs, Feature List, Feature Grid, Testimonial, Testimonial Carousel, Testimonial Grid, Testimonial Slider, Breadcrumbs, Person, Step Process, Team Grid, Logo Grid, Logo Slider, Avatar Group, Price, Metric, Social Proof, Image Text, Text Columns, Timeline, Animated Heading, Bar Counter, Highlight Box, Number Counter, Star Rating, Gradient Text, Typewriter, Quote Carousel, Marquee, Table of Contents, Stat Card, Changelog, Menu, Notification Bar, Table, Comparison Table, Skill Bar, Progress Circle, Post List, Hero, FAQ (with JSON-LD) |
 | **Media** (13) | Image (with hover effects), Gallery (with lightbox + captions), Video, Video Playlist, Audio, Slider, Masonry, Lottie, Map, Before/After, Image Card, Hotspot, Image Hotspot |
 | **Interactive** (18) | Button (hover colors), Call to Action, CTA Banner, Countdown, Pricing Table, Pricing Toggle, Social Follow, Search, Contact Form, Login, Newsletter, Modal, Flip Card, Cookie Consent, Content Toggle, Share Buttons, File Download, Back to Top |
 | **Layout** (4) | Spacer, Divider, Separator, Anchor |

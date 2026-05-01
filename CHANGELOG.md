@@ -5,7 +5,7 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0](https://github.com/Crumbls/layup/compare/v1.2.3...v1.3.0) (2026-05-01)
 
 ### Added
 - **Dual-render widget architecture.** Widgets can now render through either a Blade view component (the default) or a Livewire component, opt-in via a new `BaseLivewireWidget` base class. Same `Widget` contract, same editor experience, same registration -- only the frontend render path differs.
@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BreadcrumbList JSON-LD walks the parent chain with real page titles when a parent_id is set; legacy slug-with-slashes pages still get a path-derived breadcrumb with the page's actual title at the leaf.
 - `tests/Feature/SeoMetaTest.php` adds render-level coverage, including a no-op assertion when `<x-layup-seo />` runs outside a Layup request.
 - `docs/advanced/seo-meta.md` documents the component, per-page settings, and config knobs.
+- **Nested pages via `parent_id`.** Pages can now form parent → child trees. A new `path` column stores the resolved URL (cached on save), and the breadcrumb walker uses real ancestor titles instead of slug splitting. The `slug` unique index is replaced with a unique index on `path`. Migration `2026_04_27_000001_add_nesting_to_layup_pages_table.php` adds the columns and backfills `path` from `slug` for existing rows. `layup.pages.max_depth` (default `10`) caps tree depth and guards against accidental cycles.
+- New **`PageTitleWidget`** (`page-title`). A page-aware heading widget that injects the current page's title at render time and reuses the heading widget's view for consistent styling. Useful for templates and shared layouts where the title varies per page.
+- **Scheduled publishing.** Pages with `status = 'scheduled'` and a future `published_at` automatically flip to `published` once their publish time arrives. The `layup:publish-scheduled` console command does the work (with a `--dry-run` flag) and the service provider auto-registers it on the app's scheduler to run every minute. New `layup.scheduling.auto_publish` config (default `true`) lets hosts opt out and register the command themselves (e.g. on a single worker).
+- **`layup.pages.enabled` config option** to register or hide the bundled `PageResource` in the Filament panel. Set to `false` to use Layup as a rendering engine without surfacing the admin UI; pages still render normally via the frontend controller, `@layup` directive, or `HasLayupContent` on host models. (Thanks @TheGodlyLuzer, [#20](https://github.com/Crumbls/layup/pull/20).)
 
 ### Changed
 - `BaseView::render()` return type widened from `Illuminate\Contracts\View\View` to `View|Htmlable|string`. Existing Blade widgets are unaffected (returning a `View` still satisfies the wider type via covariance); the wider type lets `BaseLivewireWidget::render()` return a `string` from `Blade::render()`. Subclasses that previously declared `: View` continue to work.
@@ -41,6 +45,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Editor-set page descriptions and Open Graph data now reach rendered HTML on host layouts. The previous slot pattern required host layouts to opt into an undocumented `meta` slot, and the bundled reference layout itself never rendered it — so vendor-publishing the layout produced zero SEO output regardless of editor input. Replacing the slot with a drop-in component eliminates the silent-failure mode.
+- Backfill missing top-level defaults across 12 widgets (22 fields) so freshly inserted widgets render with complete data. Previously some fields were declared in the form schema but absent from `getDefaultData()`, producing undefined-key warnings on first render until the editor saved the widget once.
+- `layup:doctor` no longer flags Repeater and Builder sub-fields as missing top-level defaults. The walker now distinguishes nested fields (whose defaults live in the parent's `default()` payload) from top-level fields, eliminating a class of false positives.
+- Revision restore in the page builder produces a cleaner diff view and correctly re-applies revision content without losing widget IDs.
+
+### Maintenance
+- `bin/docs-lint` is restored and hardened against three edge cases that previously masked broken links and stale anchors during local doc builds.
 
 ## [1.2.3](https://github.com/Crumbls/layup/compare/v1.2.2...v1.2.3) (2026-04-19)
 

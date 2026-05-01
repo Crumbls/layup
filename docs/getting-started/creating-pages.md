@@ -62,8 +62,16 @@ Click a column header to configure:
 - **Align self** -- override the row's align setting for this column
 - **Overflow** -- `visible`, `hidden`, `auto`, `scroll`
 
+## Nested pages
+
+Pages can form a parent → child tree. Set a **Parent** in the page form and Layup builds the URL path by walking the chain (`about` → `about/team` → `about/team/leadership`). The resolved path is stored on the page's `path` column on every save; the unique constraint lives on `path` rather than `slug`, so two pages can share the same slug under different parents.
+
+Nested pages also drive breadcrumbs: the JSON-LD `BreadcrumbList` walks the parent chain and emits real ancestor titles (instead of title-cased URL segments). Legacy pages that pre-date nesting -- those whose `slug` already contains slashes but have no `parent_id` -- continue to work and fall back to the path-derived breadcrumb.
+
+The maximum tree depth is governed by `layup.pages.max_depth` (default `10`). Top-level pages count as depth 1. The depth cap also acts as a guard against accidental cycles when resolving ancestors.
+
 ## Page status
 
-Pages start as **Draft**. Change the status to **Published** to make them visible on the frontend (if frontend routes are enabled).
+Pages start as **Draft**. Change the status to **Published** to make them visible on the frontend (if frontend routes are enabled). Use **Scheduled** with a future **Publish at** time to have Layup promote the page automatically -- see [Saving and Publishing > Scheduled publishing](publishing.md#scheduled-publishing).
 
 You can filter the page list by status using the built-in Filament filter.

@@ -14,10 +14,13 @@ The main model for Layup pages. Uses soft deletes, factory support, and the `Has
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | integer | Primary key |
+| `parent_id` | foreignId, nullable | Parent page (cascade nulls on delete) |
 | `title` | string | Page title |
-| `slug` | string | Unique URL slug |
+| `slug` | string | URL slug, indexed (no longer unique on its own) |
+| `path` | string | Resolved URL path (unique). Built from the parent chain on save |
 | `content` | array (JSON) | Page builder content |
-| `status` | string | `draft` or `published` |
+| `status` | string | `draft`, `scheduled`, or `published` |
+| `published_at` | datetime, nullable | Live time (auto-set on publish, used for scheduled publishing) |
 | `meta` | array (JSON) | SEO metadata |
 | `created_at` | timestamp | |
 | `updated_at` | timestamp | |
@@ -28,6 +31,13 @@ The main model for Layup pages. Uses soft deletes, factory support, and the `Has
 ```php
 Page::published()->get();  // Where status = 'published'
 Page::draft()->get();      // Where status = 'draft'
+```
+
+### Relationships
+
+```php
+$page->parent(): BelongsTo   // Parent page (or null for top-level)
+$page->children(): HasMany   // Direct children
 ```
 
 ### SEO methods
