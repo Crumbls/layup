@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Install git hooks for this package.
+# Run once after cloning: bin/install-hooks
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+hooks_dir="${repo_root}/.git/hooks"
+
+if [[ ! -d "${hooks_dir}" ]]; then
+    echo "install-hooks: no .git/hooks dir (not a git checkout?)" >&2
+    exit 1
+fi
+
+cat > "${hooks_dir}/pre-commit" <<'HOOK'
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+# Only run if any docs/ or bin/docs-lint change is staged.
+if ! git diff --cached --name-only --diff-filter=ACMR | grep -Eq '^(docs/|bin/docs-lint$)'; then
+    exit 0
+fi
+
+"${repo_root}/bin/docs-lint"
+HOOK
+
+chmod +x "${hooks_dir}/pre-commit"
+echo "install-hooks: pre-commit hook installed -> ${hooks_dir}/pre-commit"

@@ -1,0 +1,213 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * docs-lint -- validate the docs/ tree against Crumbls documentation-site rules.
+ *
+ * Rules enforced:
+ *   1. No legacy /docs/... links, no relative ./ or ../ links
+ *   2. Filenames match ^[a-z0-9][a-z0-9\-]*\.md$ (except _index.md)
+ *   3. Every directory under docs/ contains _index.md
+ *   4. Every .md file starts with YAML frontmatter
+ *   5. Every page has a title; non-root pages have a weight
+ *   6. Every /documentation/{pkg}/{ver}/{slug} link resolves to a file on disk
+ *
+ * Usage:
+ *   bin/docs-lint                      # lint this package's docs/
+ *   bin/docs-lint path/to/other/pkg    # lint another package's docs/
+ *
+ * Exit codes:
+ *   0 clean, 1 lint failures, 2 bad invocation.
+ */
+
+$packageRoot = $argv[1] ?? dirname(__DIR__);
+$packageRoot = realpath($packageRoot);
+
+if ($packageRoot === false || ! is_dir($packageRoot)) {
+    fwrite(STDERR, "docs-lint: package root not found\n");
+    exit(2);
+}
+
+$docsRoot = $packageRoot . '/docs';
+
+if (! is_dir($docsRoot)) {
+    fwrite(STDERR, "docs-lint: no docs/ directory at {$packageRoot}\n");
+    exit(2);
+}
+
+$packageSlug = basename($packageRoot);
+
+$filenameRegex = '/^[a-z0-9][a-z0-9\-]*\.md$/';
+$errors = [];
+$mdFiles = [];
+
+$it = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($docsRoot, FilesystemIterator::SKIP_DOTS),
+    RecursiveIteratorIterator::SELF_FIRST,
+);
+
+foreach ($it as $file) {
+    if ($file->isDir()) {
+        if (! is_file($file->getPathname() . '/_index.md')) {
+            $errors[] = relPath($docsRoot, $file->getPathname()) . ': directory missing _index.md';
+        }
+        continue;
+    }
+
+    if ($file->getExtension() !== 'md') {
+        continue;
+    }
+
+    $name = $file->getFilename();
+
+    if ($name !== '_index.md' && ! preg_match($filenameRegex, $name)) {
+        $errors[] = relPath($docsRoot, $file->getPathname()) . ": filename must match {$filenameRegex}";
+    }
+
+    $mdFiles[] = $file->getPathname();
+}
+
+foreach ($mdFiles as $path) {
+    $rel = relPath($docsRoot, $path);
+    $content = file_get_contents($path);
+
+    if (! str_starts_with($content, "---\n") && ! str_starts_with($content, "---\r\n")) {
+        $errors[] = "{$rel}: missing YAML frontmatter";
+        continue;
+    }
+
+    [$front, $body] = splitFrontmatter($content);
+
+    $isVersionRoot = (str_replace(DIRECTORY_SEPARATOR, '/', $path) === "{$docsRoot}/_index.md");
+
+    if (! isset($front['title'])) {
+        $errors[] = "{$rel}: frontmatter missing `title`";
+    }
+
+    $needsWeight = ! $isVersionRoot;
+
+    if ($needsWeight && ! isset($front['weight'])) {
+        $errors[] = "{$rel}: frontmatter missing `weight`";
+    }
+
+    foreach (findLinks($body) as [$linkLine, $href]) {
+        if (str_starts_with($href, '/docs/')) {
+            $errors[] = "{$rel}:{$linkLine}: legacy /docs/... link -- use /documentation/{package}/{version}/...";
+            continue;
+        }
+
+        if (str_starts_with($href, './') || str_starts_with($href, '../')) {
+            $errors[] = "{$rel}:{$linkLine}: relative link `{$href}` -- use absolute /documentation/{package}/{version}/...";
+            continue;
+        }
+
+        if (str_starts_with($href, '/documentation/')) {
+            $target = resolveDocTarget($docsRoot, $href, $packageSlug);
+            if ($target === null) {
+                $errors[] = "{$rel}:{$linkLine}: broken link `{$href}` (no matching doc file)";
+            }
+        }
+    }
+}
+
+if ($errors === []) {
+    $count = count($mdFiles);
+    echo "docs-lint: OK ({$count} files)\n";
+    exit(0);
+}
+
+fwrite(STDERR, "docs-lint: " . count($errors) . " issue(s)\n");
+foreach ($errors as $err) {
+    fwrite(STDERR, "  {$err}\n");
+}
+exit(1);
+
+function relPath(string $root, string $path): string
+{
+    $root = rtrim($root, '/\\');
+    if (str_starts_with($path, $root)) {
+        return ltrim(substr($path, strlen($root)), '/\\');
+    }
+    return $path;
+}
+
+function splitFrontmatter(string $content): array
+{
+    $parts = preg_split('/^---\s*$/m', $content, 3);
+    if (count($parts) < 3) {
+        return [[], $content];
+    }
+
+    $front = [];
+    foreach (preg_split('/\R/', trim($parts[1])) as $line) {
+        if (! preg_match('/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/', $line, $m)) {
+            continue;
+        }
+        $front[$m[1]] = trim($m[2], " \t\"'");
+    }
+
+    return [$front, $parts[2]];
+}
+
+function findLinks(string $body): array
+{
+    $links = [];
+    $lineNum = 0;
+    foreach (preg_split('/\R/', $body) as $line) {
+        $lineNum++;
+        if (preg_match_all('/\]\(([^)]+)\)/', $line, $m)) {
+            foreach ($m[1] as $href) {
+                $href = explode(' ', $href, 2)[0];
+                $links[] = [$lineNum, $href];
+            }
+        }
+    }
+    return $links;
+}
+
+function resolveDocTarget(string $docsRoot, string $href, string $packageSlug): ?string
+{
+    $path = parse_url($href, PHP_URL_PATH);
+    if (! is_string($path)) {
+        return null;
+    }
+
+    $parts = array_values(array_filter(explode('/', $path), fn ($p) => $p !== ''));
+
+    if (count($parts) < 2 || $parts[0] !== 'documentation') {
+        return null;
+    }
+
+    // Cross-package link: cannot validate against this package's filesystem,
+    // accept as opaque. The site controller resolves it at request time.
+    if ($parts[1] !== $packageSlug) {
+        return $href;
+    }
+
+    // /documentation/{pkg} alone -- controller redirects to the default
+    // version. As long as the package has docs, this is valid.
+    if (count($parts) === 2) {
+        return is_file($docsRoot . '/_index.md') ? $docsRoot . '/_index.md' : null;
+    }
+
+    $slugParts = array_slice($parts, 3);
+    if ($slugParts === []) {
+        return is_file($docsRoot . '/_index.md') ? $docsRoot . '/_index.md' : null;
+    }
+
+    $slug = implode('/', $slugParts);
+    $candidates = [
+        $docsRoot . '/' . $slug . '.md',
+        $docsRoot . '/' . $slug . '/_index.md',
+    ];
+
+    foreach ($candidates as $c) {
+        if (is_file($c)) {
+            return $c;
+        }
+    }
+
+    return null;
+}
