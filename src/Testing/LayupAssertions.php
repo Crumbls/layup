@@ -8,7 +8,8 @@ use Crumbls\Layup\Contracts\Widget;
 use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Crumbls\Layup\View\BaseView;
-use Crumbls\Layup\View\BaseWidget;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
 trait LayupAssertions
@@ -65,10 +66,22 @@ trait LayupAssertions
         );
 
         $widget = $class::make($data ?: $class::getDefaultData());
-        $html = $widget->render()->render();
+        $html = $this->renderToString($widget->render());
 
         $this->assertIsString($html, "Failed asserting that widget '{$type}' renders a string.");
         $this->assertNotEmpty($html, "Failed asserting that widget '{$type}' renders non-empty HTML.");
+    }
+
+    /**
+     * Coerce a widget render() result (View | Htmlable | string) into a string.
+     */
+    protected function renderToString(View|Htmlable|string $rendered): string
+    {
+        return match (true) {
+            is_string($rendered) => $rendered,
+            $rendered instanceof View => $rendered->render(),
+            $rendered instanceof Htmlable => $rendered->toHtml(),
+        };
     }
 
     /**
@@ -130,7 +143,7 @@ trait LayupAssertions
     /**
      * Assert that a widget's getDefaultData() covers all fields in getContentFormSchema().
      *
-     * @param  class-string<BaseWidget>  $class
+     * @param  class-string<Widget>  $class
      */
     public function assertDefaultsCoverFormFields(string $class): void
     {
@@ -148,14 +161,14 @@ trait LayupAssertions
     /**
      * Assert that a widget renders successfully with its default data.
      *
-     * @param  class-string<BaseWidget>  $class
+     * @param  class-string<Widget>  $class
      */
     public function assertWidgetRendersWithDefaults(string $class): void
     {
         $defaults = $class::getDefaultData();
         $prepared = $class::prepareForRender($defaults);
         $widget = $class::make($prepared);
-        $html = $widget->render()->render();
+        $html = $this->renderToString($widget->render());
 
         $this->assertIsString($html, "Failed asserting that {$class} renders a string with default data.");
         $this->assertNotEmpty($html, "Failed asserting that {$class} renders non-empty HTML with default data.");
@@ -164,7 +177,7 @@ trait LayupAssertions
     /**
      * Extract field names from a widget's content form schema.
      *
-     * @param  class-string<BaseWidget>  $class
+     * @param  class-string<Widget>  $class
      * @return array<string>
      */
     protected function extractWidgetFieldNames(string $class): array

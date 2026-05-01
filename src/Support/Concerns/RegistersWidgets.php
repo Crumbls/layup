@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Support\Concerns;
 
+use Crumbls\Layup\Contracts\Widget;
 use Crumbls\Layup\Support\WidgetRegistry;
-use Crumbls\Layup\View\BaseWidget;
 
 /**
  * Populates the WidgetRegistry from config and auto-discovery.
@@ -46,7 +46,12 @@ trait RegistersWidgets
 
             $className = "{$namespace}\\{$file->getBasename('.php')}";
 
-            if (class_exists($className) && is_subclass_of($className, BaseWidget::class) && ! $registry->has($className::getType())) {
+            if (
+                class_exists($className)
+                && is_subclass_of($className, Widget::class)
+                && ! (new \ReflectionClass($className))->isAbstract()
+                && ! $registry->has($className::getType())
+            ) {
                 $registry->register($className);
             }
         }

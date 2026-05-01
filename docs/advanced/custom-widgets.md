@@ -22,9 +22,11 @@ Add `--with-test` to also generate a Pest test file:
 php artisan layup:make-widget BannerWidget --with-test
 ```
 
+> **Need server-side state?** Widgets can also render through Livewire components instead of Blade. See [Livewire-rendered widgets](livewire-widgets.md).
+
 ## Widget class structure
 
-Every custom widget extends `BaseWidget` and implements two required methods:
+Every custom widget extends `BaseWidget` (or `BaseLivewireWidget` for Livewire-rendered output) and implements two required methods:
 
 ```php
 <?php

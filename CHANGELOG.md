@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Dual-render widget architecture.** Widgets can now render through either a Blade view component (the default) or a Livewire component, opt-in via a new `BaseLivewireWidget` base class. Same `Widget` contract, same editor experience, same registration -- only the frontend render path differs.
+  - `Crumbls\Layup\View\BaseLivewireWidget` mounts a Livewire component via `<livewire:dynamic-component>`, passing the widget's `$data` as a prop and recursively-rendered children as the default slot. Children remain polymorphic (Blade, Livewire, or any mix).
+  - `Crumbls\Layup\View\BaseBladeWidget` is the renamed body of the previous `BaseWidget`. The default Blade rendering path is unchanged.
+  - `Crumbls\Layup\View\BaseWidget` remains as an abstract alias of `BaseBladeWidget` so every existing widget, stub, doc, and downstream package continues to work without modification.
+  - `Crumbls\Layup\View\Concerns\HasWidgetDefaults` trait extracts the static metadata defaults shared between both bases.
+  - `Crumbls\Layup\View\Concerns\Identity\` ships per-widget identity traits (`HeadingIdentity`, `ButtonIdentity`, `NumberCounterIdentity`, `NewsletterIdentity`) so a downstream package can ship a Livewire flavour of those built-ins without redeclaring form schema, defaults, or preview.
+  - `BaseView::renderChildrenToHtml()` recursively renders all children to a single HTML string. Used internally by `BaseLivewireWidget` for the slot path and available to any custom render path.
+  - `livewire/livewire` is a soft dependency (declared in `composer.json` `suggest`). The package loads cleanly without it; install it only when actually using `BaseLivewireWidget`.
+  - New `docs/advanced/livewire-widgets.md` covering when to choose each base, the render flow, the slot-based children model, identity-trait swapping, asset pipeline, performance, testing, and security considerations.
 - New `<x-layup-seo />` Blade component. Drop it once into your layout's `<head>` and Layup emits the full meta block (description, OG, Twitter, canonical, robots, article timestamps, JSON-LD) on every layup-rendered request. On non-layup routes the component renders nothing, so it's safe in shared layouts.
 - `Crumbls\Layup\Http\Controllers\AbstractController` now shares the resolved record as `layupPage` in view scope, so the component resolves the page automatically on any host layout. Custom controllers can pass `:page="$myPage"` explicitly.
 - Page Settings modal exposes Meta Description (160-char) and a "Hide from search engines" toggle (`meta.noindex`).
@@ -18,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/advanced/seo-meta.md` documents the component, per-page settings, and config knobs.
 
 ### Changed
+- `BaseView::render()` return type widened from `Illuminate\Contracts\View\View` to `View|Htmlable|string`. Existing Blade widgets are unaffected (returning a `View` still satisfies the wider type via covariance); the wider type lets `BaseLivewireWidget::render()` return a `string` from `Blade::render()`. Subclasses that previously declared `: View` continue to work.
+- Internal type checks switched from `instanceof BaseWidget` / `is_subclass_of(..., BaseWidget::class)` to interface-based `instanceof Widget` / `is_subclass_of(..., Widget::class)` in `Crumbls\Layup\Support\Concerns\RegistersWidgets`, `Crumbls\Layup\Support\LayupContent`, `Crumbls\Layup\Testing\LayupAssertions`, and `tests/Unit/WidgetDefaultCompletenessTest.php`. Downstream code that introspects widgets at runtime should follow suit if it intends to support Livewire widgets, but no immediate change is required for code that only sees the Blade lineage.
+- `Crumbls\Layup\Testing\LayupAssertions::assertWidgetRenders()` and `assertWidgetRendersWithDefaults()` now accept any `View|Htmlable|string` from `render()` (a new `renderToString()` helper coerces the result). Tests that previously called `$widget->render()->render()` directly continue to work because Blade widgets still return a `View`.
+- Four built-in widgets (`HeadingWidget`, `ButtonWidget`, `NumberCounterWidget`, `NewsletterWidget`) refactored to consume identity traits. Public surface unchanged -- all static methods resolve identically. The remaining ~95 built-in widgets are untouched.
 - SEO meta is now emitted on every published page. Previously the entire block was gated on `meta.description` being set, so pages without a description silently dropped all SEO meta.
 - Twitter card type is now `summary_large_image` when a featured image is present, `summary` otherwise. Was hardcoded to `summary`.
 - `og:type` is now `article` for pages with `published_at`, `website` otherwise. Was always implicitly `website`.

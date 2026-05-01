@@ -145,7 +145,7 @@ class LayupContent implements Htmlable
                 $entry['span'] = $node->getSpan();
             }
 
-            if ($node instanceof \Crumbls\Layup\View\BaseWidget) {
+            if ($node instanceof \Crumbls\Layup\Contracts\Widget) {
                 $entry['data'] = $node->getData();
             }
 
@@ -169,7 +169,7 @@ class LayupContent implements Htmlable
             return 'column';
         }
 
-        if ($node instanceof \Crumbls\Layup\View\BaseWidget) {
+        if ($node instanceof \Crumbls\Layup\Contracts\Widget) {
             return $node::getType();
         }
 

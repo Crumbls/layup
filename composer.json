@@ -37,6 +37,9 @@
         "laravel/pint": "^1.27",
         "rector/rector": "^2.3"
     },
+    "suggest": {
+        "livewire/livewire": "Required only when using BaseLivewireWidget to render widgets through Livewire components (^3.0)."
+    },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
