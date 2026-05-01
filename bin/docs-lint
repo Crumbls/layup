@@ -69,9 +69,16 @@ foreach ($it as $file) {
     $mdFiles[] = $file->getPathname();
 }
 
+$normalizedDocsRoot = str_replace(DIRECTORY_SEPARATOR, '/', $docsRoot);
+
 foreach ($mdFiles as $path) {
     $rel = relPath($docsRoot, $path);
-    $content = file_get_contents($path);
+    $content = @file_get_contents($path);
+
+    if ($content === false) {
+        $errors[] = "{$rel}: unreadable file";
+        continue;
+    }
 
     if (! str_starts_with($content, "---\n") && ! str_starts_with($content, "---\r\n")) {
         $errors[] = "{$rel}: missing YAML frontmatter";
@@ -80,7 +87,8 @@ foreach ($mdFiles as $path) {
 
     [$front, $body] = splitFrontmatter($content);
 
-    $isVersionRoot = (str_replace(DIRECTORY_SEPARATOR, '/', $path) === "{$docsRoot}/_index.md");
+    $normalizedPath = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+    $isVersionRoot = ($normalizedPath === "{$normalizedDocsRoot}/_index.md");
 
     if (! isset($front['title'])) {
         $errors[] = "{$rel}: frontmatter missing `title`";
@@ -193,6 +201,17 @@ function resolveDocTarget(string $docsRoot, string $href, string $packageSlug): 
     }
 
     $slugParts = array_slice($parts, 3);
+
+    // Reject traversal segments and empties before building the path.
+    // Without this, a link like /documentation/layup/v1/../../etc/passwd
+    // would resolve to a file outside $docsRoot and is_file() would
+    // happily accept it, marking a broken link as valid.
+    foreach ($slugParts as $segment) {
+        if ($segment === '' || $segment === '.' || $segment === '..') {
+            return null;
+        }
+    }
+
     if ($slugParts === []) {
         return is_file($docsRoot . '/_index.md') ? $docsRoot . '/_index.md' : null;
     }
@@ -203,10 +222,26 @@ function resolveDocTarget(string $docsRoot, string $href, string $packageSlug): 
         $docsRoot . '/' . $slug . '/_index.md',
     ];
 
+    $normalizedDocsRoot = str_replace(DIRECTORY_SEPARATOR, '/', realpath($docsRoot) ?: $docsRoot);
+
     foreach ($candidates as $c) {
-        if (is_file($c)) {
-            return $c;
+        if (! is_file($c)) {
+            continue;
         }
+
+        // Defence in depth: ensure the resolved path is actually inside
+        // the docs root, even if a slug segment slipped past validation.
+        $resolved = realpath($c);
+        if ($resolved === false) {
+            continue;
+        }
+
+        $normalizedResolved = str_replace(DIRECTORY_SEPARATOR, '/', $resolved);
+        if (! str_starts_with($normalizedResolved, $normalizedDocsRoot . '/')) {
+            continue;
+        }
+
+        return $c;
     }
 
     return null;
