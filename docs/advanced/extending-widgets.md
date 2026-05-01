@@ -48,6 +48,8 @@ class CustomHeadingWidget extends HeadingWidget
 
 To completely replace a built-in widget, use `withoutWidgets()` on the plugin and register your replacement:
 
+> **Swapping render technology only?** If you want to keep the editor experience identical (same form, same defaults, same preview) but render through a Livewire component instead of a Blade view, see [Livewire-rendered widgets](livewire-widgets.md). The four built-in widgets that ship identity traits (`HeadingWidget`, `ButtonWidget`, `NumberCounterWidget`, `NewsletterWidget`) can be swapped without redeclaring any metadata.
+
 ```php
 use Crumbls\Layup\LayupPlugin;
 use Crumbls\Layup\View\HeadingWidget;
