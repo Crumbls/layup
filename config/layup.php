@@ -160,6 +160,7 @@ return [
     'pages' => [
         'table' => 'layup_pages',
         'model' => \Crumbls\Layup\Models\Page::class,
+        'enabled' => true,
         'default_slug' => null,
 
         /*

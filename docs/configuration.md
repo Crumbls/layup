@@ -50,12 +50,14 @@ The filesystem disk used for media uploads (images, files). Must be publicly acc
 'pages' => [
     'table' => 'layup_pages',
     'model' => \Crumbls\Layup\Models\Page::class,
+    'enabled' => true,
     'default_slug' => null,
 ],
 ```
 
 - **table** -- database table name for pages. Change this if you need multiple Layup instances with separate tables.
 - **model** -- the Eloquent model class. Extend `Page` and point here to add custom behavior.
+- **enabled** -- whether the Pages resource is registered in the Filament admin panel. Set to `false` when you're using Layup purely as a rendering engine (e.g. attaching `HasLayupContent` to your own models and managing content through your own Filament resources). Disabling the resource does not affect frontend rendering or the database -- it only removes the admin UI. Pages already in the database still render normally via the frontend controller or `@layup` directive.
 - **default_slug** -- if set, this slug is served when the frontend prefix is hit without a slug.
 
 ## Revisions
