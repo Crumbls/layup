@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component as SchemaComponent;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
@@ -89,6 +90,25 @@ abstract class BaseView extends Component
     public function hasChildren(): bool
     {
         return count($this->children) > 0;
+    }
+
+    /**
+     * Recursively render all children to a single HTML string.
+     *
+     * Used by render() implementations that need a pre-rendered children
+     * blob (e.g. when mounting a Livewire component and passing children
+     * through the slot). Each child's render() result is cast to string,
+     * which works for View, Htmlable, and string return types alike.
+     */
+    public function renderChildrenToHtml(): string
+    {
+        $html = '';
+
+        foreach ($this->children as $child) {
+            $html .= (string) $child->render();
+        }
+
+        return $html;
     }
 
     /**
@@ -489,6 +509,11 @@ abstract class BaseView extends Component
 
     /**
      * Get the view / contents that represent the component.
+     *
+     * Return type is intentionally wide: BaseBladeWidget returns a View,
+     * BaseLivewireWidget returns a string from Blade::render(), and
+     * downstream extensions may return any Htmlable. The frontend call
+     * site stringifies the result.
      */
-    abstract public function render(): View;
+    abstract public function render(): View|Htmlable|string;
 }

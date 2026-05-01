@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Crumbls\Layup\Contracts\Widget;
-use Crumbls\Layup\View\BaseWidget;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Repeater;
 
@@ -66,10 +65,6 @@ function discoverShippedWidgets(): array
     foreach ($files as $file) {
         $base = basename($file, '.php');
 
-        if ($base === 'BaseWidget') {
-            continue;
-        }
-
         $class = 'Crumbls\\Layup\\View\\' . $base;
 
         if (! class_exists($class)) {
@@ -78,7 +73,7 @@ function discoverShippedWidgets(): array
 
         $ref = new ReflectionClass($class);
 
-        if ($ref->isAbstract() || ! $ref->isSubclassOf(BaseWidget::class)) {
+        if ($ref->isAbstract() || ! $ref->implementsInterface(Widget::class)) {
             continue;
         }
 
