@@ -3,11 +3,30 @@ title: Introduction
 weight: 1
 ---
 
-Layup is a visual page builder plugin for [Filament 5](https://filamentphp.com/). It brings Divi-style drag-and-drop editing to your admin panel with a 12-column responsive grid, live breakpoint previews, and undo/redo.
+Layup is a Filament form field that turns any JSON column into a visual content editor. The field is the product. The bundled Pages resource is one application of it.
+
+```php
+use Crumbls\Layup\Forms\Components\LayupBuilder;
+
+public function form(Schema $schema): Schema
+{
+    return $schema->components([
+        LayupBuilder::make('content')->columnSpanFull(),
+    ]);
+}
+```
+
+Drop that into any Filament resource form and editors get a Divi-style canvas with rows, columns, breakpoint previews, undo/redo, and 96 extensible widgets. Pair it with the `HasLayupContent` trait on the Eloquent model to render the saved content on the frontend.
+
+## Two ways to use Layup
+
+**Use the field on your own model.** Add a JSON column, drop `LayupBuilder::make()` into your existing Filament form, render with `@layup($model->content)`. No Pages resource, no opinions about routing or URLs. See [Embedding the field](embedding-the-field.md) and [Field-only installation](field-only-installation.md).
+
+**Use the bundled Pages resource.** Layup ships with a complete page CMS -- nested pages, scheduled publishing, SEO meta, frontend routes -- so you can install once and start editing. See [Getting started](getting-started/_index.md).
 
 ## Who is it for?
 
-Layup is built for Laravel developers who use Filament and need to give content editors a visual page builder without leaving the admin panel. Editors get a drag-and-drop interface. Developers keep full control over widgets, theming, and rendering.
+Laravel developers who use Filament and want a visual content editor either as a primitive (a field) or as a turnkey CMS. Editors get a drag-and-drop interface; developers keep full control over widgets, theming, and rendering.
 
 ## Key features
 
@@ -30,6 +49,6 @@ Layup is built for Laravel developers who use Filament and need to give content 
 
 ## How it works
 
-Layup stores page content as a JSON structure of rows, columns, and widgets. Each widget holds its own data (content, design settings, advanced options). The builder interface lives inside a custom Filament form field (`LayupBuilder`) that renders an Alpine.js-powered canvas.
+The `LayupBuilder` field renders an Alpine.js-powered canvas inside the Filament form. As editors arrange rows, columns, and widgets, the field serializes the layout to a JSON structure that Laravel persists to your column (any JSON-cast column on any model).
 
-On the frontend, the JSON content is walked recursively to build a tree of Row, Column, and Widget view components, each rendered through Blade templates. The grid uses flexbox with Tailwind utility classes for responsive column widths.
+On the frontend, that JSON is walked recursively to build a tree of Row, Column, and Widget view components, each rendered through Blade templates. The grid uses flexbox with Tailwind utility classes for responsive column widths. Render anywhere with the `@layup` Blade directive, the `HasLayupContent` trait's `toHtml()` method, or the `<x-layup-widget>` component for individual widgets.

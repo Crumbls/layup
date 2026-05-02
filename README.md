@@ -1,6 +1,6 @@
 # Layup
 
-A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style editor with rows, columns, and 96 extensible widgets -- all using native Filament form components, with optional Livewire rendering for any widget that needs it.
+A Filament form field that turns any JSON column into a visual content editor. Drop `LayupBuilder::make('content')` into any Filament form and your editors get a Divi-style canvas with rows, columns, and 96 extensible widgets. Layup ships with a Pages resource as a turnkey example, but the field is the product -- pair it with the `HasLayupContent` trait on any Eloquent model.
 
 **[Documentation](https://crumbls.com/documentation/layup)** -- full documentation available online.
 

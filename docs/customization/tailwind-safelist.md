@@ -61,17 +61,70 @@ module.exports = {
 
 ## The SafelistChanged event
 
-When `SafelistCollector::sync()` detects changes in the class list, it dispatches the `Crumbls\Layup\Events\SafelistChanged` event. Listen for this to trigger a frontend rebuild:
+When `SafelistCollector::sync()` detects changes in the class list, it dispatches the `Crumbls\Layup\Events\SafelistChanged` event. The event exposes:
+
+- `$added` -- classes newly added to the safelist
+- `$removed` -- classes no longer present
+- `$path` -- absolute path to the safelist file
+
+Listen for this when you need to rebuild assets or invalidate CDN caches in response to content changes.
+
+### Trigger a CI rebuild
 
 ```php
+namespace App\Listeners;
+
 use Crumbls\Layup\Events\SafelistChanged;
+use Illuminate\Support\Facades\Http;
 
 class RebuildFrontendAssets
 {
     public function handle(SafelistChanged $event): void
     {
-        // Trigger Vite rebuild, clear CDN cache, etc.
+        if ($event->added === [] && $event->removed === []) {
+            return;
+        }
+
+        Http::post(config('services.ci.deploy_hook'), [
+            'reason' => 'Layup safelist changed',
+            'added' => count($event->added),
+            'removed' => count($event->removed),
+        ]);
     }
+}
+```
+
+Register the listener in your `EventServiceProvider`:
+
+```php
+protected $listen = [
+    \Crumbls\Layup\Events\SafelistChanged::class => [
+        \App\Listeners\RebuildFrontendAssets::class,
+    ],
+];
+```
+
+### Invalidate a CDN cache
+
+```php
+public function handle(SafelistChanged $event): void
+{
+    cache()->forget('frontend-css-version');
+
+    // Or post to your CDN's purge API:
+    Http::withToken(config('services.cloudflare.token'))
+        ->post('https://api.cloudflare.com/client/v4/zones/.../purge_cache', [
+            'files' => [config('app.url') . '/build/assets/app.css'],
+        ]);
+}
+```
+
+The event fires from a synchronous code path -- if your handler does I/O, dispatch a job:
+
+```php
+public function handle(SafelistChanged $event): void
+{
+    \App\Jobs\PurgeAssetCdnCache::dispatch($event->added, $event->removed);
 }
 ```
 

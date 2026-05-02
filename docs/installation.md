@@ -3,6 +3,22 @@ title: Installation
 weight: 2
 ---
 
+## Choose your install path
+
+Layup is a Filament form field first; the bundled Pages resource is a turnkey example built on top of it. Pick the path that fits how you plan to use it.
+
+**Path A -- Use Layup as a field on your own model.** Skip the Pages resource. You bring the model, the JSON column, and your own Filament resource. Layup gives you the editor canvas. Continue at [Field-only installation](field-only-installation.md), then read [Embedding the field](embedding-the-field.md).
+
+**Path B -- Use the bundled Pages resource.** A full page CMS with nested pages, scheduled publishing, SEO meta, and frontend routes -- ready to use after `php artisan layup:install`. Continue below.
+
+Either way, the field looks like this:
+
+```php
+use Crumbls\Layup\Forms\Components\LayupBuilder;
+
+LayupBuilder::make('content')->columnSpanFull()
+```
+
 ## Requirements
 
 - PHP 8.3+
@@ -44,7 +60,7 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-Without this step, the Pages resource will not appear in your Filament sidebar.
+Registering the plugin makes the `LayupBuilder` field available in any Filament form and (unless disabled in config) registers the Pages resource in your sidebar.
 
 ## Quick install (recommended)
 
@@ -154,3 +170,64 @@ php artisan layup:doctor
 ```
 
 Then visit `/admin/pages` (or your panel path) and create a new page. You should see the visual builder with rows, columns, and the widget picker.
+
+## Troubleshooting
+
+`php artisan layup:doctor` runs a battery of checks and prints `passed / warning / failure` counts. Below are the failures you are most likely to hit and how to fix each.
+
+### "LayupPlugin is not registered in any Filament panel"
+
+The `LayupPlugin::make()` call is missing from your panel provider. Add it under `->plugins([...])` (see [Register the plugin](#register-the-plugin)). After editing, clear the config cache: `php artisan config:clear`.
+
+### "Table 'layup_pages' does not exist"
+
+Migrations have not run. Run:
+
+```bash
+php artisan migrate
+```
+
+If you are intentionally on the field-only path and do not want these tables, see [Field-only installation](field-only-installation.md) -- the doctor warning is expected there.
+
+### "Storage symlink missing"
+
+Uploaded images will not be web-accessible. Run:
+
+```bash
+php artisan storage:link
+```
+
+### "Layout component [app] not found"
+
+Layup expects a Blade component matching `frontend.layout` (default: `app`) to exist at `resources/views/components/app.blade.php`. Either:
+
+- Run `php artisan layup:install` -- it copies a starter layout component if one is missing, or
+- Create the component manually, or
+- Set `frontend.layout` in `config/layup.php` to point to your existing layout component (e.g., `'layouts.app'` for `resources/views/components/layouts/app.blade.php`).
+
+### "Layout does not include @layupScripts"
+
+Interactive widgets (accordion, tabs, countdown, modals, slider, etc.) will not function without this directive. Add it to your frontend layout, typically just before the closing `</body>` tag:
+
+```blade
+@layupScripts
+</body>
+```
+
+### "Safelist file does not exist" / Frontend pages render without styling
+
+Tailwind cannot see Layup's dynamically-generated classes. Verify three things in order:
+
+1. The safelist file exists -- run `php artisan layup:safelist` to generate it.
+2. Your Tailwind config or CSS entry point references the safelist path (see [Tailwind safelist setup](#tailwind-safelist-setup)).
+3. You ran `npm run build` (or your equivalent) **after** adding the safelist reference.
+
+### "Upload disk 'public' is not configured"
+
+Your `config/filesystems.php` does not have a disk matching `uploads.disk`. Either configure the disk or set `uploads.disk` in `config/layup.php` to a disk you do have configured.
+
+If a check is not listed here, run `php artisan layup:doctor` and read the message inline -- each failure includes a one-line fix hint.
+
+## Upgrades
+
+See [CHANGELOG.md](https://github.com/Crumbls/layup/blob/main/CHANGELOG.md) for release notes, breaking changes, and version-by-version migration guidance.

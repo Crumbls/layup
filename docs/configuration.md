@@ -11,6 +11,24 @@ php artisan vendor:publish --tag=layup-config
 
 This creates `config/layup.php`. Below is every configuration option.
 
+## Map: which key for which job
+
+The defaults work out of the box. Most installations only touch a handful of keys. Use this map to jump to the section you need.
+
+| If you want to... | Section |
+|---|---|
+| Curate which widgets editors can use | [Widgets](#widgets), [Widget auto-discovery](#widget-auto-discovery) |
+| Change where uploads go (S3, local, etc.) | [Uploads](#uploads) |
+| Use a custom Page model or table | [Pages](#pages) and [Swapping the Page model](customization/swapping-the-page-model.md) |
+| Disable the bundled Pages resource | [Pages](#pages) (`enabled => false`) and [Disable the Pages resource](customization/disable-pages-resource.md) |
+| Change the URL prefix or middleware for frontend pages | [Frontend](#frontend) |
+| Change the layout component pages render in | [Frontend](#frontend) (`layout`) |
+| Adjust auto-save / revision retention | [Revisions](#revisions) |
+| Tune scheduled-publishing behavior | [Scheduling](#scheduling) |
+| Change the Tailwind safelist file path | [Safelist](#safelist) |
+| Change responsive breakpoint widths | [Breakpoints](#breakpoints) |
+| Add or remove preset row layouts in the editor | [Row templates](#row-templates) |
+
 ## Widgets
 
 ```php
@@ -101,7 +119,7 @@ The filesystem disk used for media uploads (images, files). Must be publicly acc
 ```
 
 - **enabled** -- register frontend routes for serving published pages
-- **prefix** -- URL prefix. Use `'pages'` for `/pages/about`, or `''` (or `'/'`) to mount at the site root. An empty/slash prefix activates auto-exclusion of Filament panel paths, Livewire, and other framework routes; other values (including `null`) skip that safeguard. See [Frontend Rendering > Serving pages at the site root](advanced/frontend-rendering.md#serving-pages-at-the-site-root).
+- **prefix** -- URL prefix. Use `'pages'` for `/pages/about`, or `''` (or `'/'`) to mount at the site root. An empty/slash prefix activates auto-exclusion of Filament panel paths, Livewire, and other framework routes; other values (including `null`) skip that safeguard. See [Frontend Rendering > Serving pages at the site root](customization/frontend-rendering.md#serving-pages-at-the-site-root).
 - **middleware** -- middleware applied to frontend routes
 - **domain** -- restrict routes to a specific domain
 - **layout** -- Blade component name passed to `<x-dynamic-component>`. Example values:

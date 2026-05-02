@@ -5,6 +5,29 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1](https://github.com/Crumbls/layup/compare/v1.3.0...v1.3.1) (2026-05-02)
+
+### Documentation
+
+- **Reframed docs around the `LayupBuilder` field as the core primitive.** Previous docs led with "page builder"; the field-as-primitive story (drop `LayupBuilder::make()` into any Filament form) was buried. README, `docs/introduction.md`, and `docs/installation.md` now lead with the field, with the bundled Pages resource positioned as one application of it.
+- New **`docs/embedding-the-field.md`** -- end-to-end walkthrough for adding `LayupBuilder` to any Eloquent model: JSON column migration, `HasLayupContent` trait, form integration, and three rendering paths (`@layup` directive, `toHtml()`, `<x-layup-widget>`).
+- New **`docs/field-only-installation.md`** -- minimal install path for users who want the field without the bundled Pages resource. Sets `pages.enabled = false`, skips the resource, keeps the safelist + theme + plugin API.
+- New **`docs/customization/filament-plugin-api.md`** -- complete reference for every fluent method on `LayupPlugin` (`->widgets()`, `->withoutWidgets()`, `->withoutConfigWidgets()`, `->colors()`, `->darkColors()`, `->fonts()`, `->borderRadius()`, `->withoutPanelColors()`). Previously these methods were only listed in API reference.
+- New **`docs/customization/swapping-the-page-model.md`** -- consolidated guide for using a custom Page model. Lifted the buried "Multiple dashboards" section out of `rendering-content.md` and expanded it with multi-panel patterns and when-to-use-instead-of-embed-the-field guidance.
+- New **`docs/customization/disable-pages-resource.md`** -- partner doc to field-only install. Documents what disappears when `pages.enabled = false`, what still works (field, registry, theme, commands), and optional schema cleanup.
+- Renamed **`docs/advanced/` to `docs/customization/`** -- the directory's contents were customization guides; the new name reflects that. All 12 existing files moved via `git mv` (history preserved). Internal cross-links and the absolute deployed URL in `api-reference/widget-contract.md` updated.
+- Rewrote **`docs/customization/_index.md`** from a 6-line stub into a customization map with an "I want to..." quickref table covering every customization point, including links to embedding the field, plugin API, theme, page templates, SEO, and testing.
+- Expanded the **`SafelistChanged` event** documentation in `docs/customization/tailwind-safelist.md` with realistic listener examples (CI rebuild trigger, CDN purge, async job dispatch).
+- Added **"Choose your install path"** section to `docs/installation.md` with both the full Pages-resource path and the field-only path. Inlined a `LayupBuilder::make('content')` snippet so the core API is visible within the first 30 lines.
+- Added **troubleshooting section** to `docs/installation.md` covering the seven most common `layup:doctor` failures (plugin registration, missing migrations, storage symlink, layout component, `@layupScripts` directive, safelist file, upload disk) with one-line fix recipes.
+- Added **"Map: which key for which job"** intent-grouped table to the top of `docs/configuration.md` so readers can jump to the section they need without scrolling the flat list.
+- Linked **CHANGELOG** from `docs/installation.md` for upgrade guidance.
+
+### Notes
+
+- The `docs/advanced/` -> `docs/customization/` rename changes the public docs URL from `/documentation/layup/v1/advanced/*` to `/documentation/layup/v1/customization/*`. Set up redirects on the docs site (`/advanced/* -> /customization/*`) before deploying to preserve external links and SEO equity on the old paths.
+- No code changes in this release. All updates are documentation only. Existing installations require no action.
+
 ## [1.3.0](https://github.com/Crumbls/layup/compare/v1.2.3...v1.3.0) (2026-05-01)
 
 ### Added

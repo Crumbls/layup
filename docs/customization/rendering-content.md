@@ -89,23 +89,7 @@ Available methods: `string()`, `bool()`, `int()`, `float()`, `array()`, `has()`,
 
 ## Multiple dashboards
 
-To use Layup across multiple Filament panels with separate page tables, override the model:
-
-```php
-// config/layup.php
-'pages' => [
-    'model' => \App\Models\PageB::class,
-],
-```
-
-```php
-namespace App\Models;
-
-class PageB extends \Crumbls\Layup\Models\Page
-{
-    protected $table = 'custom_pages';
-}
-```
+To use Layup across multiple Filament panels with separate page tables, swap the Page model. See [Swapping the Page model](swapping-the-page-model.md) for the full walkthrough.
 
 ## Render isolation
 

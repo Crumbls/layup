@@ -8,7 +8,7 @@ All widgets implement `Crumbls\Layup\Contracts\Widget`. This interface defines t
 - `Crumbls\Layup\View\BaseBladeWidget` -- renders through a Blade view component (the default).
 - `Crumbls\Layup\View\BaseLivewireWidget` -- renders through a Livewire component (opt-in, requires `livewire/livewire`).
 
-`Crumbls\Layup\View\BaseWidget` is an abstract alias for `BaseBladeWidget` retained for backwards compatibility. New code may extend either base directly. See [Livewire-rendered widgets](/documentation/layup/v1/advanced/livewire-widgets) for when each base applies.
+`Crumbls\Layup\View\BaseWidget` is an abstract alias for `BaseBladeWidget` retained for backwards compatibility. New code may extend either base directly. See [Livewire-rendered widgets](/documentation/layup/v1/customization/livewire-widgets) for when each base applies.
 
 ## Interface methods
 
@@ -85,7 +85,7 @@ The interface deliberately omits `render()`. Each base class adds it with the ap
 
 **Render mechanism:**
 
-The base mounts the named Livewire component via `<livewire:dynamic-component>`, passing the widget's `$data` as a `data` prop and the recursively-rendered children as the default slot. See [Livewire-rendered widgets](/documentation/layup/v1/advanced/livewire-widgets) for the full architecture, children-handling model, and migration patterns.
+The base mounts the named Livewire component via `<livewire:dynamic-component>`, passing the widget's `$data` as a `data` prop and the recursively-rendered children as the default slot. See [Livewire-rendered widgets](/documentation/layup/v1/customization/livewire-widgets) for the full architecture, children-handling model, and migration patterns.
 
 ## HasWidgetDefaults trait
 
