@@ -66,57 +66,7 @@ A visual page builder plugin for [Filament](https://filamentphp.com). Divi-style
 - Filament 5
 - Livewire 4
 
-## Quick Start
-
-**1. Install:**
-
-```bash
-composer require crumbls/layup
-```
-
-**2. Register the plugin** in your Filament panel provider:
-
-```php
-use Crumbls\Layup\LayupPlugin;
-
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        ->plugins([
-            LayupPlugin::make(),
-        ]);
-}
-```
-
-**3. Run the install command:**
-
-```bash
-php artisan layup:install
-```
-
-**4. Add the safelist to your Tailwind config:**
-
-Tailwind v4 (`resources/css/app.css`):
-```css
-@source "../../storage/layup-safelist.txt";
-```
-
-Tailwind v3 (`tailwind.config.js`):
-```js
-content: ['./storage/layup-safelist.txt']
-```
-
-**5. Build frontend assets:**
-
-```bash
-npm run build
-```
-
-**6. Create a page** in your Filament panel and set the status to **Published**.
-
-See the [Installation docs](https://crumbls.com/documentation/layup/installation) for manual installation steps and troubleshooting.
-
-## Documentation
+## Documentation & Installation
 
 Full documentation is available at **[crumbls.com/documentation/layup](https://crumbls.com/documentation/layup)**.
 
