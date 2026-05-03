@@ -15,7 +15,7 @@ The `layout` config value is a Blade component name passed to `<x-dynamic-compon
 
 > **Using the Livewire starter kit?** Livewire v4 registers `layouts` as an anonymous component namespace pointing at `resources/views/layouts/`, and the starter kit ships its layout at `resources/views/layouts/app.blade.php`. Set `'layout' => 'layouts::app'` — the dot-notation form (`'layouts.app'`) resolves to a different path that does not exist in Livewire starter-kit projects.
 
-Your layout must accept a `title` slot. SEO meta is rendered through a separate drop-in component, [`<x-layup-seo />`]({{< relref "seo-meta" >}}):
+Your layout must accept a `title` slot. SEO meta is rendered through a separate drop-in component, [`<x-layup-seo />`](/documentation/layup/v1/customization/seo-meta):
 
 ```blade
 <!DOCTYPE html>

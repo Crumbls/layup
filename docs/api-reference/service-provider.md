@@ -20,7 +20,7 @@ The service provider is auto-discovered by Laravel. It handles all package boots
 |-----|-------------|
 | `layup-config` | `config/layup.php` |
 | `layup-views` | Blade views to `resources/views/vendor/layup` |
-| `layup-assets` | JavaScript to `resources/js/vendor/layup.js` |
+| `layup-scripts` | JavaScript to `resources/js/vendor/layup.js` |
 | `layup-routes` | Route file to `routes/layup.php` |
 | `layup-templates` | Page templates to `resources/layup/templates` |
 | `layup-translations` | Language files to `lang/vendor/layup` |
@@ -33,6 +33,7 @@ The service provider is auto-discovered by Laravel. It handles all package boots
 | `layup:install` | Guided setup wizard |
 | `layup:safelist` | Generate Tailwind safelist file |
 | `layup:make-widget {name}` | Scaffold a new widget class + Blade view |
+| `layup:make-controller {name}` | Scaffold a custom page controller |
 | `layup:list-widgets` | List all registered widgets |
 | `layup:doctor` | Health check for installation |
 | `layup:debug-widget {type}` | Inspect a widget's metadata and form schema |
@@ -40,6 +41,7 @@ The service provider is auto-discovered by Laravel. It handles all package boots
 | `layup:export` | Export a page to JSON |
 | `layup:import` | Import a page from JSON |
 | `layup:search` | Search across page content |
+| `layup:publish-scheduled` | Promote scheduled pages whose publish time has arrived |
 
 ### Blade directives
 

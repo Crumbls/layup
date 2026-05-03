@@ -80,7 +80,7 @@ Set `meta.schema_type` to control the JSON-LD type:
 - `Article` or `BlogPosting` (includes author if `meta.author` is set)
 - `FAQPage` (auto-extracts questions from Accordion and Toggle widgets)
 
-Breadcrumb structured data is generated automatically from the page slug.
+Breadcrumb structured data is generated automatically. When a page has a parent chain (`parent_id`), breadcrumbs walk that chain using real page titles. For pages without a parent chain, breadcrumbs fall back to splitting the URL path into title-cased segments.
 
 ## Duplicating pages
 

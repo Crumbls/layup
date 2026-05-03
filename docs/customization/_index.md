@@ -9,7 +9,7 @@ Layup is built to be extended. The defaults work out of the box, but most non-tr
 
 | Goal | Guide | Config or API |
 |---|---|---|
-| Embed the field on my own model | [Embedding the field](../embedding-the-field.md) | `LayupBuilder::make('content')` |
+| Embed the field on my own model | [Embedding the field](/documentation/layup/v1/embedding-the-field) | `LayupBuilder::make('content')` |
 | Disable the bundled Pages resource entirely | [Disable the Pages resource](disable-pages-resource.md) | `pages.enabled = false` |
 | Use a custom Page model (multi-dashboard, custom table) | [Swapping the Page model](swapping-the-page-model.md) | `pages.model` |
 | Add or remove widgets in the picker | [Filament plugin API](filament-plugin-api.md) and [Extending widgets](extending-widgets.md) | `->widgets()`, `->withoutWidgets()` |
@@ -28,6 +28,6 @@ Layup is built to be extended. The defaults work out of the box, but most non-tr
 
 Most customization questions reduce to one of two scenarios:
 
-**You want the field, not the CMS.** You have your own models, your own routing, your own front-end. Read [Embedding the field](../embedding-the-field.md) and [Disable the Pages resource](disable-pages-resource.md). Skip the Pages-related guides.
+**You want the field, not the CMS.** You have your own models, your own routing, your own front-end. Read [Embedding the field](/documentation/layup/v1/embedding-the-field) and [Disable the Pages resource](disable-pages-resource.md). Skip the Pages-related guides.
 
 **You want to extend the bundled CMS.** You like the Pages resource but want different widgets, theme, or rendering. Start with [Filament plugin API](filament-plugin-api.md), then move on to [Frontend rendering](frontend-rendering.md), [Page templates](page-templates.md), and [Theme system](theme-system.md).

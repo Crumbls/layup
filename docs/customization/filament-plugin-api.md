@@ -14,7 +14,7 @@ public function panel(Panel $panel): Panel
         ->plugins([
             LayupPlugin::make()
                 ->widgets([\App\Layup\Widgets\HeroBlock::class])
-                ->withoutWidgets([\Crumbls\Layup\Widgets\Embed::class])
+                ->withoutWidgets([\Crumbls\Layup\View\EmbedWidget::class])
                 ->colors(['primary' => '#3b82f6'])
                 ->fonts(['heading' => 'Playfair Display, serif'])
                 ->borderRadius('0.5rem'),
@@ -45,8 +45,8 @@ Remove widget types from the picker. Pass the widget class name -- the plugin re
 
 ```php
 LayupPlugin::make()->withoutWidgets([
-    \Crumbls\Layup\Widgets\Embed::class,
-    \Crumbls\Layup\Widgets\Code::class,
+    \Crumbls\Layup\View\EmbedWidget::class,
+    \Crumbls\Layup\View\CodeWidget::class,
 ])
 ```
 
@@ -136,7 +136,7 @@ LayupPlugin::make()
 // MarketingPanelProvider.php
 LayupPlugin::make()
     ->colors(['primary' => '#10b981'])
-    ->withoutWidgets([\Crumbls\Layup\Widgets\Code::class])
+    ->withoutWidgets([\Crumbls\Layup\View\CodeWidget::class])
 ```
 
 If you also need separate page tables per panel, see [Swapping the Page model](swapping-the-page-model.md).

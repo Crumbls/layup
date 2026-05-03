@@ -58,6 +58,6 @@ Run that **after** the package migrations, and treat it as a one-way decision --
 
 ## Related guides
 
-- [Field-only installation](../field-only-installation.md) -- the minimal install path that disables the Pages resource from the start
-- [Embedding the field](../embedding-the-field.md) -- using `LayupBuilder` on your own models
+- [Field-only installation](/documentation/layup/v1/field-only-installation) -- the minimal install path that disables the Pages resource from the start
+- [Embedding the field](/documentation/layup/v1/embedding-the-field) -- using `LayupBuilder` on your own models
 - [Swapping the Page model](swapping-the-page-model.md) -- if you do want the resource but with a custom model
