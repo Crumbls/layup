@@ -134,7 +134,7 @@ class ListPages extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data): void {
-                    $path = storage_path('app/' . $data['file']);
+                    $path = \Storage::path($data['file']);
 
                     if (! file_exists($path)) {
                         Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
