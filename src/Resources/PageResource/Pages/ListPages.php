@@ -17,6 +17,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ListPages extends ListRecords
@@ -134,16 +135,37 @@ class ListPages extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data): void {
-                    $path = \Storage::path($data['file']);
+                    $disk = config('filament.default_filesystem_disk', 'public');
+                    $diskInstance = Storage::disk($disk);
+                    $file = $data['file'];
 
-                    if (! file_exists($path)) {
+                    if (! $diskInstance->exists($file)) {
                         Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
 
                         return;
                     }
 
-                    $json = json_decode(file_get_contents($path), true);
-                    @unlink($path);
+                    $contents = null;
+
+                    try {
+                        $contents = $diskInstance->get($file);
+
+                        if ($contents === null) {
+                            Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
+
+                            return;
+                        }
+
+                        if (! $diskInstance->delete($file)) {
+                            Notification::make()->warning()->title(__('layup::notifications.file_delete_failed'))->send();
+                        }
+                    } catch (\Throwable $e) {
+                        Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
+
+                        return;
+                    }
+
+                    $json = json_decode($contents, true);
 
                     if (! $json || ! isset($json['content'])) {
                         Notification::make()->danger()->title(__('layup::notifications.invalid_json'))->send();
