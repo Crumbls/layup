@@ -136,14 +136,36 @@ class ListPages extends ListRecords
                 ])
                 ->action(function (array $data): void {
                     $disk = config('filament.default_filesystem_disk', 'public');
-                    if (! Storage::disk($disk)->exists($data['file'])) {
+                    $diskInstance = Storage::disk($disk);
+                    $file = $data['file'];
+
+                    if (! $diskInstance->exists($file)) {
                         Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
 
                         return;
                     }
 
-                    $json = json_decode(Storage::disk($disk)->get($data['file']), true);
-                    Storage::disk($disk)->delete($data['file']);
+                    $contents = null;
+
+                    try {
+                        $contents = $diskInstance->get($file);
+
+                        if ($contents === null) {
+                            Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
+
+                            return;
+                        }
+
+                        if (! $diskInstance->delete($file)) {
+                            Notification::make()->warning()->title(__('layup::notifications.file_delete_failed'))->send();
+                        }
+                    } catch (\Throwable $e) {
+                        Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
+
+                        return;
+                    }
+
+                    $json = json_decode($contents, true);
 
                     if (! $json || ! isset($json['content'])) {
                         Notification::make()->danger()->title(__('layup::notifications.invalid_json'))->send();

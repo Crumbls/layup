@@ -30,6 +30,7 @@ return [
 
     // Import
     'file_not_found' => 'File not found',
+    'file_delete_failed' => 'Imported but could not remove the temporary file',
     'invalid_json' => 'Invalid Layup JSON file',
     'invalid_content_structure' => 'Invalid page content structure',
     'page_imported' => 'Page imported successfully',
