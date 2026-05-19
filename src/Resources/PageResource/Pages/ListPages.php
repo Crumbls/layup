@@ -17,6 +17,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ListPages extends ListRecords
@@ -134,16 +135,15 @@ class ListPages extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data): void {
-                    $path = \Storage::path($data['file']);
-
-                    if (! file_exists($path)) {
+                    $disk = config('filament.default_filesystem_disk', 'public');
+                    if (! Storage::disk($disk)->exists($data['file'])) {
                         Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
 
                         return;
                     }
 
-                    $json = json_decode(file_get_contents($path), true);
-                    @unlink($path);
+                    $json = json_decode(Storage::disk($disk)->get($data['file']), true);
+                    Storage::disk($disk)->delete($data['file']);
 
                     if (! $json || ! isset($json['content'])) {
                         Notification::make()->danger()->title(__('layup::notifications.invalid_json'))->send();
