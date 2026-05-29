@@ -482,12 +482,11 @@ class Page extends Model
         ])->all();
     }
 
-	/**
-	 * Added as a backfill for old versions that didn't have a slug.
-	 * @return string
-	 */
-	public function getSlugAttribute() : string {
-		return array_key_exists('slug', $this->attributes) && !empty($this->attributes['slug']) ? $this->attributes['slug'] : $this->getKey();
-	}
-
+    /**
+     * Added as a backfill for old versions that didn't have a slug.
+     */
+    public function getSlugAttribute(): string
+    {
+        return array_key_exists('slug', $this->attributes) && ! empty($this->attributes['slug']) ? $this->attributes['slug'] : $this->getKey();
+    }
 }
