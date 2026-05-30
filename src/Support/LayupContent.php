@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Support;
 
 use Crumbls\Layup\Support\Concerns\RegistersWidgets;
-use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\View\Column;
 use Crumbls\Layup\View\Row;
 use Illuminate\Contracts\Support\Htmlable;

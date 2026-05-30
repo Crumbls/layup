@@ -6,7 +6,6 @@ namespace Crumbls\Layup\Support;
 
 use Crumbls\Layup\Events\SafelistChanged;
 use Crumbls\Layup\Models\Page;
-use Crumbls\Layup\Support\ContentWalker;
 use Illuminate\Support\Facades\File;
 
 /**
