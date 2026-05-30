@@ -5,6 +5,14 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-05-29
+
+### Fixed
+- Undo/redo (Ctrl+Z / Ctrl+Y) now correctly syncs restored state back to Livewire. Previously `$wire.restoreContent()` was called but the method did not exist, so the canvas appeared to undo visually but the field saved the wrong content on form submit.
+- Column resize drag now adds a history snapshot on release — resize operations are undoable.
+- Inline double-click text edits now push a history snapshot and sync correctly to Livewire state.
+- Removed stray `console.log` debug statement in inline edit handler.
+
 ## [1.4.0] - 2026-05-29
 
 ### Fixed

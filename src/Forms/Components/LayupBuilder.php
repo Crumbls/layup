@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Crumbls\Layup\Forms\Components;
 
 use Crumbls\Layup\Forms\Components\Traits\HandlesColumns;
@@ -7,6 +9,8 @@ use Crumbls\Layup\Forms\Components\Traits\HandlesRows;
 use Crumbls\Layup\Forms\Components\Traits\HandlesWidgets;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Filament\Forms\Components\Field;
+use Filament\Support\Components\Attributes\ExposedLivewireMethod;
+use Livewire\Attributes\Renderless;
 
 class LayupBuilder extends Field
 {
@@ -48,6 +52,13 @@ class LayupBuilder extends Field
     {
         // Intentionally empty — Alpine manages local state via $entangle.
         // Dispatch events directly from actions instead.
+    }
+
+    #[Renderless]
+    #[ExposedLivewireMethod]
+    public function restoreContent(array $state = []): void
+    {
+        $this->state($state);
     }
 
     public function getWidgetRegistryProperty(): array

@@ -826,7 +826,7 @@
                 this.historyIndex--;
                 const state = JSON.parse(JSON.stringify(this.history[this.historyIndex]));
                 this.content = state;
-                $wire.restoreContent(state);
+                $wire.callSchemaComponentMethod(this.componentKey, 'restoreContent', {state: state});
             },
 
             redo() {
@@ -834,7 +834,7 @@
                 this.historyIndex++;
                 const state = JSON.parse(JSON.stringify(this.history[this.historyIndex]));
                 this.content = state;
-                $wire.restoreContent(state);
+                $wire.callSchemaComponentMethod(this.componentKey, 'restoreContent', {state: state});
             },
 
             onKeyDown(e) {
@@ -1111,7 +1111,7 @@
                     }
                 }
 
-                console.log('incoming update.');
+                this.pushHistory();
                 $wire.callSchemaComponentMethod(this.componentKey, 'widgetUpdateContent', {rowId: rowId, columnId: colId, widgetId: widgetId, content: newContent});
                 this.cancelInlineEdit();
             },
@@ -1182,6 +1182,7 @@
                     const row = this.content.rows.find(r => r.id === this.columnResize.rowId);
                     if (row) {
                         const spans = row.columns.map(col => col.span);
+                        this.pushHistory();
                         $wire.callSchemaComponentMethod(this.componentKey, 'columnResize', {
                             rowId: this.columnResize.rowId,
                             spans: spans
