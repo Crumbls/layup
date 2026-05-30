@@ -23,6 +23,7 @@ class FieldPacks
                 ->label(__('layup::widgets.shared.image'))
                 ->image()
                 ->directory('layup/images')
+                ->maxSize(config('layup.uploads.max_size', 10240))
                 ->nullable(),
             TextInput::make("{$prefix}_alt")
                 ->label(__('layup::widgets.shared.alt_text'))

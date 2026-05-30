@@ -5,6 +5,10 @@
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }} @if(!empty($data['aspect']))aspect-ratio: {{ $data['aspect'] }};@endif @if(!empty($data['max_width']))max-width: {{ $data['max_width'] }};@endif"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
-    {!! $data['html'] !!}
+    @if(config('layup.allow_raw_html', true))
+        {!! $data['html'] !!}
+    @else
+        {{ $data['html'] }}
+    @endif
 </div>
 @endif

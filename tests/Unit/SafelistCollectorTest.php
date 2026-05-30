@@ -207,3 +207,40 @@ it('includes extra_classes from config', function (): void {
 
     config(['layup.safelist.extra_classes' => []]);
 });
+
+it('extracts classes from sections structure', function (): void {
+    $content = [
+        'sections' => [[
+            'settings' => [],
+            'rows' => [[
+                'id' => 'r1',
+                'settings' => ['class' => 'section-custom-class'],
+                'columns' => [],
+            ]],
+        ]],
+    ];
+
+    $classes = SafelistCollector::classesFromContent($content);
+    expect($classes)->toContain('section-custom-class');
+});
+
+it('extracts inline styles from sections structure', function (): void {
+    $content = [
+        'sections' => [[
+            'settings' => [],
+            'rows' => [[
+                'id' => 'r1',
+                'settings' => ['inline_css' => 'background: green;'],
+                'columns' => [],
+            ]],
+        ]],
+    ];
+
+    $styles = SafelistCollector::inlineStylesFromContent($content);
+    expect($styles)->toContain('background: green;');
+});
+
+it('returns empty array from classesFromContent with sections but empty rows', function (): void {
+    $content = ['sections' => [['settings' => [], 'rows' => []]]];
+    expect(SafelistCollector::classesFromContent($content))->toBe([]);
+});

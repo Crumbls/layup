@@ -64,7 +64,8 @@ class HeroWidget extends BaseWidget
             FileUpload::make('background_image')
                 ->label(__('layup::widgets.hero.background_image'))
                 ->image()
-                ->directory('layup/heroes'),
+                ->directory('layup/heroes')
+                ->maxSize(config('layup.uploads.max_size', 10240)),
             Select::make('alignment')
                 ->label(__('layup::widgets.hero.content_alignment'))
                 ->options(['left' => __('layup::widgets.hero.left'), 'center' => __('layup::widgets.hero.center'), 'right' => __('layup::widgets.hero.right')])

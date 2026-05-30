@@ -39,6 +39,7 @@ class GalleryWidget extends BaseWidget
                 ->multiple()
                 ->reorderable()
                 ->directory('layup/gallery')
+                ->maxSize(config('layup.uploads.max_size', 10240))
                 ->columnSpanFull(),
             Select::make('columns')
                 ->label(__('layup::widgets.gallery.columns'))

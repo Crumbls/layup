@@ -39,7 +39,8 @@ class ImageWidget extends BaseWidget
             FileUpload::make('src')
                 ->label(__('layup::widgets.image.image'))
                 ->image()
-                ->directory('layup/images'),
+                ->directory('layup/images')
+                ->maxSize(config('layup.uploads.max_size', 10240)),
             TextInput::make('alt')
                 ->label(__('layup::widgets.image.alt_text')),
             TextInput::make('caption')
@@ -89,8 +90,17 @@ class ImageWidget extends BaseWidget
 
     public static function onDelete(array $data, ?WidgetContext $context = null): void
     {
-        if (! empty($data['src']) && is_string($data['src'])) {
-            Storage::disk('public')->delete($data['src']);
+        if (empty($data['src']) || ! is_string($data['src'])) {
+            return;
         }
+
+        $src = $data['src'];
+
+        if (str_contains($src, '..') || str_contains($src, "\0") || str_starts_with($src, '/')) {
+            return;
+        }
+
+        $disk = config('layup.uploads.disk', 'public');
+        Storage::disk($disk)->delete($src);
     }
 }

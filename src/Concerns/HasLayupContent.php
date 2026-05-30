@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Concerns;
 
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\SafelistCollector;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Crumbls\Layup\View\Column;
@@ -39,10 +40,12 @@ trait HasLayupContent
     {
         $content = $this->getLayupContent();
 
+        $rawRows = ContentWalker::extractRows($content);
+
         if (array_key_exists('sections', $content)) {
             $sections = $content['sections'];
         } else {
-            $sections = [['settings' => [], 'rows' => $content['rows'] ?? []]];
+            $sections = [['settings' => [], 'rows' => $rawRows]];
         }
 
         return array_map(fn (array $sectionData): array => [
@@ -59,19 +62,8 @@ trait HasLayupContent
     public function getContentTree(): array
     {
         $content = $this->getLayupContent();
-        $rows = $content['rows'] ?? [];
 
-        if (array_key_exists('sections', $content)) {
-            $rows = [];
-
-            foreach ($content['sections'] as $section) {
-                foreach ($section['rows'] ?? [] as $row) {
-                    $rows[] = $row;
-                }
-            }
-        }
-
-        return $this->buildRowTree($rows);
+        return $this->buildRowTree(ContentWalker::extractRows($content));
     }
 
     /**
@@ -88,7 +80,12 @@ trait HasLayupContent
                 $widgets = array_values(array_filter(array_map(
                     function (array $widgetData) use ($registry) {
                         $type = $widgetData['type'] ?? null;
-                        $class = $type ? $registry->get($type) : null;
+
+                        if (! is_string($type) || $type === '') {
+                            return;
+                        }
+
+                        $class = $registry->get($type);
 
                         if (! $class) {
                             return;

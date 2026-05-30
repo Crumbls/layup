@@ -122,6 +122,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Widget Security
+    |--------------------------------------------------------------------------
+    |
+    | allow_raw_html: when true (default), HtmlWidget, EmbedWidget, and
+    | MapWidget render their output unescaped via {!! !!}. Set to false to
+    | escape the output and prevent raw HTML injection.
+    |
+    */
+    'allow_raw_html' => true,
+
+    /*
+    |--------------------------------------------------------------------------
     | Widget Auto-Discovery
     |--------------------------------------------------------------------------
     |
@@ -146,6 +158,7 @@ return [
     */
     'uploads' => [
         'disk' => 'public',
+        'max_size' => 10240,
     ],
 
     /*
@@ -286,6 +299,9 @@ return [
 
         // Label for the root crumb in BreadcrumbList JSON-LD.
         'home_breadcrumb_label' => 'Home',
+
+        // Priority value written into sitemap entries for published pages.
+        'sitemap_priority' => '0.7',
     ],
 
     'page_layout' => [

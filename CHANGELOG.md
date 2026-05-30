@@ -5,6 +5,26 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-05-29
+
+### Fixed
+- SafelistCollector now correctly collects custom classes and inline styles from section-structured pages (previously only legacy `rows` structure was scanned).
+
+### Security
+- Import action path-traversal hardening: the uploaded file path is now validated to reject `..`, null bytes, and absolute paths before any disk operation.
+- Added configurable `layup.uploads.max_size` (default 10240 KB) applied to all FileUpload fields to prevent unbounded uploads.
+- `ImageWidget::onDelete` now uses `config('layup.uploads.disk')` instead of hardcoded `public` disk, and validates the path before deletion.
+- Added `layup.allow_raw_html` config flag (default `true`). Set to `false` to escape HTML/embed/map widget output rather than rendering it raw.
+- Import exceptions are now logged via `logger()->warning()` for diagnostics (user-facing message unchanged).
+
+### Changed
+- `Page` status strings extracted to class constants (`Page::STATUS_PUBLISHED`, `Page::STATUS_DRAFT`, `Page::STATUS_SCHEDULED`).
+- Sitemap entry priority is now configurable via `layup.seo.sitemap_priority` (default `'0.7'`).
+- `SafelistCollector::writeFile` now uses the `File` facade (`File::ensureDirectoryExists`, `File::put`) and logs write failures.
+- `HasLayupContent` and `LayupContent` now use `ContentWalker::extractRows()` for all row-extraction paths, eliminating drift between the two implementations.
+- `HasLayupContent::buildRowTree` now guards against non-string widget type values (matches `LayupContent`).
+- Scope methods `scopePublished`, `scopeDraft`, `scopeScheduled` now have proper `Builder` type hints and return types.
+
 ## [1.3.1](https://github.com/Crumbls/layup/compare/v1.3.0...v1.3.1) (2026-05-02)
 
 ### Documentation

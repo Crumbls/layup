@@ -41,7 +41,8 @@ class Section extends BaseView
             FileUpload::make('background_image')
                 ->label(__('layup::widgets.section.background_image'))
                 ->image()
-                ->directory('layup/sections'),
+                ->directory('layup/sections')
+                ->maxSize(config('layup.uploads.max_size', 10240)),
             TextInput::make('background_video')
                 ->label(__('layup::widgets.section.background_video'))
                 ->url()
