@@ -6,6 +6,7 @@ namespace Crumbls\Layup\Support;
 
 use Crumbls\Layup\Events\SafelistChanged;
 use Crumbls\Layup\Models\Page;
+use Illuminate\Support\Facades\File;
 
 /**
  * Collects all Tailwind CSS classes and inline styles used across
@@ -91,13 +92,19 @@ class SafelistCollector
      */
     public static function classesFromContent(?array $content): array
     {
-        if (! $content || empty($content['rows'])) {
+        if (! $content) {
+            return [];
+        }
+
+        $rows = ContentWalker::extractRows($content);
+
+        if (empty($rows)) {
             return [];
         }
 
         $classes = [];
 
-        foreach ($content['rows'] as $row) {
+        foreach ($rows as $row) {
             $classes = array_merge($classes, static::classesFromRow($row));
         }
 
@@ -203,13 +210,19 @@ class SafelistCollector
      */
     public static function inlineStylesFromContent(?array $content): array
     {
-        if (! $content || empty($content['rows'])) {
+        if (! $content) {
+            return [];
+        }
+
+        $rows = ContentWalker::extractRows($content);
+
+        if (empty($rows)) {
             return [];
         }
 
         $styles = [];
 
-        foreach ($content['rows'] as $row) {
+        foreach ($rows as $row) {
             if (! empty($row['settings']['inline_css'])) {
                 $styles[] = $row['settings']['inline_css'];
             }
@@ -293,15 +306,13 @@ class SafelistCollector
     protected static function writeFile(string $path, array $classes): bool
     {
         try {
-            $dir = dirname($path);
-            if (! is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-
-            file_put_contents($path, implode("\n", $classes) . "\n");
+            File::ensureDirectoryExists(dirname($path));
+            File::put($path, implode("\n", $classes) . "\n");
 
             return true;
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            logger()->warning('Layup: safelist file write failed', ['path' => $path, 'exception' => $e->getMessage()]);
+
             return false;
         }
     }

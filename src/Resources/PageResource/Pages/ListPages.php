@@ -119,7 +119,7 @@ class ListPages extends ListRecords
                         'slug' => $slug,
                         'parent_id' => $parentId,
                         'content' => $data['content'] ?? ['rows' => []],
-                        'status' => 'draft',
+                        'status' => Page::STATUS_DRAFT,
                     ]);
 
                     return redirect(PageResource::getUrl('edit', ['record' => $record]));
@@ -132,12 +132,19 @@ class ListPages extends ListRecords
                     FileUpload::make('file')
                         ->label(__('layup::resource.json_file'))
                         ->acceptedFileTypes(['application/json'])
+                        ->maxSize(config('layup.uploads.max_size', 10240))
                         ->required(),
                 ])
                 ->action(function (array $data): void {
                     $disk = config('filament.default_filesystem_disk', 'public');
                     $diskInstance = Storage::disk($disk);
                     $file = $data['file'];
+
+                    if (! static::isValidUploadPath($file)) {
+                        Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
+
+                        return;
+                    }
 
                     if (! $diskInstance->exists($file)) {
                         Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
@@ -160,6 +167,7 @@ class ListPages extends ListRecords
                             Notification::make()->warning()->title(__('layup::notifications.file_delete_failed'))->send();
                         }
                     } catch (\Throwable $e) {
+                        logger()->warning('Layup: import file read failed', ['exception' => $e->getMessage()]);
                         Notification::make()->danger()->title(__('layup::notifications.file_not_found'))->send();
 
                         return;
@@ -189,12 +197,37 @@ class ListPages extends ListRecords
                         'slug' => $slug,
                         'content' => $json['content'],
                         'meta' => $json['meta'] ?? [],
-                        'status' => 'draft',
+                        'status' => Page::STATUS_DRAFT,
                     ]);
 
                     Notification::make()->success()->title(__('layup::notifications.page_imported'))->send();
                 }),
         ];
+    }
+
+    /**
+     * Validate that an uploaded file path is safe to pass to disk operations.
+     * Rejects non-strings, path traversal sequences, null bytes, and absolute paths.
+     */
+    private static function isValidUploadPath(mixed $value): bool
+    {
+        if (! is_string($value)) {
+            return false;
+        }
+
+        if (str_contains($value, '..')) {
+            return false;
+        }
+
+        if (str_contains($value, "\0")) {
+            return false;
+        }
+
+        if (str_starts_with($value, '/')) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

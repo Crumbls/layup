@@ -43,10 +43,12 @@ class LayupContent implements Htmlable
      */
     public function getSectionTree(): array
     {
+        $rawRows = ContentWalker::extractRows($this->content);
+
         if (array_key_exists('sections', $this->content)) {
             $sections = $this->content['sections'];
         } else {
-            $sections = [['settings' => [], 'rows' => $this->content['rows'] ?? []]];
+            $sections = [['settings' => [], 'rows' => $rawRows]];
         }
 
         return array_map(fn (array $sectionData): array => [
@@ -60,18 +62,7 @@ class LayupContent implements Htmlable
      */
     public function getContentTree(): array
     {
-        if (array_key_exists('sections', $this->content)) {
-            $rows = [];
-            foreach ($this->content['sections'] as $section) {
-                foreach ($section['rows'] ?? [] as $row) {
-                    $rows[] = $row;
-                }
-            }
-        } else {
-            $rows = $this->content['rows'] ?? [];
-        }
-
-        return $this->buildRowTree($rows);
+        return $this->buildRowTree(ContentWalker::extractRows($this->content));
     }
 
     /**

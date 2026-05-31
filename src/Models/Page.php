@@ -7,15 +7,22 @@ namespace Crumbls\Layup\Models;
 use Crumbls\Layup\Concerns\HasLayupContent;
 use Crumbls\Layup\Concerns\HasNestedPath;
 use Crumbls\Layup\Support\ContentValidator;
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\SafelistCollector;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Page extends Model
 {
     use HasFactory, HasLayupContent, HasNestedPath, SoftDeletes;
+
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_SCHEDULED = 'scheduled';
 
     protected static function booted(): void
     {
@@ -32,18 +39,18 @@ class Page extends Model
             // Existing-row safety net: any row going to "published" without
             // a date gets one. This keeps legacy callers ("just publish it")
             // working with no behavior change.
-            if ($page->status === 'published' && empty($page->published_at)) {
+            if ($page->status === self::STATUS_PUBLISHED && empty($page->published_at)) {
                 $page->published_at = now();
             }
 
             // Future-dated published pages are reclassified as scheduled,
             // so the frontend stays hidden until the cron promotes them.
             if (
-                $page->status === 'published'
+                $page->status === self::STATUS_PUBLISHED
                 && $page->published_at
                 && $page->published_at->isFuture()
             ) {
-                $page->status = 'scheduled';
+                $page->status = self::STATUS_SCHEDULED;
             }
         });
 
@@ -126,10 +133,10 @@ class Page extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function scopePublished($query)
+    public function scopePublished(Builder $query): Builder
     {
         return $query
-            ->where('status', 'published')
+            ->where('status', self::STATUS_PUBLISHED)
             ->where(function ($q): void {
                 // Defense in depth: even if a scheduled row leaks past the
                 // status check, the date gate keeps it off the frontend.
@@ -138,14 +145,14 @@ class Page extends Model
             });
     }
 
-    public function scopeDraft($query)
+    public function scopeDraft(Builder $query): Builder
     {
-        return $query->where('status', 'draft');
+        return $query->where('status', self::STATUS_DRAFT);
     }
 
-    public function scopeScheduled($query)
+    public function scopeScheduled(Builder $query): Builder
     {
-        return $query->where('status', 'scheduled');
+        return $query->where('status', self::STATUS_SCHEDULED);
     }
 
     /*
@@ -338,19 +345,8 @@ class Page extends Model
     protected function extractFaqItems(): array
     {
         $faqs = [];
-        $rows = $this->getLayupContent()['rows'] ?? [];
-
-        // Also check inside sections
         $content = $this->getLayupContent();
-
-        if (! empty($content['sections'])) {
-            $rows = [];
-            foreach ($content['sections'] as $section) {
-                foreach ($section['rows'] ?? [] as $row) {
-                    $rows[] = $row;
-                }
-            }
-        }
+        $rows = ContentWalker::extractRows($content);
 
         foreach ($rows as $row) {
             foreach ($row['columns'] ?? [] as $col) {
@@ -394,7 +390,7 @@ class Page extends Model
 
         $disk = config('layup.uploads.disk', 'public');
 
-        return \Illuminate\Support\Facades\Storage::disk($disk)->url($value);
+        return Storage::disk($disk)->url($value);
     }
 
     /*
@@ -478,7 +474,19 @@ class Page extends Model
         return static::published()->get()->map(fn (self $page): array => [
             'url' => $page->getUrl(),
             'lastmod' => $page->updated_at->toDateString(),
-            'priority' => '0.7',
+            'priority' => config('layup.seo.sitemap_priority', '0.7'),
         ])->all();
+    }
+
+    /**
+     * Added as a backfill for old versions that didn't have a slug.
+     */
+    public function getSlugAttribute(): ?string
+    {
+        if (array_key_exists('slug', $this->attributes) && ! empty($this->attributes['slug']) && $this->attributes['slug'] !== null) {
+            return $this->attributes['slug'];
+        }
+
+        return $this->getKey() ? $this->getKey() : config(['layup.pages.default_slug' => null]);
     }
 }
