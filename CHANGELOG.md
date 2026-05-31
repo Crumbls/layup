@@ -5,6 +5,18 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0](https://github.com/Crumbls/layup/compare/v1.3.0...v1.4.0) (2026-05-31)
+
+
+### Features
+
+* v1.4.0 — security hardening, safelist bug fix, dedup & polish ([db5cd68](https://github.com/Crumbls/layup/commit/db5cd68b3f242933dcb4bf3044c988f30b33f620))
+
+
+### Bug Fixes
+
+* restore undo/redo Livewire sync (v1.4.1) ([4fb84a2](https://github.com/Crumbls/layup/commit/4fb84a21c2f66e2099ed8873ebc07225b8c84128))
+
 ## [1.4.1] - 2026-05-29
 
 ### Fixed
