@@ -61,4 +61,9 @@ class TestimonialGridWidget extends BaseWidget
 
         return "💬 Testimonial Grid ({$count})";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

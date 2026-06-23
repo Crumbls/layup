@@ -81,4 +81,9 @@ class SeparatorWidget extends BaseWidget
             default => '── Line ──',
         };
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

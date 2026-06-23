@@ -44,6 +44,7 @@ class LayupBuilder extends Field
         $ret['rowTemplates'] = $this->getRowTemplatesProperty();
         $ret['widgetRegistry'] = $this->getWidgetRegistryProperty();
         $ret['translations'] = $this->getTranslationsProperty();
+        $ret['initialLivePreviews'] = $this->buildInitialLivePreviews();
 
         return $ret;
     }

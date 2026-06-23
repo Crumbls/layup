@@ -69,4 +69,9 @@ class BreadcrumbsWidget extends BaseWidget
 
         return implode(' > ', array_slice($labels, 0, 3));
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

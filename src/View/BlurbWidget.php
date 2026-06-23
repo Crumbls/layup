@@ -206,4 +206,9 @@ class BlurbWidget extends BaseWidget
     {
         return $data['title'] ?? '(empty blurb)';
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

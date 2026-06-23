@@ -50,4 +50,9 @@ class PriceWidget extends BaseWidget
     {
         return ($data['currency_symbol'] ?? '$') . ($data['amount'] ?? '0') . ($data['period'] ?? '');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

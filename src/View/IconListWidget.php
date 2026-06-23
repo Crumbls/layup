@@ -49,4 +49,9 @@ class IconListWidget extends BaseWidget
     {
         return '📋 Icon List (' . count($data['items'] ?? []) . ')';
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

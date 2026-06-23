@@ -80,4 +80,9 @@ class TeamGridWidget extends BaseWidget
 
         return "👥 Team Grid ({$count} members)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

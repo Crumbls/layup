@@ -60,4 +60,9 @@ class FeatureGridWidget extends BaseWidget
 
         return "✨ Feature Grid ({$count})";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

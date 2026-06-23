@@ -85,4 +85,9 @@ class FeatureListWidget extends BaseWidget
 
         return "✓ Feature List ({$count} items)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

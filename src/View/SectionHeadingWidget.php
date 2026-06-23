@@ -52,4 +52,9 @@ class SectionHeadingWidget extends BaseWidget
     {
         return '📌 ' . ($data['heading'] ?? 'Section Heading');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

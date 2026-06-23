@@ -71,4 +71,9 @@ class StarRatingWidget extends BaseWidget
     {
         return '⭐ ' . ($data['rating'] ?? 5) . '/' . ($data['max'] ?? 5);
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

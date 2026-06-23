@@ -83,4 +83,9 @@ class DividerWidget extends BaseWidget
 
         return "— Divider · {$style} · {$width}";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

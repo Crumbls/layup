@@ -70,4 +70,9 @@ class ListWidget extends BaseWidget
 
         return "• List ({$count} items)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

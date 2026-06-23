@@ -83,4 +83,9 @@ class CallToActionWidget extends BaseWidget
 
         return $title ? "📢 {$title}" : '(empty CTA)';
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

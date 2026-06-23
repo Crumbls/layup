@@ -99,4 +99,9 @@ class TestimonialWidget extends BaseWidget
 
         return $author ? "💬 {$author}: \"{$short}\"" : '(empty testimonial)';
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

@@ -82,4 +82,9 @@ class BannerWidget extends BaseWidget
     {
         return '📣 ' . ($data['heading'] ?? '(empty banner)');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

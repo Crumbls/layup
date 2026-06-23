@@ -71,4 +71,9 @@ class AlertWidget extends BaseWidget
 
         return "⚠️ [{$type}] {$title}";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

@@ -70,4 +70,9 @@ class MetricWidget extends BaseWidget
 
         return "📊 Metrics ({$count})";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

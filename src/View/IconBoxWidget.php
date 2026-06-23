@@ -76,4 +76,9 @@ class IconBoxWidget extends BaseWidget
     {
         return ($data['icon'] ?? '⚡') . ' ' . ($data['title'] ?? '');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }
