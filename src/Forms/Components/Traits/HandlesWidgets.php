@@ -479,4 +479,79 @@ trait HandlesWidgets
 
         return collect($col['widgets'] ?? [])->firstWhere('id', $widgetId);
     }
+
+    /**
+     * Render a single widget's real HTML for the builder canvas preview.
+     * Kept for ad-hoc calls; the canvas uses the batched variant below.
+     */
+    #[Renderless]
+    #[ExposedLivewireMethod]
+    public function renderWidgetPreview(string $type, array $data = []): string
+    {
+        return $this->renderLivePreviewHtml(app(WidgetRegistry::class), $type, $data);
+    }
+
+    /**
+     * Pre-render the canvas previews for the field's current content so the
+     * initial page load needs no round-trips. Keyed by widget id.
+     *
+     * @return array<string, string>
+     */
+    public function buildInitialLivePreviews(): array
+    {
+        $registry = app(WidgetRegistry::class);
+        $state = $this->getState();
+        $previews = [];
+
+        foreach ($state['rows'] ?? [] as $row) {
+            foreach ($row['columns'] ?? [] as $column) {
+                foreach ($column['widgets'] ?? [] as $widget) {
+                    $id = $widget['id'] ?? null;
+                    $type = $widget['type'] ?? null;
+
+                    if ($id === null || $type === null) {
+                        continue;
+                    }
+
+                    $html = $this->renderLivePreviewHtml($registry, $type, $widget['data'] ?? []);
+
+                    if ($html !== '') {
+                        $previews[$id] = $html;
+                    }
+                }
+            }
+        }
+
+        return $previews;
+    }
+
+    /**
+     * Render a widget to HTML, but only when it opts in via
+     * supportsLivePreview(). Returns an empty string otherwise (or on
+     * failure) so the canvas falls back to the plain-text getPreview().
+     */
+    protected function renderLivePreviewHtml(WidgetRegistry $registry, string $type, array $data): string
+    {
+        $class = $registry->get($type);
+
+        if (! $class || ! $class::supportsLivePreview()) {
+            return '';
+        }
+
+        try {
+            $rendered = $class::make(array_merge($class::getDefaultData(), $data))->render();
+        } catch (\Throwable $e) {
+            return '';
+        }
+
+        if ($rendered instanceof \Illuminate\Contracts\View\View) {
+            return $rendered->render();
+        }
+
+        if ($rendered instanceof \Illuminate\Contracts\Support\Htmlable) {
+            return $rendered->toHtml();
+        }
+
+        return (string) $rendered;
+    }
 }

@@ -60,6 +60,17 @@ trait HasWidgetDefaults
         return '(empty)';
     }
 
+    /**
+     * Whether the builder canvas should render this widget's real HTML
+     * as its preview, instead of the plain-text getPreview() string.
+     * Override and return true for cheap, static widgets that look better
+     * rendered in place (e.g. breadcrumbs, lists).
+     */
+    public static function supportsLivePreview(): bool
+    {
+        return false;
+    }
+
     public static function prepareForRender(array $data): array
     {
         return $data;
@@ -142,6 +153,7 @@ trait HasWidgetDefaults
             'search_terms' => static::getSearchTerms(),
             'deprecated' => static::isDeprecated(),
             'deprecation_message' => static::getDeprecationMessage(),
+            'supports_live_preview' => static::supportsLivePreview(),
         ];
     }
 }

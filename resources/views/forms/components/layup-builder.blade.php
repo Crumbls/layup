@@ -14,6 +14,7 @@
                 rowTemplates: @js($rowTemplates),
                 widgetRegistry: @js($widgetRegistry),
                 translations: @js($translations),
+                initialLivePreviews: @js($initialLivePreviews),
                 geocode: function() {
                 console.log('tf');
                 }
@@ -237,12 +238,20 @@
                                                                         </button>
                                                                     </div>
                                                                 </div>
-                                                                <div
-                                                                        class="lyp-widget-preview"
-                                                                        :class="{ 'lyp-widget-preview--editable': isInlineEditable(widget.type) }"
-                                                                        x-text="getWidgetPreview(widget)"
-                                                                        @dblclick.stop="startInlineEdit(row.id, col.id, widget.id, widget.type, widget.data)"
-                                                                ></div>
+                                                                <template x-if="supportsLivePreview(widget.type)">
+                                                                    <div
+                                                                            class="lyp-widget-preview lyp-widget-preview--live"
+                                                                            x-html="livePreviewHtml(widget)"
+                                                                    ></div>
+                                                                </template>
+                                                                <template x-if="!supportsLivePreview(widget.type)">
+                                                                    <div
+                                                                            class="lyp-widget-preview"
+                                                                            :class="{ 'lyp-widget-preview--editable': isInlineEditable(widget.type) }"
+                                                                            x-text="getWidgetPreview(widget)"
+                                                                            @dblclick.stop="startInlineEdit(row.id, col.id, widget.id, widget.type, widget.data)"
+                                                                    ></div>
+                                                                </template>
                                                             </div>
                                                         </div>
                                                     </template>
@@ -364,6 +373,12 @@
             showRuler: true,
             saving: false,
 
+            // Live (server-rendered) widget previews, keyed by widget content.
+            // Seeded from server-rendered HTML on load; refreshed only when a
+            // widget is added, edited, or duplicated.
+            livePreviews: {},
+            initialLivePreviews: config.initialLivePreviews || {},
+
             // Widget Picker
             picker: {open: false, rowId: null, colId: null, search: ''},
 
@@ -449,6 +464,8 @@
                 this.history = [JSON.parse(JSON.stringify(this.content))];
                 this.historyIndex = 0;
 
+                this.seedLivePreviews();
+
                 // Watch for Livewire saves
                 Livewire.hook('request', ({respond}) => {
                     this.saving = true;
@@ -533,6 +550,7 @@
                 window.addEventListener('layup-widget-updated', (event) => {
                     if (event.detail.statePath != $self.statePath) return;
                     const { rowId, columnId, widgetId, data } = event.detail;
+                    let updatedWidget = null;
                     $self.content.rows = ($self.content.rows || []).map(function(row) {
                         if (row.id === rowId) {
                             row.columns = (row.columns || []).map(function(col) {
@@ -540,6 +558,7 @@
                                     col.widgets = (col.widgets || []).map(function(widget) {
                                         if (widget.id === widgetId && data) {
                                             widget.data = data;
+                                            updatedWidget = widget;
                                         }
                                         return widget;
                                     });
@@ -549,6 +568,7 @@
                         }
                         return row;
                     });
+                    $self.refreshLivePreview(updatedWidget);
                     $self.pushHistory();
                 });
 
@@ -743,6 +763,7 @@
                             }
                             return row;
                         });
+                        $self.refreshLivePreview(response);
                         $self.pushHistory();
                     });
             },
@@ -770,6 +791,7 @@
                             }
                             return row;
                         });
+                        $self.refreshLivePreview(response);
                         $self.pushHistory();
                     });
             },
@@ -941,6 +963,73 @@
             },
             getColSpan(col) { return col.span?.[this.currentBreakpoint] ?? col.span?.lg ?? 6; },
             getWidgetLabel(type) { const w = this.widgetRegistry.find(r => r.type === type); return w ? w.label : type; },
+
+            // ─── Live (server-rendered) previews ─────────────────
+            supportsLivePreview(type) {
+                const w = this.widgetRegistry.find(r => r.type === type);
+                return !!(w && w.supports_live_preview);
+            },
+
+            // Cache key for a widget's preview: its type + data. Keying by
+            // content (not id) means undo/redo and identical widgets reuse a
+            // previously rendered preview with no extra round-trips.
+            livePreviewSig(widget) {
+                return (widget.type || '') + '|' + JSON.stringify(widget.data || {});
+            },
+
+            // Seed the cache with HTML rendered server-side on page load, so the
+            // existing content needs zero round-trips to preview.
+            seedLivePreviews() {
+                const map = this.initialLivePreviews || {};
+                (this.content.rows || []).forEach(row => {
+                    (row.columns || []).forEach(col => {
+                        (col.widgets || []).forEach(widget => {
+                            if (map[widget.id] != null) {
+                                this.livePreviews[this.livePreviewSig(widget)] = map[widget.id];
+                            }
+                        });
+                    });
+                });
+            },
+
+            // Plain read: return the cached HTML for this widget's content, or
+            // the escaped text preview until a refresh fills it in.
+            livePreviewHtml(widget) {
+                const html = this.livePreviews[this.livePreviewSig(widget)];
+
+                return html != null
+                    ? html
+                    : '<span class="lyp-widget-preview-fallback">' + this.escapeHtml(this.getWidgetPreview(widget)) + '</span>';
+            },
+
+            // Render one widget server-side and cache it. Called only on the
+            // discrete mutations that change a widget's data (add/edit/duplicate).
+            refreshLivePreview(widget) {
+                if (!widget || !this.supportsLivePreview(widget.type)) {
+                    return;
+                }
+
+                const sig = this.livePreviewSig(widget);
+                if (this.livePreviews[sig] != null) {
+                    return;
+                }
+
+                $wire.callSchemaComponentMethod(this.componentKey, 'renderWidgetPreview', {
+                    type: widget.type,
+                    data: widget.data || {},
+                }).then(html => {
+                    if (html && html.length) {
+                        this.livePreviews[sig] = html;
+                    }
+                }).catch(() => {});
+            },
+
+            escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str == null ? '' : String(str);
+                return div.innerHTML;
+            },
+
             getWidgetCategories() {
                 const cats = {};
                 const order = ['content', 'media', 'interactive', 'layout', 'advanced'];

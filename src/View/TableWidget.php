@@ -86,4 +86,9 @@ class TableWidget extends BaseWidget
 
         return "📊 Table ({$cols} cols × {$rows} rows)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

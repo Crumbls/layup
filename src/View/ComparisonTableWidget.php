@@ -79,4 +79,9 @@ class ComparisonTableWidget extends BaseWidget
 
         return "⚖️ {$a} vs {$b}";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

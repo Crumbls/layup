@@ -76,4 +76,9 @@ class CodeWidget extends BaseWidget
 
         return "💻 {$lang} ({$lines} lines)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

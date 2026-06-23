@@ -91,4 +91,9 @@ class PersonWidget extends BaseWidget
 
         return $name ? "👤 {$name}" . ($role ? " — {$role}" : '') : '(empty person)';
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

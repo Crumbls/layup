@@ -58,4 +58,9 @@ class ChangelogWidget extends BaseWidget
 
         return "📋 Changelog ({$count} releases)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

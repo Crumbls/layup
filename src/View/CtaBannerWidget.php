@@ -50,4 +50,9 @@ class CtaBannerWidget extends BaseWidget
     {
         return '📢 ' . ($data['heading'] ?? 'CTA Banner');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

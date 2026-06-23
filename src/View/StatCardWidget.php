@@ -74,4 +74,9 @@ class StatCardWidget extends BaseWidget
     {
         return ($data['value'] ?? '') . ' ' . ($data['label'] ?? '');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

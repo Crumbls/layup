@@ -79,4 +79,9 @@ class CardWidget extends BaseWidget
     {
         return '🃏 ' . ($data['title'] ?? '(empty card)');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

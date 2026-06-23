@@ -72,4 +72,9 @@ class TimelineWidget extends BaseWidget
 
         return "📅 Timeline ({$count} events)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

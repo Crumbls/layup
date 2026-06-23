@@ -81,4 +81,9 @@ class PageTitleWidget extends HeadingWidget
 
         return (string) ($page?->title ?? '');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

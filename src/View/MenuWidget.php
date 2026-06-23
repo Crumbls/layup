@@ -82,4 +82,9 @@ class MenuWidget extends BaseWidget
 
         return "☰ Menu ({$count} items)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

@@ -76,4 +76,9 @@ class StepProcessWidget extends BaseWidget
 
         return "1→2→3 Process ({$count} steps)";
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

@@ -49,4 +49,9 @@ class BadgeWidget extends BaseWidget
     {
         return '🏷 ' . ($data['text'] ?? 'Badge');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

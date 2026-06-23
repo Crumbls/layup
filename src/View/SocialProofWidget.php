@@ -48,4 +48,9 @@ class SocialProofWidget extends BaseWidget
     {
         return '⭐ ' . ($data['rating'] ?? '4.9') . ' on ' . ($data['platform'] ?? 'Trustpilot');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }

@@ -50,4 +50,9 @@ class HighlightBoxWidget extends BaseWidget
     {
         return '💡 ' . ($data['title'] ?? 'Highlight Box');
     }
+
+    public static function supportsLivePreview(): bool
+    {
+        return true;
+    }
 }
