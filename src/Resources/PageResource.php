@@ -95,14 +95,18 @@ class PageResource extends Resource
     }
 
     /**
-     * Render the live permalink preview shown above the builder. Path
-     * stays muted, slug segment is bold so the user sees what they're
-     * editing in the Page Settings modal.
+     * Render the status indicator shown above the builder. Draft and
+     * scheduled pages show a muted "not published" pill instead of a
+     * live link, since the URL only resolves once the page is published.
      */
     protected static function renderPermalink(?Model $record): HtmlString
     {
         if (! $record || ! $record->path) {
             return new HtmlString('');
+        }
+
+        if (! $record->isPublished()) {
+            return self::renderUnpublishedPill($record);
         }
 
         $url = $record->getUrl();
@@ -126,6 +130,31 @@ class PageResource extends Resource
             . '<span>' . $baseHtml . '</span>'
             . '<span class="font-semibold text-gray-900 dark:text-gray-100">' . $slugHtml . '</span>'
             . '</a>'
+        );
+    }
+
+    /**
+     * Pill shown for draft / scheduled pages in place of the permalink.
+     * Scheduled pages surface their go-live time so the editor knows the
+     * page is queued rather than simply unpublished.
+     */
+    protected static function renderUnpublishedPill(Model $record): HtmlString
+    {
+        if ($record->status === Page::STATUS_SCHEDULED && $record->published_at) {
+            $label = __('layup::resource.scheduled_for', [
+                'time' => $record->published_at->isoFormat('lll'),
+            ]);
+            $classes = 'bg-info-50 text-info-700 dark:bg-info-400/10 dark:text-info-400';
+        } else {
+            $label = __('layup::resource.draft_not_published');
+            $classes = 'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400';
+        }
+
+        return new HtmlString(
+            '<span class="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium ' . $classes . '">'
+            . '<span class="h-1.5 w-1.5 rounded-full bg-current opacity-70"></span>'
+            . e($label)
+            . '</span>'
         );
     }
 

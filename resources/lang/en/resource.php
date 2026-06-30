@@ -67,6 +67,8 @@ return [
     'featured_image' => 'Featured Image',
     'featured_image_help' => 'Used for social shares (OG/Twitter), schema, and theme thumbnails.',
     'permalink' => 'Permalink',
+    'draft_not_published' => 'Draft — not published yet',
+    'scheduled_for' => 'Scheduled for :time',
     'empty_trash' => 'Empty Trash',
     'empty_trash_confirm_heading' => 'Permanently delete every page in trash?',
     'empty_trash_confirm_description' => 'This force-deletes all trashed pages. This action cannot be undone.',
@@ -75,6 +77,8 @@ return [
     // Edit page header actions
     'page_settings' => 'Page Settings',
     'page_settings_updated' => 'Page settings updated',
+    'page_published' => 'Page published',
+    'page_unpublished' => 'Page moved to draft',
     'revision_history' => 'Revision History',
     'revision_history_description' => 'View and restore previous versions of this page',
     'save_as_template' => 'Save as Template',
