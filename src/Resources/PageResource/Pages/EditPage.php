@@ -49,6 +49,39 @@ class EditPage extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('publish')
+                ->label(__('layup::resource.publish'))
+                ->icon('heroicon-o-rocket-launch')
+                ->color('success')
+                ->visible(fn (): bool => ! $this->record->isPublished())
+                ->action(function (): void {
+                    $this->record->update([
+                        'status' => Page::STATUS_PUBLISHED,
+                        'published_at' => null,
+                    ]);
+
+                    Notification::make()
+                        ->success()
+                        ->title(__('layup::resource.page_published'))
+                        ->send();
+                }),
+            Action::make('unpublish')
+                ->label(__('layup::resource.unpublish'))
+                ->icon('heroicon-o-eye-slash')
+                ->color('gray')
+                ->requiresConfirmation()
+                ->visible(fn (): bool => $this->record->isPublished())
+                ->action(function (): void {
+                    $this->record->update([
+                        'status' => Page::STATUS_DRAFT,
+                        'published_at' => null,
+                    ]);
+
+                    Notification::make()
+                        ->success()
+                        ->title(__('layup::resource.page_unpublished'))
+                        ->send();
+                }),
             Action::make('pageSettings')
                 ->label(__('layup::resource.page_settings'))
                 ->icon('heroicon-o-cog-6-tooth')

@@ -443,6 +443,19 @@ class Page extends Model
     }
 
     /**
+     * Whether this page is live: published status and either no publish
+     * date or a date that has already passed.
+     */
+    public function isPublished(): bool
+    {
+        if ($this->status !== self::STATUS_PUBLISHED) {
+            return false;
+        }
+
+        return $this->published_at === null || $this->published_at <= now();
+    }
+
+    /**
      * Get the public-facing URL for this page.
      */
     public function getUrl(): string

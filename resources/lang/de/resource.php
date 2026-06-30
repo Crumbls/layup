@@ -67,6 +67,8 @@ return [
     'featured_image' => 'Beitragsbild',
     'featured_image_help' => 'Wird für Social Shares (OG/Twitter), Schema und Theme-Vorschaubilder verwendet.',
     'permalink' => 'Permalink',
+    'draft_not_published' => 'Entwurf — noch nicht veröffentlicht',
+    'scheduled_for' => 'Geplant für :time',
     'empty_trash' => 'Papierkorb leeren',
     'empty_trash_confirm_heading' => 'Alle Seiten im Papierkorb dauerhaft löschen?',
     'empty_trash_confirm_description' => 'Dies löscht alle Seiten im Papierkorb endgültig. Diese Aktion kann nicht rückgängig gemacht werden.',
@@ -75,6 +77,8 @@ return [
     // Bearbeitungsseite Kopfaktionen
     'page_settings' => 'Seiteneinstellungen',
     'page_settings_updated' => 'Seiteneinstellungen aktualisiert',
+    'page_published' => 'Seite veröffentlicht',
+    'page_unpublished' => 'Seite als Entwurf gespeichert',
     'revision_history' => 'Versionsgeschichte',
     'revision_history_description' => 'Frühere Versionen dieser Seite anzeigen und wiederherstellen',
     'save_as_template' => 'Als Vorlage speichern',
