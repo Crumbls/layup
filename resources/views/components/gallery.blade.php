@@ -49,8 +49,6 @@
                 <button @click="close()" class="absolute top-4 right-4 text-white text-3xl hover:text-gray-300">&times;</button>
                 <button @click="prev()" class="absolute left-4 text-white text-3xl hover:text-gray-300">&#8249;</button>
                 <img :src="current" class="max-w-[90vw] max-h-[90vh] object-contain" />
-                <button @click="next()" class="absolute right-4 text-white text-3xl hover:text-gray-300">&#8250;</button>
-            </div>
-        </template>
+                <button @click="next()" class="absolute right-4 text-white text-3xl hover:text-gray-300">&#8250;</button></div></template>
     @endif
 </div>

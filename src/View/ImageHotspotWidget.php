@@ -86,6 +86,6 @@ class ImageHotspotWidget extends BaseWidget
     {
         $count = count($data['hotspots'] ?? []);
 
-        return "📍 Image Hotspot ({$count} pins)";
+        return "Image Hotspot ({$count} pins)";
     }
 }

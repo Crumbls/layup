@@ -20,6 +20,4 @@
             @if(!empty($data['role']) || !empty($data['company']))
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ $data['role'] ?? '' }}@if(!empty($data['role']) && !empty($data['company'])), @endif{{ $data['company'] ?? '' }}</p>
             @endif
-        </div>
-    </div>
-</div>
+        </div></div></div>

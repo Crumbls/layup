@@ -78,7 +78,7 @@ class TeamGridWidget extends BaseWidget
     {
         $count = count($data['members'] ?? []);
 
-        return "👥 Team Grid ({$count} members)";
+        return "Team Grid ({$count} members)";
     }
 
     public static function supportsLivePreview(): bool

@@ -22,5 +22,4 @@
                 @endif
             </li>
         @endforeach
-    </ol>
-</nav>
+    </ol></nav>

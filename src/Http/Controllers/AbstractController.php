@@ -14,8 +14,8 @@ use Illuminate\Routing\Controller;
  * Base controller for rendering Layup content on the frontend.
  *
  * Model-agnostic: subclasses resolve any Eloquent model from the
- * request. The model must implement `getSectionTree()` and
- * `getContentTree()` (as Page does).
+ * request. The model must implement `getSectionTree()`and
+ * `getContentTree()`(as Page does).
  *
  * For a Page-specific implementation, see AbstractPageController.
  *

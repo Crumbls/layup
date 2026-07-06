@@ -45,6 +45,6 @@ class TextColumnsWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📝 Text Columns (' . ($data['columns'] ?? 2) . ')';
+        return 'Text Columns (' . ($data['columns'] ?? 2) . ')';
     }
 }

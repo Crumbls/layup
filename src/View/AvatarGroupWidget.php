@@ -65,6 +65,6 @@ class AvatarGroupWidget extends BaseWidget
     {
         $count = count($data['avatars'] ?? []);
 
-        return "👥 {$count} avatars" . (empty($data['extra_count']) ? '' : " {$data['extra_count']}");
+        return "{$count} avatars" . (empty($data['extra_count']) ? '' : " {$data['extra_count']}");
     }
 }

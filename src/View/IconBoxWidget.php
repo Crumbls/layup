@@ -34,9 +34,8 @@ class IconBoxWidget extends BaseWidget
     {
         return [
             TextInput::make('icon')
-                ->label(__('layup::widgets.icon-box.icon_emoji_or_text'))
-                ->default('⚡')
-                ->required(),
+                ->label(__('layup::widgets.icon-box.icon_text'))
+                ->nullable(),
             TextInput::make('title')
                 ->label(__('layup::widgets.icon-box.title'))
                 ->required(),
@@ -62,7 +61,7 @@ class IconBoxWidget extends BaseWidget
     public static function getDefaultData(): array
     {
         return [
-            'icon' => '⚡',
+            'icon' => '',
             'title' => '',
             'description' => '',
             'link_url' => '',
@@ -74,7 +73,7 @@ class IconBoxWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return ($data['icon'] ?? '⚡') . ' ' . ($data['title'] ?? '');
+        return $data['title'] ?? 'Icon Box';
     }
 
     public static function supportsLivePreview(): bool

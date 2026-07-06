@@ -59,8 +59,7 @@
                         x-cloak
                         style="position: absolute; inset: 0; border-radius: 50%;"
                         x-bind:style="'position: absolute; inset: 0; border-radius: 50%; background-color: ' + customColor"
-                    ></span>
-                </span>
+                    ></span></span>
                 <span x-show="!(customColor && state === customColor)">Custom</span>
                 <span x-show="customColor && state === customColor" x-cloak x-text="customColor" style="font-family: ui-monospace, monospace;"></span>
                 <input
@@ -68,8 +67,6 @@
                     x-bind:value="customColor || '#000000'"
                     x-on:input="onCustomInput($event)"
                     style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"
-                />
-            </label>
+                /></label>
         @endif
-    </div>
-</x-dynamic-component>
+    </div></x-dynamic-component>

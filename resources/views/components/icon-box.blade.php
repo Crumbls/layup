@@ -10,9 +10,11 @@
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
-    <div class="{{ $isTop ? 'mx-auto mb-3' : 'shrink-0' }} w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style="background-color: {{ $iconBg }}; color: {{ $iconColor }}">
-        {{ $data['icon'] ?? '⚡' }}
-    </div>
+    @if(!empty($data['icon']))
+        <div class="{{ $isTop ? 'mx-auto mb-3' : 'shrink-0' }} w-14 h-14 rounded-xl flex items-center justify-center text-2xl" style="background-color: {{ $iconBg }}; color: {{ $iconColor }}">
+            {{ $data['icon'] }}
+        </div>
+    @endif
     <div>
         @if(!empty($data['title']))
             @if(!empty($data['link_url']))
@@ -24,5 +26,4 @@
         @if(!empty($data['description']))
             <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ $data['description'] }}</p>
         @endif
-    </div>
-</div>
+    </div></div>

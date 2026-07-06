@@ -13,15 +13,13 @@
     <div class="flex items-center justify-center gap-3 mb-8">
         <span class="text-sm font-medium" :class="!annual ? 'opacity-100' : 'opacity-50'">{{ $data['monthly_label'] ?? __('layup::frontend.pricing_toggle.monthly') }}</span>
         <button @click="annual = !annual" class="relative w-14 h-7 rounded-full transition-colors" :style="annual ? 'background-color: {{ $color }}' : 'background-color: var(--layup-border)'">
-            <span class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform" :class="annual ? 'translate-x-7' : ''"></span>
-        </button>
+            <span class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform" :class="annual ? 'translate-x-7' : ''"></span></button>
         <span class="text-sm font-medium" :class="annual ? 'opacity-100' : 'opacity-50'">
             {{ $data['annual_label'] ?? __('layup::frontend.pricing_toggle.annual') }}
             @if(!empty($data['discount_badge']))
                 <span class="text-xs text-white px-2 py-0.5 rounded-full ml-1" style="background-color: {{ $color }}">{{ $data['discount_badge'] }}</span>
             @endif
-        </span>
-    </div>
+        </span></div>
 
     {{-- Plans --}}
     @php
@@ -43,8 +41,7 @@
                 <div class="text-3xl font-bold mb-4">
                     <span x-show="!annual">{{ $plan['monthly_price'] ?? '' }}</span>
                     <span x-show="annual" x-cloak>{{ $plan['annual_price'] ?? '' }}</span>
-                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400" x-text="annual ? '{{ __('layup::frontend.pricing_toggle.per_year') }}' : '{{ __('layup::frontend.pricing_toggle.per_month') }}'"></span>
-                </div>
+                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400" x-text="annual ? '{{ __('layup::frontend.pricing_toggle.per_year') }}' : '{{ __('layup::frontend.pricing_toggle.per_month') }}'"></span></div>
                 @if(!empty($plan['features']))
                     <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-2 mb-6 text-left">
                         @foreach(explode(',', $plan['features']) as $feat)
@@ -57,5 +54,4 @@
                 @endif
             </div>
         @endforeach
-    </div>
-</div>
+    </div></div>

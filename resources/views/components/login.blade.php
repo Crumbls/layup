@@ -11,12 +11,10 @@
         @csrf
         <div>
             <label class="block text-sm font-medium mb-1">{{ $data['email_label'] ?? __('layup::frontend.login.email') }}</label>
-            <input type="email" name="email" required class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-2 focus:ring-[var(--layup-primary)] focus:border-[var(--layup-primary)] outline-none" />
-        </div>
+            <input type="email" name="email" required class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-2 focus:ring-[var(--layup-primary)] focus:border-[var(--layup-primary)] outline-none" /></div>
         <div>
             <label class="block text-sm font-medium mb-1">{{ $data['password_label'] ?? __('layup::frontend.login.password') }}</label>
-            <input type="password" name="password" required class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-2 focus:ring-[var(--layup-primary)] focus:border-[var(--layup-primary)] outline-none" />
-        </div>
+            <input type="password" name="password" required class="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-2 focus:ring-[var(--layup-primary)] focus:border-[var(--layup-primary)] outline-none" /></div>
         @if(!empty($data['remember_me']))
             <label class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="remember" class="rounded" /> {{ __('layup::frontend.login.remember_me') }}
@@ -31,5 +29,4 @@
                 @if(!empty($data['register_url']))<a href="{{ $data['register_url'] }}" class="layup-hover-text-primary">{{ __('layup::frontend.login.create_account') }}</a>@endif
             </div>
         @endif
-    </form>
-</div>
+    </form></div>

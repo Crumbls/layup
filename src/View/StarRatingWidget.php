@@ -69,7 +69,7 @@ class StarRatingWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '⭐ ' . ($data['rating'] ?? 5) . '/' . ($data['max'] ?? 5);
+        return '' . ($data['rating'] ?? 5) . '/' . ($data['max'] ?? 5);
     }
 
     public static function supportsLivePreview(): bool

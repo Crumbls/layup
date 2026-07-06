@@ -4,7 +4,7 @@
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
-    <div class="text-3xl">📄</div>
+    <div class="text-3xl"></div>
     <div class="flex-1">
         <div class="font-semibold">{{ $data['title'] ?? '' }}</div>
         @if(!empty($data['description']))<div class="text-sm text-gray-500 dark:text-gray-400">{{ $data['description'] }}</div>@endif

@@ -49,6 +49,6 @@ class ImageTextWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📰 ' . ($data['heading'] ?? 'Image + Text');
+        return '' . ($data['heading'] ?? 'Image + Text');
     }
 }

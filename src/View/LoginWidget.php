@@ -76,6 +76,6 @@ class LoginWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🔐 Login Form';
+        return 'Login Form';
     }
 }

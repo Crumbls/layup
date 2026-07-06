@@ -10,8 +10,7 @@
                     @foreach($data['headers'] as $header)
                         <th class="px-2 py-2 md:px-4 md:py-3 font-semibold">{{ is_array($header) ? ($header['text'] ?? '') : $header }}</th>
                     @endforeach
-                </tr>
-            </thead>
+                </tr></thead>
         @endif
         <tbody>
             @foreach(($data['rows'] ?? []) as $index => $row)
@@ -21,6 +20,4 @@
                     @endforeach
                 </tr>
             @endforeach
-        </tbody>
-    </table>
-</div>
+        </tbody></table></div>

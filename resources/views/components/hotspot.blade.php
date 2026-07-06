@@ -13,8 +13,7 @@
             <div x-show="show" x-transition @click.away="show = false" class="absolute z-10 bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl dark:shadow-gray-900/50 p-3 min-w-0 sm:min-w-48 max-w-[calc(100vw-2rem)] text-sm">
                 <div class="font-semibold">{{ $point['label'] ?? '' }}</div>
                 @if(!empty($point['description']))<div class="text-gray-500 dark:text-gray-400 mt-1">{{ $point['description'] }}</div>@endif
-            </div>
-        </div>
+            </div></div>
     @endforeach
 </div>
 @endif

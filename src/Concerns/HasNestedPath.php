@@ -11,8 +11,8 @@ use Illuminate\Validation\ValidationException;
 /**
  * Adds parent/child nesting with a denormalized URL path.
  *
- * The `path` column is the canonical URL component
- * (e.g. "about/team/jane"); `slug` is just the segment ("jane").
+ * The `path`column is the canonical URL component
+ * (e.g. "about/team/jane"); `slug`is just the segment ("jane").
  * `path` carries a unique index, which enforces both global URL
  * uniqueness and slug-uniqueness-scoped-to-parent without a
  * composite index that would have to wrestle with NULL parents.

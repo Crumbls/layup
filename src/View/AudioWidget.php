@@ -71,9 +71,9 @@ class AudioWidget extends BaseWidget
         $artist = $data['artist'] ?? '';
 
         if ($title) {
-            return "🎵 {$title}" . ($artist ? " — {$artist}" : '');
+            return "{$title}" . ($artist ? " — {$artist}" : '');
         }
 
-        return '🎵 (no audio)';
+        return '(no audio)';
     }
 }

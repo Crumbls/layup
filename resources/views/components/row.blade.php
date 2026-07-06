@@ -25,5 +25,4 @@
             @endphp
             {!! $child->render() !!}
         @endforeach
-    </div>
-</div>
+    </div></div>

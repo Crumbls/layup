@@ -61,6 +61,6 @@ class ContentToggleWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '👁 Content Toggle';
+        return 'Content Toggle';
     }
 }

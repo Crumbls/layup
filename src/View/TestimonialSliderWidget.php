@@ -84,6 +84,6 @@ class TestimonialSliderWidget extends BaseWidget
     {
         $count = count($data['testimonials'] ?? []);
 
-        return "💬 Testimonial Slider ({$count})";
+        return "Testimonial Slider ({$count})";
     }
 }

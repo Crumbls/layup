@@ -88,6 +88,6 @@ trait ButtonIdentity
         $label = $data['label'] ?? 'Button';
         $url = $data['url'] ?? '#';
 
-        return "🔘 {$label}" . ($url !== '#' ? " → {$url}" : '');
+        return "{$label}" . ($url !== '#' ? " → {$url}" : '');
     }
 }

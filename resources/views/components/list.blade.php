@@ -25,8 +25,7 @@
                 @elseif($marker)
                     <span class="shrink-0" style="color: {{ $color }}">{{ $marker }}</span>
                 @endif
-                <span>{{ $item }}</span>
-            </li>
+                <span>{{ $item }}</span></li>
         @endif
     @endforeach
 </{{ $style === 'number' ? 'ol' : 'ul' }}>

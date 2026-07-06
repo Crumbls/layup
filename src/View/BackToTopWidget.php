@@ -68,6 +68,6 @@ class BackToTopWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '⬆️ Back to Top button';
+        return '⬆ Back to Top button';
     }
 }

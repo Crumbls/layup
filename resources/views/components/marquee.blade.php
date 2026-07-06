@@ -11,7 +11,5 @@
 >
     <div class="inline-block" style="animation: layup-marquee {{ $speed }}s linear infinite {{ $direction }}; @if($pause) &:hover { animation-play-state: paused } @endif">
         <span class="inline-block px-4">{{ $data['text'] ?? '' }}</span>
-        <span class="inline-block px-4">{{ $data['text'] ?? '' }}</span>
-    </div>
-    <style>@keyframes layup-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }</style>
-</div>
+        <span class="inline-block px-4">{{ $data['text'] ?? '' }}</span></div>
+    <style>@keyframes layup-marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }</style></div>

@@ -63,6 +63,6 @@ class TabsWidget extends BaseWidget
     {
         $count = count($data['tabs'] ?? []);
 
-        return "📑 Tabs · {$count} tabs";
+        return "Tabs · {$count} tabs";
     }
 }

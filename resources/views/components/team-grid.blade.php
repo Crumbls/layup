@@ -20,7 +20,7 @@
             @if(!empty($photoSrc))
                 <img src="{{ str_starts_with($photoSrc, 'http') ? $photoSrc : asset('storage/' . $photoSrc) }}" alt="{{ $member['name'] ?? '' }}" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover mx-auto mb-3" />
             @else
-                <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200 dark:bg-gray-700 mx-auto mb-3 flex items-center justify-center text-gray-400 dark:text-gray-500 text-2xl">👤</div>
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gray-200 dark:bg-gray-700 mx-auto mb-3 flex items-center justify-center text-gray-400 dark:text-gray-500 text-2xl"></div>
             @endif
             @if(!empty($member['name']))
                 <div class="font-semibold">{{ $member['name'] }}</div>

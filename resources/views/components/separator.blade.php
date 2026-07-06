@@ -22,8 +22,7 @@
             @break
         @case('wave')
             <svg viewBox="0 0 200 20" style="width: {{ $width }}; height: 20px" preserveAspectRatio="none">
-                <path d="M0 10 Q25 0 50 10 T100 10 T150 10 T200 10" fill="none" stroke="{{ $color }}" stroke-width="2" />
-            </svg>
+                <path d="M0 10 Q25 0 50 10 T100 10 T150 10 T200 10" fill="none" stroke="{{ $color }}" stroke-width="2" /></svg>
             @break
         @case('fade')
             <div style="width: {{ $width }}; height: 1px; background: linear-gradient(to right, transparent, {{ $color }}, transparent)"></div>

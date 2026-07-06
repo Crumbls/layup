@@ -56,7 +56,7 @@ class ChangelogWidget extends BaseWidget
     {
         $count = count($data['releases'] ?? []);
 
-        return "📋 Changelog ({$count} releases)";
+        return "Changelog ({$count} releases)";
     }
 
     public static function supportsLivePreview(): bool

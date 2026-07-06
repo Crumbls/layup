@@ -69,7 +69,7 @@ class AlertWidget extends BaseWidget
         $type = strtoupper($data['type'] ?? 'info');
         $title = $data['title'] ?? '';
 
-        return "⚠️ [{$type}] {$title}";
+        return "[{$type}] {$title}";
     }
 
     public static function supportsLivePreview(): bool

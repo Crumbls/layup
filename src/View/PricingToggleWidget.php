@@ -93,6 +93,6 @@ class PricingToggleWidget extends BaseWidget
     {
         $count = count($data['plans'] ?? []);
 
-        return "💰 Pricing Toggle ({$count} plans)";
+        return "Pricing Toggle ({$count} plans)";
     }
 }

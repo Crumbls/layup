@@ -72,6 +72,6 @@ trait NumberCounterIdentity
         $suffix = $data['suffix'] ?? '';
         $title = $data['title'] ?? '';
 
-        return "🔢 {$prefix}{$number}{$suffix}" . ($title ? " — {$title}" : '');
+        return "{$prefix}{$number}{$suffix}" . ($title ? " — {$title}" : '');
     }
 }

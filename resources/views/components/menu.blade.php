@@ -19,9 +19,7 @@
                 <li>
                     <a href="{{ $item['url'] }}" class="{{ $itemClass }}" @if(!empty($item['new_tab']))target="_blank" rel="noopener noreferrer"@endif>
                         {{ $item['label'] }}
-                    </a>
-                </li>
+                    </a></li>
             @endif
         @endforeach
-    </ul>
-</nav>
+    </ul></nav>

@@ -8,11 +8,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected function tableName(): string
+    {
+        return config('layup.revisions.table', 'layup_page_revisions');
+    }
+
+    protected function pagesTableName(): string
+    {
+        return config('layup.pages.table', 'layup_pages');
+    }
+
     public function up(): void
     {
-        Schema::create('layup_page_revisions', function (Blueprint $table) {
+        Schema::create($this->tableName(), function (Blueprint $table) {
             $table->id();
-            $table->foreignId('page_id')->constrained('layup_pages')->cascadeOnDelete();
+            $table->foreignId('page_id')->constrained($this->pagesTableName())->cascadeOnDelete();
             $table->json('content');
             $table->string('note')->nullable();
             $table->string('author')->nullable();
@@ -22,6 +32,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('layup_page_revisions');
+        Schema::dropIfExists($this->tableName());
     }
 };

@@ -118,6 +118,7 @@ return [
 
     'search' => [
         'placeholder' => 'Search...',
+        'submit' => 'Search',
     ],
 
     'share_buttons' => [

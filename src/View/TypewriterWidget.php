@@ -83,6 +83,6 @@ class TypewriterWidget extends BaseWidget
     {
         $first = is_array($data['words'] ?? null) ? ($data['words'][0] ?? '') : '';
 
-        return "⌨️ {$data['prefix']}{$first}|";
+        return "⌨ {$data['prefix']}{$first}|";
     }
 }

@@ -47,7 +47,7 @@ class BadgeWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🏷 ' . ($data['text'] ?? 'Badge');
+        return '' . ($data['text'] ?? 'Badge');
     }
 
     public static function supportsLivePreview(): bool

@@ -195,6 +195,7 @@ return [
     */
     'revisions' => [
         'enabled' => true,
+        'table' => 'layup_page_revisions',
         'max' => 50,
     ],
 

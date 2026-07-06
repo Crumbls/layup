@@ -23,7 +23,6 @@
             <div>
                 <div class="font-semibold text-sm">{{ $t['name'] ?? '' }}</div>
                 @if(!empty($t['role']))<div class="text-xs text-gray-500 dark:text-gray-400">{{ $t['role'] }}</div>@endif
-            </div>
-        </div>
+            </div></div>
     @endforeach
 </div>

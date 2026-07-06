@@ -46,7 +46,7 @@ class SocialProofWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '⭐ ' . ($data['rating'] ?? '4.9') . ' on ' . ($data['platform'] ?? 'Trustpilot');
+        return '' . ($data['rating'] ?? '4.9') . ' on ' . ($data['platform'] ?? 'Trustpilot');
     }
 
     public static function supportsLivePreview(): bool

@@ -9,8 +9,7 @@
     @foreach(($data['links'] ?? []) as $link)
         @if(!empty($link['url']))
             <a href="{{ $link['url'] }}" class="inline-flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors" @if($data['new_tab'] ?? true)target="_blank" rel="noopener noreferrer"@endif>
-                <span>{{ ucfirst($link['network'] ?? '') }}</span>
-            </a>
+                <span>{{ ucfirst($link['network'] ?? '') }}</span></a>
         @endif
     @endforeach
 </div>

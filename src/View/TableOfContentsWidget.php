@@ -66,6 +66,6 @@ class TableOfContentsWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📑 Table of Contents';
+        return 'Table of Contents';
     }
 }

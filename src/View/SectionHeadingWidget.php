@@ -50,7 +50,7 @@ class SectionHeadingWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📌 ' . ($data['heading'] ?? 'Section Heading');
+        return '' . ($data['heading'] ?? 'Section Heading');
     }
 
     public static function supportsLivePreview(): bool

@@ -245,15 +245,16 @@ trait HandlesWidgets
     {
         $state = $this->getState();
         $clone = null;
+        $registry = app(WidgetRegistry::class);
 
         $state['rows'] = collect($state['rows'] ?? [])
-            ->map(function (array $row) use ($rowId, $columnId, $widgetId, &$clone): array {
+            ->map(function (array $row) use ($rowId, $columnId, $widgetId, &$clone, $registry): array {
                 if ($row['id'] !== $rowId) {
                     return $row;
                 }
 
                 $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($columnId, $widgetId, &$clone): array {
+                    ->map(function (array $col) use ($columnId, $widgetId, &$clone, $registry): array {
                         if ($col['id'] !== $columnId) {
                             return $col;
                         }
@@ -264,10 +265,12 @@ trait HandlesWidgets
                         }
 
                         $original = $col['widgets'][$index];
+                        $type = $original['type'];
+
                         $clone = [
                             'id' => 'widget_' . Str::random(8),
-                            'type' => $original['type'],
-                            'data' => $original['data'] ?? [],
+                            'type' => $type,
+                            'data' => $registry->fireOnDuplicate($type, $original['data'] ?? []),
                         ];
 
                         array_splice($col['widgets'], $index + 1, 0, [$clone]);

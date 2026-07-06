@@ -74,6 +74,6 @@ class GradientTextWidget extends BaseWidget
     {
         $text = $data['text'] ?? '';
 
-        return "🌈 {$text}";
+        return "{$text}";
     }
 }

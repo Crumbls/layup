@@ -31,7 +31,4 @@
                 @if(!empty($data['body']))
                     <div class="prose">{!! $data['body'] !!}</div>
                 @endif
-            </div>
-        </div>
-    </template>
-</div>
+            </div></div></template></div>

@@ -74,6 +74,6 @@ class ShareButtonsWidget extends BaseWidget
     {
         $count = count($data['networks'] ?? []);
 
-        return "🔗 Share Buttons ({$count} networks)";
+        return "Share Buttons ({$count} networks)";
     }
 }

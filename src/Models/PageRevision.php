@@ -11,8 +11,6 @@ class PageRevision extends Model
 {
     public $timestamps = false;
 
-    protected $table = 'layup_page_revisions';
-
     protected $fillable = [
         'page_id',
         'content',
@@ -25,6 +23,11 @@ class PageRevision extends Model
         'content' => 'array',
         'created_at' => 'datetime',
     ];
+
+    public function getTable(): string
+    {
+        return config('layup.revisions.table', 'layup_page_revisions');
+    }
 
     public function page(): BelongsTo
     {

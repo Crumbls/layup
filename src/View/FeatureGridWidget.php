@@ -36,7 +36,7 @@ class FeatureGridWidget extends BaseWidget
             Repeater::make('features')
                 ->label(__('layup::widgets.feature-grid.features'))
                 ->schema([
-                    TextInput::make('emoji')->label(__('layup::widgets.feature-grid.emoji_icon'))->default('🚀'),
+                    TextInput::make('icon')->label(__('layup::widgets.feature-grid.icon'))->nullable(),
                     TextInput::make('title')->label(__('layup::widgets.feature-grid.title'))->required(),
                     TextInput::make('description')->label(__('layup::widgets.feature-grid.description'))->nullable(),
                 ])
@@ -58,7 +58,7 @@ class FeatureGridWidget extends BaseWidget
     {
         $count = count($data['features'] ?? []);
 
-        return "✨ Feature Grid ({$count})";
+        return "Feature Grid ({$count})";
     }
 
     public static function supportsLivePreview(): bool

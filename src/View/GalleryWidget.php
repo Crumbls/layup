@@ -88,6 +88,6 @@ class GalleryWidget extends BaseWidget
     {
         $count = count($data['images'] ?? []);
 
-        return "🖼 Gallery · {$count} images";
+        return "Gallery · {$count} images";
     }
 }

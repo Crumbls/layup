@@ -10,7 +10,7 @@
     };
     $noteClass = $v === 'note' ? 'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200' : '';
     $icons = match($v) {
-        'tip' => '💚', 'warning' => '⚠️', 'important' => '❗', 'note' => '📝', default => '💡',
+        'tip' => '', 'warning' => '', 'important' => '', 'note' => '', default => '',
     };
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
@@ -23,6 +23,4 @@
         <div>
             @if(!empty($data['title']))<div class="font-semibold mb-1">{{ $data['title'] }}</div>@endif
             @if(!empty($data['content']))<div class="prose prose-sm">{!! $data['content'] !!}</div>@endif
-        </div>
-    </div>
-</div>
+        </div></div></div>

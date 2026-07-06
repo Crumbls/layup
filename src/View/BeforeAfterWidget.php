@@ -71,6 +71,6 @@ class BeforeAfterWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '↔️ Before / After comparison';
+        return '↔ Before / After comparison';
     }
 }

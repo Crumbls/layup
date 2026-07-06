@@ -97,6 +97,6 @@ class SliderWidget extends BaseWidget
     {
         $count = count($data['slides'] ?? []);
 
-        return "🎠 Slider · {$count} slides";
+        return "Slider · {$count} slides";
     }
 }

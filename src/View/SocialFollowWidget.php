@@ -88,6 +88,6 @@ class SocialFollowWidget extends BaseWidget
     {
         $count = count($data['links'] ?? []);
 
-        return "🔗 Social · {$count} links";
+        return "Social · {$count} links";
     }
 }

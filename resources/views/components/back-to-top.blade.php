@@ -20,5 +20,4 @@
             style="background-color: {{ $bg }}; color: {{ $tc }}"
             aria-label="{{ __('layup::frontend.back_to_top.label') }}">
         ↑
-    </button>
-</div>
+    </button></div>

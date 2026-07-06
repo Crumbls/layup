@@ -73,6 +73,6 @@ class AnimatedHeadingWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '✨ ' . ($data['before_text'] ?? '') . ' [' . ($data['animated_text'] ?? '') . '] ' . ($data['after_text'] ?? '');
+        return '' . ($data['before_text'] ?? '') . ' [' . ($data['animated_text'] ?? '') . '] ' . ($data['after_text'] ?? '');
     }
 }

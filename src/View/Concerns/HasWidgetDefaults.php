@@ -54,7 +54,7 @@ trait HasWidgetDefaults
         }
 
         if (! empty($data['src'])) {
-            return "\u{1F5BC} " . basename((string) $data['src']);
+            return basename((string) $data['src']);
         }
 
         return '(empty)';

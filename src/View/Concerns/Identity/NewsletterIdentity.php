@@ -80,6 +80,6 @@ trait NewsletterIdentity
 
     public static function getPreview(array $data): string
     {
-        return '📬 Newsletter Signup';
+        return 'Newsletter Signup';
     }
 }

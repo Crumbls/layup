@@ -9,7 +9,7 @@
     };
     $icon = match($type) {
         'success' => '✓',
-        'warning' => '⚠',
+        'warning' => '',
         'danger'  => '✕',
         default   => 'ℹ',
     };
@@ -33,5 +33,4 @@
         @if(!empty($data['dismissible']))
             <button @click="show = false" class="text-current opacity-50 hover:opacity-100 shrink-0">&times;</button>
         @endif
-    </div>
-</div>
+    </div></div>

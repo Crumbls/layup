@@ -19,5 +19,4 @@
         @if(!empty($data['cta_text']) && !empty($data['cta_url']))
             <a href="{{ $data['cta_url'] }}" class="inline-block bg-white dark:bg-gray-100 font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity" style="color: {{ $bg }}">{{ $data['cta_text'] }}</a>
         @endif
-    </div>
-</div>
+    </div></div>

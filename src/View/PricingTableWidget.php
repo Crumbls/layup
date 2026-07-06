@@ -109,6 +109,6 @@ class PricingTableWidget extends BaseWidget
         $title = $data['title'] ?? '';
         $price = ($data['currency'] ?? '$') . ($data['price'] ?? '');
 
-        return $title ? "💰 {$title} · {$price}" : '(empty pricing table)';
+        return $title ? "{$title} · {$price}" : '(empty pricing table)';
     }
 }

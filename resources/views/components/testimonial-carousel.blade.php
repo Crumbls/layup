@@ -23,9 +23,7 @@
                 <div class="text-left">
                     <div class="font-semibold text-sm">{{ $t['author'] ?? '' }}</div>
                     @if(!empty($t['role']))<div class="text-xs text-gray-500 dark:text-gray-400">{{ $t['role'] }}</div>@endif
-                </div>
-            </div>
-        </div>
+                </div></div></div>
     @endforeach
     @if(count($testimonials) > 1)
         <div class="flex justify-center gap-2 mt-4">

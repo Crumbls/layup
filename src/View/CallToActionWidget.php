@@ -81,7 +81,7 @@ class CallToActionWidget extends BaseWidget
     {
         $title = $data['title'] ?? '';
 
-        return $title ? "📢 {$title}" : '(empty CTA)';
+        return $title ? "{$title}" : '(empty CTA)';
     }
 
     public static function supportsLivePreview(): bool

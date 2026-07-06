@@ -26,8 +26,7 @@
                 transform="rotate(-90 {{ $size/2 }} {{ $size/2 }})"
                 style="transition: stroke-dashoffset 0.1s ease" />
         <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
-              class="text-xl font-bold fill-current" x-text="percent + '%'">{{ $percent }}%</text>
-    </svg>
+              class="text-xl font-bold fill-current" x-text="percent + '%'">{{ $percent }}%</text></svg>
     @if(!empty($data['title']))
         <div class="mt-2 text-sm font-medium">{{ $data['title'] }}</div>
     @endif

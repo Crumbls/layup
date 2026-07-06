@@ -6,29 +6,24 @@
         @if($data['show_days'] ?? true)
             <div class="flex flex-col items-center">
                 <span class="text-2xl md:text-3xl font-bold" x-text="days">0</span>
-                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.days') }}</span>
-            </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.days') }}</span></div>
         @endif
         @if($data['show_hours'] ?? true)
             <div class="flex flex-col items-center">
                 <span class="text-2xl md:text-3xl font-bold" x-text="hours">0</span>
-                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.hours') }}</span>
-            </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.hours') }}</span></div>
         @endif
         @if($data['show_minutes'] ?? true)
             <div class="flex flex-col items-center">
                 <span class="text-2xl md:text-3xl font-bold" x-text="minutes">0</span>
-                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.min') }}</span>
-            </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.min') }}</span></div>
         @endif
         @if($data['show_seconds'] ?? true)
             <div class="flex flex-col items-center">
                 <span class="text-2xl md:text-3xl font-bold" x-text="seconds">0</span>
-                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.sec') }}</span>
-            </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400 uppercase">{{ __('layup::frontend.countdown.sec') }}</span></div>
         @endif
     </div>
     <div x-show="expired" class="text-xl font-semibold" style="color: var(--layup-success);">
         {{ $data['expired_message'] ?? __('layup::frontend.countdown.time_is_up') }}
-    </div>
-</div>
+    </div></div>

@@ -69,6 +69,6 @@ class EmbedWidget extends BaseWidget
             return '(no embed code)';
         }
 
-        return '🔗 Embedded content';
+        return 'Embedded content';
     }
 }

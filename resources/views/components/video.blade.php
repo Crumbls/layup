@@ -5,6 +5,5 @@
             frameborder="0"
             allowfullscreen
             @if(!empty($data['title']))title="{{ $data['title'] }}"@endif
-            loading="lazy"></iframe>
-</div>
+            loading="lazy"></iframe></div>
 @endif

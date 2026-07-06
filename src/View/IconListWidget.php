@@ -33,7 +33,7 @@ class IconListWidget extends BaseWidget
     {
         return [
             Repeater::make('items')->label(__('layup::widgets.icon-list.items'))->schema([
-                TextInput::make('icon')->label(__('layup::widgets.icon-list.emoji_icon'))->default('✅'),
+                TextInput::make('icon')->label(__('layup::widgets.icon-list.icon'))->nullable(),
                 TextInput::make('text')->label(__('layup::widgets.icon-list.text'))->required(),
                 TextInput::make('description')->label(__('layup::widgets.icon-list.description'))->nullable(),
             ])->defaultItems(4)->columnSpanFull(),
@@ -47,7 +47,7 @@ class IconListWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📋 Icon List (' . count($data['items'] ?? []) . ')';
+        return 'Icon List (' . count($data['items'] ?? []) . ')';
     }
 
     public static function supportsLivePreview(): bool

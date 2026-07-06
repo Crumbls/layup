@@ -111,9 +111,9 @@ it('getPreview uses label when no content', function (): void {
     expect($result)->toBe('My Label');
 });
 
-it('getPreview uses src with emoji prefix', function (): void {
+it('getPreview uses src basename', function (): void {
     $result = TextWidget::getPreview(['src' => '/images/photo.jpg']);
-    expect($result)->toBe('🖼 photo.jpg');
+    expect($result)->toBe('photo.jpg');
 });
 
 it('getPreview prefers content over label over src', function (): void {

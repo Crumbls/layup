@@ -82,7 +82,7 @@ class ImageWidget extends BaseWidget
         if (! empty($data['src'])) {
             $name = is_array($data['src']) ? 'uploaded image' : basename((string) $data['src']);
 
-            return "🖼 {$name}";
+            return "{$name}";
         }
 
         return '(no image)';

@@ -92,6 +92,6 @@ class ContactFormWidget extends BaseWidget
     {
         $count = count($data['fields'] ?? []);
 
-        return "📧 Contact Form ({$count} fields)";
+        return "Contact Form ({$count} fields)";
     }
 }

@@ -21,5 +21,4 @@
         @if(!empty($data['link_url']))
             <a href="{{ $data['link_url'] }}" class="inline-block mt-3 layup-text-primary hover:underline text-sm font-medium">{{ $data['link_text'] ?? __('layup::frontend.card.learn_more') }} →</a>
         @endif
-    </div>
-</div>
+    </div></div>

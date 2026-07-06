@@ -87,6 +87,6 @@ class PostListWidget extends BaseWidget
     {
         $limit = $data['limit'] ?? 6;
 
-        return "📝 Post List ({$limit} posts)";
+        return "Post List ({$limit} posts)";
     }
 }

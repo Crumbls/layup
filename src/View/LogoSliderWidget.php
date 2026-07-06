@@ -67,6 +67,6 @@ class LogoSliderWidget extends BaseWidget
     {
         $count = count($data['logos'] ?? []);
 
-        return "🏢 Logo Slider ({$count} logos)";
+        return "Logo Slider ({$count} logos)";
     }
 }

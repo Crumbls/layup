@@ -48,7 +48,7 @@ class CtaBannerWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📢 ' . ($data['heading'] ?? 'CTA Banner');
+        return '' . ($data['heading'] ?? 'CTA Banner');
     }
 
     public static function supportsLivePreview(): bool

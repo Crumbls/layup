@@ -47,6 +47,6 @@ class FileDownloadWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📥 ' . ($data['title'] ?? 'File Download');
+        return '' . ($data['title'] ?? 'File Download');
     }
 }

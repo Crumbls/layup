@@ -77,7 +77,7 @@ class ComparisonTableWidget extends BaseWidget
         $a = $data['column_a'] ?? 'A';
         $b = $data['column_b'] ?? 'B';
 
-        return "⚖️ {$a} vs {$b}";
+        return "{$a} vs {$b}";
     }
 
     public static function supportsLivePreview(): bool

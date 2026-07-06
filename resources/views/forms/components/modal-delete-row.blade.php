@@ -24,6 +24,4 @@
                 @click="rows.deleteConfirm"
         >
             Delete Row
-        </x-filament::button>
-    </x-slot>
-</x-filament::modal>
+        </x-filament::button></x-slot></x-filament::modal>

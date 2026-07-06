@@ -82,6 +82,6 @@ class MapWidget extends BaseWidget
     {
         $address = $data['address'] ?? '';
 
-        return $address ? "📍 {$address}" : '📍 (no address)';
+        return $address ? "{$address}" : '(no address)';
     }
 }

@@ -68,6 +68,6 @@ class LottieWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🎬 Lottie Animation';
+        return 'Lottie Animation';
     }
 }

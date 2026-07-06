@@ -70,7 +70,7 @@ class TimelineWidget extends BaseWidget
     {
         $count = count($data['events'] ?? []);
 
-        return "📅 Timeline ({$count} events)";
+        return "Timeline ({$count} events)";
     }
 
     public static function supportsLivePreview(): bool

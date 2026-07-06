@@ -10,8 +10,6 @@
             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                 <div class="h-full rounded-full transition-all duration-1000 ease-out"
                      :style="'width: ' + width + '%; background-color: {{ $bar['color'] ?? 'var(--layup-primary)' }}'"
-                ></div>
-            </div>
-        </div>
+                ></div></div></div>
     @endforeach
 </div>

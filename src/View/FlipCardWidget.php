@@ -89,6 +89,6 @@ class FlipCardWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🔄 ' . ($data['front_title'] ?? '') . ' ↔ ' . ($data['back_title'] ?? '');
+        return '' . ($data['front_title'] ?? '') . ' ↔ ' . ($data['back_title'] ?? '');
     }
 }

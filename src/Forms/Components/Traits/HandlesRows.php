@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Forms\Components\Traits;
 
 use Crumbls\Layup\View\Row;
+use Crumbls\Layup\Support\WidgetRegistry;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
@@ -282,12 +283,14 @@ trait HandlesRows
 
     protected function rowDeepClone(array $row): array
     {
+        $registry = app(WidgetRegistry::class);
         $clone = $row;
         $clone['id'] = 'row_' . Str::random(8);
-        $clone['columns'] = collect($row['columns'])->map(function (array $col): array {
+        $clone['columns'] = collect($row['columns'])->map(function (array $col) use ($registry): array {
             $col['id'] = 'col_' . Str::random(8);
-            $col['widgets'] = collect($col['widgets'] ?? [])->map(function (array $widget): array {
+            $col['widgets'] = collect($col['widgets'] ?? [])->map(function (array $widget) use ($registry): array {
                 $widget['id'] = 'widget_' . Str::random(8);
+                $widget['data'] = $registry->fireOnDuplicate($widget['type'] ?? '', $widget['data'] ?? []);
 
                 return $widget;
             })->all();

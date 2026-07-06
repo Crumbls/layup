@@ -73,6 +73,6 @@ class NotificationBarWidget extends BaseWidget
     {
         $text = $data['text'] ?? '';
 
-        return "🔔 {$text}";
+        return "{$text}";
     }
 }

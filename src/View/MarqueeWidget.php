@@ -70,6 +70,6 @@ class MarqueeWidget extends BaseWidget
         $text = $data['text'] ?? '';
         $short = mb_strlen($text) > 40 ? mb_substr($text, 0, 40) . '…' : $text;
 
-        return "📜 {$short}";
+        return "{$short}";
     }
 }

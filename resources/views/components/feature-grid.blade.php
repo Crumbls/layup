@@ -16,7 +16,9 @@
 >
     @foreach(($data['features'] ?? []) as $f)
         <div class="text-center p-4">
-            <div class="text-3xl mb-3">{{ $f['emoji'] ?? '🚀' }}</div>
+            @if(!empty($f['icon']))
+                <div class="text-3xl mb-3">{{ $f['icon'] }}</div>
+            @endif
             <div class="font-semibold mb-1">{{ $f['title'] ?? '' }}</div>
             @if(!empty($f['description']))<div class="text-sm text-gray-600 dark:text-gray-300">{{ $f['description'] }}</div>@endif
         </div>

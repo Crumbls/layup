@@ -76,6 +76,6 @@ class CookieConsentWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🍪 Cookie Consent Banner';
+        return 'Cookie Consent Banner';
     }
 }

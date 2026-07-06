@@ -68,7 +68,7 @@ class MetricWidget extends BaseWidget
     {
         $count = count($data['metrics'] ?? []);
 
-        return "📊 Metrics ({$count})";
+        return "Metrics ({$count})";
     }
 
     public static function supportsLivePreview(): bool

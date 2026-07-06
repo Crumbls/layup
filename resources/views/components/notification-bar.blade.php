@@ -17,5 +17,4 @@
         @if(!empty($data['dismissible']))
             <button @click="show = false" class="ml-2 opacity-60 hover:opacity-100" style="color: {{ $textColor }}">&times;</button>
         @endif
-    </div>
-</div>
+    </div></div>

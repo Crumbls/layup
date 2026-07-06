@@ -58,6 +58,6 @@ class AnchorWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '⚓ #' . ($data['anchor_id'] ?? '');
+        return '#' . ($data['anchor_id'] ?? '');
     }
 }

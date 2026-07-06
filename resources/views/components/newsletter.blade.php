@@ -26,10 +26,7 @@
                     class="text-white font-medium px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity {{ $layout === 'stacked' ? 'w-full' : '' }}"
                     style="background-color: {{ $btnColor }}">
                 {{ $data['submit_text'] ?? __('layup::frontend.newsletter.subscribe') }}
-            </button>
-        </form>
-    </template>
+            </button></form></template>
     <div x-show="submitted" x-transition class="font-semibold py-4" style="color: var(--layup-success);">
         ✓ {{ $data['success_message'] ?? __('layup::frontend.newsletter.subscribed') }}
-    </div>
-</div>
+    </div></div>

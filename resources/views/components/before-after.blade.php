@@ -15,12 +15,9 @@
 >
     <img src="{{ asset('storage/' . $data['after_image']) }}" alt="{{ $data['after_label'] ?? __('layup::frontend.before_after.after') }}" class="w-full h-auto block" />
     <div class="absolute inset-0 overflow-hidden" :style="'width: ' + pos + '%'">
-        <img src="{{ asset('storage/' . $data['before_image']) }}" alt="{{ $data['before_label'] ?? __('layup::frontend.before_after.before') }}" class="h-full object-cover object-left" style="width: 100vw; max-width: none" />
-    </div>
+        <img src="{{ asset('storage/' . $data['before_image']) }}" alt="{{ $data['before_label'] ?? __('layup::frontend.before_after.before') }}" class="h-full object-cover object-left" style="width: 100vw; max-width: none" /></div>
     <div class="absolute top-0 bottom-0 w-1 bg-white dark:bg-gray-300 shadow cursor-ew-resize" :style="'left: ' + pos + '%'">
-        <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-white dark:bg-gray-300 rounded-full shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-900 text-xs font-bold">↔</div>
-    </div>
+        <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 bg-white dark:bg-gray-300 rounded-full shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-900 text-xs font-bold">↔</div></div>
     <span class="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">{{ $data['before_label'] ?? __('layup::frontend.before_after.before') }}</span>
-    <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">{{ $data['after_label'] ?? __('layup::frontend.before_after.after') }}</span>
-</div>
+    <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">{{ $data['after_label'] ?? __('layup::frontend.before_after.after') }}</span></div>
 @endif

@@ -6,5 +6,4 @@
             @if(!empty($q['author']))<p class="text-sm text-gray-500 dark:text-gray-400">— {{ $q['author'] }}</p>@endif
         </div>
     @endforeach
-    <div class="flex justify-center gap-2 mt-4">@foreach($quotes as $i => $q)<button @click="active = {{ $i }}" class="w-2 h-2 rounded-full transition-colors" :class="active === {{ $i }} ? 'bg-gray-800 dark:bg-white' : 'bg-gray-300 dark:bg-gray-600'"></button>@endforeach</div>
-</div>
+    <div class="flex justify-center gap-2 mt-4">@foreach($quotes as $i => $q)<button @click="active = {{ $i }}" class="w-2 h-2 rounded-full transition-colors" :class="active === {{ $i }} ? 'bg-gray-800 dark:bg-white' : 'bg-gray-300 dark:bg-gray-600'"></button>@endforeach</div></div>

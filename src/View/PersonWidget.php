@@ -89,7 +89,7 @@ class PersonWidget extends BaseWidget
         $name = $data['name'] ?? '';
         $role = $data['role'] ?? '';
 
-        return $name ? "👤 {$name}" . ($role ? " — {$role}" : '') : '(empty person)';
+        return $name ? "{$name}" . ($role ? " — {$role}" : '') : '(empty person)';
     }
 
     public static function supportsLivePreview(): bool

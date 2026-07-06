@@ -58,6 +58,6 @@ class SkillBarWidget extends BaseWidget
     {
         $count = count($data['skills'] ?? []);
 
-        return "📊 Skill Bars ({$count})";
+        return "Skill Bars ({$count})";
     }
 }

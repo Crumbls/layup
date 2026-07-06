@@ -14,8 +14,7 @@
     {{-- Background video --}}
     @if(!empty($settings['background_video']))
         <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover -z-10">
-            <source src="{{ $settings['background_video'] }}" type="video/mp4" />
-        </video>
+            <source src="{{ $settings['background_video'] }}" type="video/mp4" /></video>
     @endif
 
     {{-- Overlay --}}
@@ -28,5 +27,4 @@
         @foreach($section['rows'] ?? [] as $row)
             {!! $row->render() !!}
         @endforeach
-    </div>
-</section>
+    </div></section>

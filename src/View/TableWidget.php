@@ -84,7 +84,7 @@ class TableWidget extends BaseWidget
         $cols = count($data['headers'] ?? []);
         $rows = count($data['rows'] ?? []);
 
-        return "📊 Table ({$cols} cols × {$rows} rows)";
+        return "Table ({$cols} cols × {$rows} rows)";
     }
 
     public static function supportsLivePreview(): bool

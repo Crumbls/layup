@@ -11,7 +11,6 @@
     @php $src = !empty($data['url']) ? $data['url'] : (!empty($data['file']) ? asset('storage/' . $data['file']) : ''); @endphp
     @if($src)
         <audio controls class="w-full" preload="metadata">
-            <source src="{{ $src }}">
-        </audio>
+            <source src="{{ $src }}"></audio>
     @endif
 </div>

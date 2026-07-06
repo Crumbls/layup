@@ -47,6 +47,6 @@ class ImageCardWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🖼 ' . ($data['title'] ?? 'Image Card');
+        return '' . ($data['title'] ?? 'Image Card');
     }
 }

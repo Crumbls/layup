@@ -77,6 +77,6 @@ class LogoGridWidget extends BaseWidget
     {
         $count = count($data['logos'] ?? []);
 
-        return "🏢 Logo Grid ({$count} logos)";
+        return "Logo Grid ({$count} logos)";
     }
 }

@@ -9,5 +9,4 @@
     <div class="w-full md:{{ $tw }}">
         @if(!empty($data['heading']))<h2 class="text-2xl font-bold mb-4">{{ $data['heading'] }}</h2>@endif
         @if(!empty($data['content']))<div class="prose">{!! $data['content'] !!}</div>@endif
-    </div>
-</div>
+    </div></div>

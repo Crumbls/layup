@@ -41,8 +41,7 @@ class="relative overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClass
                             {{ $slide['button_text'] }}
                         </a>
                     @endif
-                </div>
-            </div>
+                </div></div>
         @endforeach
     </div>
 
@@ -54,15 +53,13 @@ class="relative overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClass
                     class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-gray-800/80 rounded-full flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
                     aria-label="Previous slide"
             >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
-            </button>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg></button>
             <button
                     @click="next()"
                     class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-gray-800/80 rounded-full flex items-center justify-center hover:bg-white dark:hover:bg-gray-800 transition-colors"
                     aria-label="Next slide"
             >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-            </button>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></button>
         @endif
 
         {{-- Pause / Play (WCAG 2.2.2) --}}
@@ -74,8 +71,7 @@ class="relative overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClass
                     :aria-pressed="(!autoplay).toString()"
             >
                 <svg x-show="autoplay" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                <svg x-show="!autoplay" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-            </button>
+                <svg x-show="!autoplay" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
         @endif
 
         {{-- Dot nav --}}

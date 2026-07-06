@@ -24,6 +24,5 @@
             @endforeach
         @endfor
     </div>
-    <style>@keyframes layup-logo-slide { from { transform: translateX(0) } to { transform: translateX(-50%) } }</style>
-</div>
+    <style>@keyframes layup-logo-slide { from { transform: translateX(0) } to { transform: translateX(-50%) } }</style></div>
 @endif

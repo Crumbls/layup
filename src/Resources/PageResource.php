@@ -425,7 +425,7 @@ class PageResource extends Resource
 
     /**
      * Apply settings-modal data to a page, merging the virtual
-     * `container_preset` field into the JSON `meta` column instead of
+     * `container_preset`field into the JSON `meta` column instead of
      * letting it land as a top-level attribute.
      */
     public static function applySettings(Model $record, array $data): void

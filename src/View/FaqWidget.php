@@ -68,6 +68,6 @@ class FaqWidget extends BaseWidget
     {
         $count = count($data['items'] ?? []);
 
-        return "❓ FAQ ({$count} questions)";
+        return "FAQ ({$count} questions)";
     }
 }

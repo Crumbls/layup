@@ -76,7 +76,7 @@ class SeparatorWidget extends BaseWidget
             'dots' => '● ● ●',
             'stars' => '★ ★ ★',
             'diamond' => '◆',
-            'wave' => '〰️ Wave',
+            'wave' => '〰 Wave',
             'fade' => '— Fade —',
             default => '── Line ──',
         };

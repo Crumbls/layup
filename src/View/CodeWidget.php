@@ -74,7 +74,7 @@ class CodeWidget extends BaseWidget
         $lang = $data['language'] ?? 'plaintext';
         $lines = substr_count($data['code'] ?? '', "\n") + 1;
 
-        return "💻 {$lang} ({$lines} lines)";
+        return "{$lang} ({$lines} lines)";
     }
 
     public static function supportsLivePreview(): bool

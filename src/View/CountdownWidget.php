@@ -74,6 +74,6 @@ class CountdownWidget extends BaseWidget
     {
         $date = $data['target_date'] ?? '';
 
-        return $date ? "⏱ Countdown to {$date}" : '⏱ (no date set)';
+        return $date ? "Countdown to {$date}" : '(no date set)';
     }
 }

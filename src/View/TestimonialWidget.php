@@ -97,7 +97,7 @@ class TestimonialWidget extends BaseWidget
         $quote = $data['quote'] ?? '';
         $short = mb_strlen($quote) > 40 ? mb_substr($quote, 0, 40) . '…' : $quote;
 
-        return $author ? "💬 {$author}: \"{$short}\"" : '(empty testimonial)';
+        return $author ? "{$author}: \"{$short}\"" : '(empty testimonial)';
     }
 
     public static function supportsLivePreview(): bool

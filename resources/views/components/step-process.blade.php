@@ -29,8 +29,6 @@
                     @if(!empty($step['description']))
                         <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{ $step['description'] }}</div>
                     @endif
-                </div>
-            </div>
+                </div></div>
         @endforeach
-    </div>
-</div>
+    </div></div>

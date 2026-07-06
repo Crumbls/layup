@@ -21,13 +21,11 @@
             <div class="flex items-center gap-3 mb-2">
                 <span class="font-mono font-bold text-lg">v{{ $release['version'] ?? '' }}</span>
                 <span class="text-sm text-gray-500 dark:text-gray-400">{{ $release['date'] ?? '' }}</span>
-                <span class="text-xs px-2 py-0.5 rounded-full @if($isPatch) bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 @endif" @if($isMajor || $isMinor) style="{{ $badgeStyle }}" @endif>{{ ucfirst($release['type'] ?? 'minor') }}</span>
-            </div>
+                <span class="text-xs px-2 py-0.5 rounded-full @if($isPatch) bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 @endif" @if($isMajor || $isMinor) style="{{ $badgeStyle }}" @endif>{{ ucfirst($release['type'] ?? 'minor') }}</span></div>
             <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                 @foreach(array_filter(explode("\n", $release['changes'] ?? '')) as $change)
                     <li>• {{ trim($change) }}</li>
                 @endforeach
-            </ul>
-        </div>
+            </ul></div>
     @endforeach
 </div>

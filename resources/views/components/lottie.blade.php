@@ -11,6 +11,5 @@
                       @if(!empty($data['loop'])) loop @endif
                       background="transparent"
     ></dotlottie-player>
-    <script src="https://unpkg.com/@dotlottie/player-component@2/dist/dotlottie-player.mjs" type="module"></script>
-</div>
+    <script src="https://unpkg.com/@dotlottie/player-component@2/dist/dotlottie-player.mjs" type="module"></script></div>
 @endif

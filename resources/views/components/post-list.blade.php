@@ -46,8 +46,7 @@
                         @if(!empty($data['read_more_text']) && $post->slug)
                             <a href="{{ url($post->slug) }}" class="text-sm layup-text-primary hover:underline mt-2 inline-block">{{ $data['read_more_text'] }}</a>
                         @endif
-                    </div>
-                </article>
+                    </div></article>
             @endforeach
         </div>
     @endif

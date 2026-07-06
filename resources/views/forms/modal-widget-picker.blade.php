@@ -9,8 +9,7 @@
                         x-model="picker.search"
                         x-ref="pickerSearch"
                         @keydown.escape="closePicker()"
-                />
-            </div>
+                /></div>
             <div class="lyp-picker-body">
                 {{-- Recently Used --}}
                 <template x-if="!picker.search && getRecentWidgets().length > 0">
@@ -26,12 +25,7 @@
                                         @dragend="onPickerDragEnd()"
                                 >
                                     <span x-html="getIconSvg(w.icon)" class="lyp-picker-item-icon"></span>
-                                    <span class="lyp-picker-item-label" x-text="w.label"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-                </template>
+                                    <span class="lyp-picker-item-label" x-text="w.label"></span></button></template></div></div></template>
 
                 {{-- Widget Categories --}}
                 <template x-for="cat in getFilteredWidgetCategories()" :key="cat.name">
@@ -47,16 +41,6 @@
                                         @dragend="onPickerDragEnd()"
                                 >
                                     <span x-html="getIconSvg(w.icon)" class="lyp-picker-item-icon"></span>
-                                    <span class="lyp-picker-item-label" x-text="w.label"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-                </template>
+                                    <span class="lyp-picker-item-label" x-text="w.label"></span></button></template></div></div></template>
                 <template x-if="getFilteredWidgetCategories().length === 0">
-                    <div class="lyp-picker-empty">{{ __('layup::builder.no_widgets_match') }}</div>
-                </template>
-            </div>
-        </div>
-    </div>
-</template>
+                    <div class="lyp-picker-empty">{{ __('layup::builder.no_widgets_match') }}</div></template></div></div></div></template>

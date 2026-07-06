@@ -37,10 +37,8 @@
                             $url = $video['url'] ?? '';
                             $embedUrl = str_contains($url, 'youtube') ? 'https://www.youtube.com/embed/' . (parse_url($url, PHP_URL_QUERY) ? collect(explode('&', parse_url($url, PHP_URL_QUERY)))->mapWithKeys(fn($p) => [explode('=', $p)[0] => explode('=', $p)[1] ?? ''])->get('v', '') : basename(parse_url($url, PHP_URL_PATH))) : $url;
                         @endphp
-                        <iframe src="{{ $embedUrl }}" class="w-full h-full" allowfullscreen loading="lazy"></iframe>
-                    </div>
-                    <div class="font-medium text-sm">{{ $video['title'] ?? '' }}</div>
-                </div>
+                        <iframe src="{{ $embedUrl }}" class="w-full h-full" allowfullscreen loading="lazy"></iframe></div>
+                    <div class="font-medium text-sm">{{ $video['title'] ?? '' }}</div></div>
             @endforeach
         </div>
     @endif

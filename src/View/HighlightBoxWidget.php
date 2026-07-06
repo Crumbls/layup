@@ -37,7 +37,7 @@ class HighlightBoxWidget extends BaseWidget
             RichEditor::make('content')->label(__('layup::widgets.highlight-box.content'))->toolbarButtons(['bold', 'italic', 'link', 'bulletList'])->columnSpanFull(),
             Select::make('variant')->label(__('layup::widgets.highlight-box.variant'))->options(['info' => __('layup::widgets.highlight-box.info_blue'), 'tip' => __('layup::widgets.highlight-box.tip_green'), 'warning' => __('layup::widgets.highlight-box.warning_yellow'),
                 'important' => __('layup::widgets.highlight-box.important_red'), 'note' => __('layup::widgets.highlight-box.note_gray'), ])->default('info'),
-            TextInput::make('icon')->label(__('layup::widgets.highlight-box.custom_icon_emoji'))->nullable(),
+            TextInput::make('icon')->label(__('layup::widgets.highlight-box.custom_icon'))->nullable(),
         ];
     }
 
@@ -48,7 +48,7 @@ class HighlightBoxWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '💡 ' . ($data['title'] ?? 'Highlight Box');
+        return '' . ($data['title'] ?? 'Highlight Box');
     }
 
     public static function supportsLivePreview(): bool

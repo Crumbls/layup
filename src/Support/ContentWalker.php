@@ -11,7 +11,7 @@ class ContentWalker
     /**
      * Walk all widgets in a content structure, calling $callback for each.
      *
-     * Handles both `sections` and legacy `rows` structures.
+     * Handles both `sections`and legacy `rows` structures.
      *
      * @param  array  $content  The page content array
      * @param  Closure(string $type, array $data, array $path): void  $callback

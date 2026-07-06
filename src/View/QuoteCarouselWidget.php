@@ -47,6 +47,6 @@ class QuoteCarouselWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '💬 Quote Carousel (' . count($data['quotes'] ?? []) . ')';
+        return 'Quote Carousel (' . count($data['quotes'] ?? []) . ')';
     }
 }

@@ -18,8 +18,7 @@
     @if(!empty($data['background_image']))
         <div class="absolute inset-0">
             <img src="{{ asset('storage/' . $data['background_image']) }}" alt="" class="w-full h-full object-cover" />
-            <div class="absolute inset-0" style="background-color: {{ $overlayColor }}; opacity: {{ $overlayOpacity }}"></div>
-        </div>
+            <div class="absolute inset-0" style="background-color: {{ $overlayColor }}; opacity: {{ $overlayOpacity }}"></div></div>
     @endif
     <div class="relative z-10 max-w-3xl {{ $align === 'center' ? 'mx-auto' : '' }}">
         @if(!empty($data['heading']))
@@ -41,5 +40,4 @@
                 @endif
             </div>
         @endif
-    </div>
-</div>
+    </div></div>

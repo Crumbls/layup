@@ -66,6 +66,6 @@ class SearchWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '🔍 Search form';
+        return 'Search form';
     }
 }

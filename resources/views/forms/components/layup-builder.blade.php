@@ -38,38 +38,25 @@
                             :title="bp.label + ' (' + bp.width + 'px)'"
                     >
                         <template x-if="bp.icon === 'heroicon-o-device-phone-mobile'">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg>
-                        </template>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"/></svg></template>
                         <template x-if="bp.icon === 'heroicon-o-device-tablet'">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5h3m-6.75 2.25h10.5a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 4.5v15a2.25 2.25 0 002.25 2.25z"/></svg>
-                        </template>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5h3m-6.75 2.25h10.5a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 4.5v15a2.25 2.25 0 002.25 2.25z"/></svg></template>
                         <template x-if="bp.icon === 'heroicon-o-computer-desktop'">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z"/></svg>
-                        </template>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z"/></svg></template>
                         <template x-if="bp.icon === 'heroicon-o-tv'">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H2.625c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z"/></svg>
-                        </template>
-                        <span class="lyp-bp-label" x-text="bp.label"></span>
-                    </button>
-                </template>
-            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="lyp-bp-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H2.625c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z"/></svg></template>
+                        <span class="lyp-bp-label" x-text="bp.label"></span></button></template></div>
 
             <div class="lyp-toolbar-right">
                 <div class="lyp-undo-group">
                     <button type="button" @click="undo()" :disabled="historyIndex <= 0" class="lyp-toolbar-icon" title="{{ __('layup::builder.undo') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/></svg>
-                    </button>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/></svg></button>
                     <button type="button" @click="redo()" :disabled="historyIndex >= history.length - 1" class="lyp-toolbar-icon" title="{{ __('layup::builder.redo') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3"/></svg>
-                    </button>
-                </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0l-6-6m6 6H9a6 6 0 000 12h3"/></svg></button></div>
 
                 {{-- Ruler Toggle --}}
                 <button type="button" @click="showRuler = !showRuler" class="lyp-toolbar-icon" :title="showRuler ? '{{ __('layup::builder.hide_ruler') }}' : '{{ __('layup::builder.show_ruler') }}'" :style="showRuler ? 'color: var(--primary-500)' : ''">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"/></svg>
-                </button>
-            </div>
-        </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"/></svg></button></div></div>
 
         {{-- Canvas --}}
         <div class="lyp-canvas">
@@ -77,9 +64,7 @@
                 {{-- Ruler --}}
                 <div class="lyp-ruler" :class="{ 'lyp-ruler--hidden': !showRuler }">
                     <template x-for="i in 12" :key="i">
-                        <div class="lyp-ruler-cell" x-text="i"></div>
-                    </template>
-                </div>
+                        <div class="lyp-ruler-cell" x-text="i"></div></template></div>
 
                 {{-- Rows --}}
                 <div class="lyp-rows group">
@@ -89,23 +74,14 @@
                             <button
                                     type="button"
                                     @click.stop="showTemplates = !showTemplates" class="lyp-insert-btn" title="{{ __('layup::builder.add_row') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                            </button>
-                        </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button></div>
                         <div x-show="showTemplates" @click.away="showTemplates = false; $el.closest('.lyp-insert-zone').classList.remove('lyp-insert-zone--hover')" x-transition class="lyp-templates lyp-templates--inline">
                             <p>{{ __('layup::builder.choose_layout') }}</p>
                             <div class="lyp-templates-grid">
                                 <template x-for="(template, idx) in rowTemplates" :key="idx">
                                     <button type="button" @click="rowAddAt(template, 0); showTemplates = false; $el.closest('.lyp-insert-zone').classList.remove('lyp-insert-zone--hover')" class="lyp-tpl-btn">
                                         <template x-for="(span, ci) in template" :key="ci">
-                                            <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div>
-                                        </template>
-                                    </button>
-                                </template>
-
-                            </div>
-                        </div>
-                    </div>
+                                            <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div></template></button></template></div></div></div>
 
                     <template x-for="(row, rowIndex) in content.rows" :key="row.id">
                         <div>
@@ -132,33 +108,25 @@
                                                 @dragend="onRowDragEnd()"
                                                 title="{{ __('layup::builder.drag_to_reorder') }}"
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
-                                        </span>
-                                        <span class="lyp-row-label" x-text="translations.row_label.replace(':number', rowIndex + 1)"></span>
-                                    </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg></span>
+                                        <span class="lyp-row-label" x-text="translations.row_label.replace(':number', rowIndex + 1)"></span></div>
                                     <div class="lyp-actions group-hover:opacity-100">
                                         <button
                                                 type="button"
                                                 @click.stop="columnAdd(row.id)" class="lyp-action-btn" title="{{ __('layup::builder.add_column') }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                                        </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
                                         <button
                                                 type="button"
                                                 @click.stop="rowDuplicate(row.id)"
                                                 class="lyp-action-btn"
                                                 title="{{ __('layup::builder.duplicate_row') }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/></svg>
-                                        </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/></svg></button>
                                         <button type="button" @click.stop="rowEdit(row.id)" class="lyp-action-btn" title="{{ __('layup::builder.row_settings') }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                        </button>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></button>
                                         <button type="button"
                                                 @click.stop="rowDelete(row.id)"
                                                 class="lyp-action-btn lyp-action-btn--danger" title="{{ __('layup::builder.delete_row') }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                                        </button>
-                                    </div>
-                                </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></button></div></div>
 
                                 {{-- Columns --}}
                                 <div class="lyp-columns" :style="'--lyp-col-gap:' + (row.settings.gap ? row.settings.gap.replace('gap-','').replace('0','0px').replace('2','0.5rem').replace('4','1rem').replace('6','1.5rem').replace('8','2rem').replace('12','3rem') : '1rem')">
@@ -171,9 +139,7 @@
                                                         @mousedown.prevent="startColumnResize(row.id, colIndex, $event)"
                                                         title="{{ __('layup::builder.drag_to_resize') }}"
                                                 >
-                                                    <div class="lyp-resize-handle-bar"></div>
-                                                </div>
-                                            </template>
+                                                    <div class="lyp-resize-handle-bar"></div></div></template>
                                             <div
                                                     class="lyp-col"
                                                     :class="{ 'lyp-col--drop-target': drag.active && (drag.fromPicker || !(drag.sourceRowId === row.id && drag.sourceColId === col.id && col.widgets.length === 1)) }"
@@ -188,19 +154,13 @@
                                                     <div class="lyp-actions">
                                                         <button
                                                                 @click.stop="columnMove(row.id, col.id, 'left')" :disabled="colIndex === 0" class="lyp-action-btn lyp-action-btn--sm" title="{{ __('layup::builder.move_left') }}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
-                                                        </button>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg></button>
                                                         <button type="button" @click.stop="columnMove(row.id, col.id, 'right')" :disabled="colIndex === row.columns.length - 1" class="lyp-action-btn lyp-action-btn--sm" title="{{ __('layup::builder.move_right') }}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
-                                                        </button>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg></button>
                                                         <button type="button" @click.stop="columnEdit(row.id, col.id)" class="lyp-action-btn lyp-action-btn--sm" title="{{ __('layup::builder.column_settings') }}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                                        </button>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></button>
                                                         <button type="button" @click.stop="columnDelete(row.id, col.id)" class="lyp-action-btn lyp-action-btn--sm lyp-action-btn--danger" title="{{ __('layup::builder.delete_column') }}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></button></div></div>
 
                                                 {{-- Widgets --}}
                                                 <div class="lyp-widgets">
@@ -222,79 +182,51 @@
                                                                 <div class="lyp-widget-header">
                                                                     <div style="display:flex;align-items:center;gap:0.375rem">
                                                                         <span class="lyp-drag-handle" title="{{ __('layup::builder.drag_to_reorder') }}">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
-                                                                        </span>
-                                                                        <span class="lyp-widget-type" x-text="getWidgetLabel(widget.type)"></span>
-                                                                    </div>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg></span>
+                                                                        <span class="lyp-widget-type" x-text="getWidgetLabel(widget.type)"></span></div>
                                                                     <div class="lyp-actions">
                                                                         <button type="button" @click.stop="widgetEdit(row.id, col.id, widget.id)" class="lyp-action-btn lyp-action-btn--sm" title="{{ __('layup::builder.edit') }}">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
-                                                                        </button>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg></button>
                                                                         <button type="button" @click.stop="widgetDuplicate(row.id, col.id, widget.id)" class="lyp-action-btn lyp-action-btn--sm" title="{{ __('layup::builder.duplicate') }}">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/></svg>
-                                                                        </button>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"/></svg></button>
                                                                         <button type="button" @click.stop="widgetDelete(row.id, col.id, widget.id)" class="lyp-action-btn lyp-action-btn--sm lyp-action-btn--danger" title="{{ __('layup::builder.delete') }}">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></button></div></div>
                                                                 <template x-if="supportsLivePreview(widget.type)">
                                                                     <div
                                                                             class="lyp-widget-preview lyp-widget-preview--live"
                                                                             x-html="livePreviewHtml(widget)"
-                                                                    ></div>
-                                                                </template>
+                                                                    ></div></template>
                                                                 <template x-if="!supportsLivePreview(widget.type)">
                                                                     <div
                                                                             class="lyp-widget-preview"
                                                                             :class="{ 'lyp-widget-preview--editable': isInlineEditable(widget.type) }"
                                                                             x-text="getWidgetPreview(widget)"
                                                                             @dblclick.stop="startInlineEdit(row.id, col.id, widget.id, widget.type, widget.data)"
-                                                                    ></div>
-                                                                </template>
-                                                            </div>
-                                                        </div>
-                                                    </template>
+                                                                    ></div></template></div></div></template>
 
                                                     <div
                                                             class="lyp-drop-indicator"
                                                             :class="{ 'lyp-drop-indicator--active': drag.dropTarget?.rowId === row.id && drag.dropTarget?.colId === col.id && drag.dropTarget?.position === col.widgets.length }"
-                                                    ></div>
-                                                </div>
+                                                    ></div></div>
 
                                                 {{-- Add Widget --}}
                                                 <button type="button" @click.stop="openPicker(row.id, col.id)" class="lyp-add-widget">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                                                     {{ __('layup::builder.add_widget') }}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
+                                                </button></div></div></template></div></div>
 
                             {{-- Insert zone after row --}}
                             <div class="lyp-insert-zone" x-data="{ showTemplates: false }" @mouseenter="$el.classList.add('lyp-insert-zone--hover')" @mouseleave="if(!showTemplates) $el.classList.remove('lyp-insert-zone--hover')">
                                 <div class="lyp-insert-line">
                                     <button type="button" @click.stop="showTemplates = !showTemplates" class="lyp-insert-btn" title="{{ __('layup::builder.add_row') }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                                    </button>
-                                </div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button></div>
                                 <div x-show="showTemplates" @click.away="showTemplates = false; $el.closest('.lyp-insert-zone').classList.remove('lyp-insert-zone--hover')" x-transition class="lyp-templates lyp-templates--inline">
                                     <p>{{ __('layup::builder.choose_layout') }}</p>
                                     <div class="lyp-templates-grid">
                                         <template x-for="(template, idx) in rowTemplates" :key="idx">
                                             <button type="button" @click="rowAddAt(template, rowIndex + 1); showTemplates = false; $el.closest('.lyp-insert-zone').classList.remove('lyp-insert-zone--hover')" class="lyp-tpl-btn">
                                                 <template x-for="(span, ci) in template" :key="ci">
-                                                    <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div>
-                                                </template>
-                                            </button>
-                                        </template>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
+                                                    <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div></template></button></template></div></div></div></div></template>
 
                     {{-- Drop indicator after last row --}}
                     <div
@@ -312,8 +244,7 @@
                          }">
                         <button type="button" @click.stop="showTemplates = !showTemplates" class="lyp-add-row-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                            </svg>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                             {{ __('layup::builder.add_row_label') }}
                         </button>
 
@@ -326,24 +257,13 @@
                                     <button type="button"
                                             @click="rowAdd(template); showTemplates = false" class="lyp-tpl-btn">
                                         <template x-for="(span, ci) in template" :key="ci">
-                                            <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div>
-                                        </template>
-                                    </button>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
+                                            <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div></template></button></template></div></div></div>
 
                     {{-- Empty State --}}
                     <template x-if="!content.rows || content.rows.length === 0">
                         <div class="lyp-empty">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
-                            <p>{!! __('layup::builder.empty_state') !!}</p>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
+                            <p>{!! __('layup::builder.empty_state') !!}</p></div></template></div></div></div>
 
         {{-- Action mount points (hidden — triggered via JS $wire.mountAction) --}}
         <div style="display:none !important; position:absolute; overflow:hidden; width:0; height:0;">
@@ -1050,7 +970,7 @@
                     case 'animated-heading':
                         const level = data.level || 'h2';
                         const text = this.stripHtml(data.content || '');
-                        return text ? `${level.toUpperCase()}: ${text.substring(0, 50)}` : '(empty heading)';
+                        return text ? `${level.toUpperCase()}: ${text.substring(0, 50)}`: '(empty heading)';
 
                     case 'text':
                     case 'blockquote':
@@ -1060,59 +980,59 @@
                     case 'image':
                         const imgSrc = data.src || data.url || '';
                         const imgAlt = data.alt || '';
-                        return imgSrc ? `🖼 ${imgAlt || imgSrc.split('/').pop()}` : '(no image)';
+                        return imgSrc ? `${imgAlt || imgSrc.split('/').pop()}` : '(no image)';
 
                     case 'video':
                         const vidSrc = data.src || data.url || '';
-                        return vidSrc ? `🎬 ${vidSrc.split('/').pop()}` : '(no video)';
+                        return vidSrc ? `${vidSrc.split('/').pop()}` : '(no video)';
 
                     case 'button':
                     case 'cta':
                         const btnText = data.text || data.label || data.button_text || '';
                         const btnUrl = data.url || data.link || '';
-                        return btnText ? `🔘 ${btnText}` : btnUrl ? `🔘 ${btnUrl}` : '(empty button)';
+                        return btnText ? `${btnText}` : btnUrl ? `${btnUrl}` : '(empty button)';
 
                     case 'blurb':
                         const blurbTitle = data.title || '';
                         const blurbText = this.stripHtml(data.content || data.text || '');
-                        return blurbTitle ? `💡 ${blurbTitle}` : blurbText ? blurbText.substring(0, 50) : '(empty blurb)';
+                        return blurbTitle ? `${blurbTitle}` : blurbText ? blurbText.substring(0, 50) : '(empty blurb)';
 
                     case 'icon-box':
                     case 'feature':
                         const featureTitle = data.title || data.heading || '';
-                        return featureTitle ? `✨ ${featureTitle}` : '(empty feature)';
+                        return featureTitle ? `${featureTitle}` : '(empty feature)';
 
                     case 'testimonial':
                         const author = data.author || data.name || '';
                         const quote = this.stripHtml(data.content || data.quote || '');
-                        return author ? `💬 ${author}` : quote ? `💬 ${quote.substring(0, 40)}` : '(empty testimonial)';
+                        return author ? `${author}` : quote ? `${quote.substring(0, 40)}` : '(empty testimonial)';
 
                     case 'accordion':
                     case 'tabs':
                         const items = data.items || [];
-                        return items.length ? `📋 ${items.length} item${items.length !== 1 ? 's' : ''}` : '(no items)';
+                        return items.length ? `${items.length} item${items.length !== 1 ? 's' : ''}` : '(no items)';
 
                     case 'gallery':
                         const images = data.images || [];
-                        return images.length ? `🖼 ${images.length} image${images.length !== 1 ? 's' : ''}` : '(no images)';
+                        return images.length ? `${images.length} image${images.length !== 1 ? 's' : ''}` : '(no images)';
 
                     case 'pricing-table':
                         const planName = data.name || data.title || '';
                         const price = data.price || '';
-                        return planName ? `💰 ${planName}${price ? ' - ' + price : ''}` : '(empty plan)';
+                        return planName ? `${planName}${price ? ' - ' + price : ''}` : '(empty plan)';
 
                     case 'countdown':
                         const targetDate = data.target_date || data.date || '';
-                        return targetDate ? `⏱ ${targetDate}` : '(no date set)';
+                        return targetDate ? `${targetDate}` : '(no date set)';
 
                     case 'map':
                         const address = data.address || data.location || '';
-                        return address ? `📍 ${address}` : '(no location)';
+                        return address ? `${address}` : '(no location)';
 
                     case 'contact-form':
                     case 'newsletter':
                         const action = data.action || '';
-                        return action ? `📧 → ${action}` : '(no action URL)';
+                        return action ? `${action}` : '(no action URL)';
 
                     case 'divider':
                         const dividerStyle = data.style || 'solid';
@@ -1129,7 +1049,7 @@
 
                     case 'social-follow':
                         const links = data.links || [];
-                        return links.length ? `🔗 ${links.length} social link${links.length !== 1 ? 's' : ''}` : '(no links)';
+                        return links.length ? `${links.length} social link${links.length !== 1 ? 's' : ''}` : '(no links)';
                 }
 
                 // Fallback to generic preview
@@ -1141,7 +1061,7 @@
                     return data.label || data.title || data.heading;
                 }
                 if (data.src || data.url) {
-                    return '🖼 ' + (data.src || data.url);
+                    return '' + (data.src || data.url);
                 }
                 return '(empty)';
             },

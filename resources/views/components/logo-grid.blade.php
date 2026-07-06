@@ -28,5 +28,4 @@
                 <img src="{{ str_starts_with($logoSrc, 'http') ? $logoSrc : asset('storage/' . $logoSrc) }}" alt="{{ $logoAlt }}" style="max-height:{{ $maxH }};width:auto" class="{{ $gray ? 'grayscale hover:grayscale-0 opacity-60 hover:opacity-100' : '' }} transition-all duration-300" />
             @endif
         @endforeach
-    </div>
-</div>
+    </div></div>

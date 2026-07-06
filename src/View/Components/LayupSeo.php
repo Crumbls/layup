@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\View\Component;
 
 /**
- * Drop-in SEO meta component. Hosts add `<x-layup-seo />` once in their
+ * Drop-in SEO meta component. Hosts add `<x-layup-seo />`once in their
  * layout's <head>; on Layup-rendered requests the component emits the
  * full meta block (OG, Twitter, canonical, JSON-LD), and on every
  * other request it renders nothing.

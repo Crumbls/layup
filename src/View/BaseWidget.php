@@ -13,7 +13,7 @@ namespace Crumbls\Layup\View;
  * either BaseBladeWidget directly (clearer intent) or BaseLivewireWidget
  * (Livewire-rendered output).
  *
- * Note for runtime checks: prefer `instanceof Widget` (the interface) over
+ * Note for runtime checks: prefer `instanceof Widget`(the interface) over
  * `instanceof BaseWidget` so that BaseLivewireWidget instances are also
  * recognised. The Widget interface is the contract — BaseWidget is just
  * one base implementation.

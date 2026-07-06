@@ -62,6 +62,6 @@ class VideoPlaylistWidget extends BaseWidget
     {
         $count = count($data['videos'] ?? []);
 
-        return "🎬 Video Playlist ({$count} videos)";
+        return "Video Playlist ({$count} videos)";
     }
 }

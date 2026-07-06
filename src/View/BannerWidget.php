@@ -80,7 +80,7 @@ class BannerWidget extends BaseWidget
 
     public static function getPreview(array $data): string
     {
-        return '📣 ' . ($data['heading'] ?? '(empty banner)');
+        return '' . ($data['heading'] ?? '(empty banner)');
     }
 
     public static function supportsLivePreview(): bool

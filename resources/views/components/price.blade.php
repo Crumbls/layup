@@ -19,5 +19,4 @@
         @endif
         <span class="{{ $sizeClass }} font-bold">{{ $data['currency_symbol'] ?? '$' }}{{ $data['amount'] ?? '' }}</span>
         @if(!empty($data['period']))<span class="text-gray-500 dark:text-gray-400">{{ $data['period'] }}</span>@endif
-    </div>
-</div>
+    </div></div>

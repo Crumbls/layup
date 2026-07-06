@@ -8,8 +8,7 @@
     >
         <div class="lyp-span-header">
             <span class="lyp-span-label">{{ $getBreakpointLabel() }}</span>
-            <span class="lyp-span-value" x-text="state + '/12'"></span>
-        </div>
+            <span class="lyp-span-value" x-text="state + '/12'"></span></div>
         <div class="lyp-span-blocks">
             <template x-for="i in 12" :key="i">
                 <button
@@ -29,9 +28,4 @@
                         class="lyp-span-block-num"
                         x-show="i === state || i === hovering"
                         x-text="i"
-                    ></span>
-                </button>
-            </template>
-        </div>
-    </div>
-</x-dynamic-component>
+                    ></span></button></template></div></div></x-dynamic-component>

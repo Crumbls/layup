@@ -5,5 +5,4 @@
         <h3 class="font-semibold text-lg mb-2">{{ $data['title'] ?? '' }}</h3>
         @if(!empty($data['description']))<p class="text-gray-600 dark:text-gray-300 text-sm mb-3">{{ $data['description'] }}</p>@endif
         @if(!empty($data['link_url']))<a href="{{ $data['link_url'] }}" class="layup-text-primary text-sm font-medium hover:underline">{{ $data['link_text'] ?? __('layup::frontend.image_card.read_more') . ' →' }}</a>@endif
-    </div>
-</div>
+    </div></div>

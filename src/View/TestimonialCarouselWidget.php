@@ -82,6 +82,6 @@ class TestimonialCarouselWidget extends BaseWidget
     {
         $count = count($data['testimonials'] ?? []);
 
-        return "💬 Testimonial Carousel ({$count} slides)";
+        return "Testimonial Carousel ({$count} slides)";
     }
 }

@@ -9,6 +9,14 @@ it('has correct table name', function (): void {
     expect($revision->getTable())->toBe('layup_page_revisions');
 });
 
+it('reads table name from config', function (): void {
+    config(['layup.revisions.table' => 'custom_layup_revisions']);
+
+    $revision = new PageRevision;
+
+    expect($revision->getTable())->toBe('custom_layup_revisions');
+});
+
 it('has timestamps disabled', function (): void {
     $revision = new PageRevision;
     expect($revision->timestamps)->toBeFalse();

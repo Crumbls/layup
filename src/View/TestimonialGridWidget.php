@@ -59,7 +59,7 @@ class TestimonialGridWidget extends BaseWidget
     {
         $count = count($data['testimonials'] ?? []);
 
-        return "💬 Testimonial Grid ({$count})";
+        return "Testimonial Grid ({$count})";
     }
 
     public static function supportsLivePreview(): bool
