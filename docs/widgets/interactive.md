@@ -1,6 +1,8 @@
 ---
 title: Interactive Widgets
 weight: 3
+nav_title: Interactive Widgets
+order: 30
 ---
 
 Interactive widgets provide user-facing actions, forms, and dynamic elements.

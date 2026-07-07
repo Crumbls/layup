@@ -1,6 +1,8 @@
 ---
 title: Extending Existing Widgets
 weight: 2
+nav_title: Extending Existing Widgets
+order: 20
 ---
 
 ## Extending a built-in widget

@@ -1,6 +1,8 @@
 ---
 title: Adding Widgets
 weight: 2
+nav_title: Adding Widgets
+order: 20
 ---
 
 ## The widget picker

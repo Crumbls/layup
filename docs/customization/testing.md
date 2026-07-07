@@ -1,6 +1,8 @@
 ---
 title: Testing
 weight: 8
+nav_title: Testing
+order: 80
 ---
 
 Layup ships with factory states and assertion helpers for testing pages and custom widgets.

@@ -1,6 +1,8 @@
 ---
 title: Theme System
 weight: 7
+nav_title: Theme System
+order: 70
 ---
 
 Layup includes a global theme that outputs CSS custom properties and utility classes. Widgets use these variables for colors, fonts, and border radius so pages stay visually consistent.

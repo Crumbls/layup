@@ -1,6 +1,8 @@
 ---
 title: Configuration
 weight: 5
+nav_title: Configuration
+order: 50
 ---
 
 Publish the config file with:
@@ -35,7 +37,7 @@ The defaults work out of the box. Most installations only touch a handful of key
 'widgets' => [
     \Crumbls\Layup\View\TextWidget::class,
     \Crumbls\Layup\View\HeadingWidget::class,
-    // ... 95+ built-in widget classes
+    // ... 96 built-in widget classes
 ],
 ```
 

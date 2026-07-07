@@ -1,6 +1,8 @@
 ---
 title: Frontend Rendering
 weight: 6
+nav_title: Frontend Rendering
+order: 60
 ---
 
 Layup includes an optional frontend controller that serves published pages with SEO metadata. This page covers the layout requirements, routing options, custom controllers, and Alpine.js integration.
@@ -15,7 +17,7 @@ The `layout` config value is a Blade component name passed to `<x-dynamic-compon
 
 > **Using the Livewire starter kit?** Livewire v4 registers `layouts` as an anonymous component namespace pointing at `resources/views/layouts/`, and the starter kit ships its layout at `resources/views/layouts/app.blade.php`. Set `'layout' => 'layouts::app'` — the dot-notation form (`'layouts.app'`) resolves to a different path that does not exist in Livewire starter-kit projects.
 
-Your layout must accept a `title` slot. SEO meta is rendered through a separate drop-in component, [`<x-layup-seo />`](/documentation/layup/v1/customization/seo-meta):
+Your layout must accept a `title` slot. SEO meta is rendered through a separate drop-in component, [`<x-layup-seo />`](seo-meta.md):
 
 ```blade
 <!DOCTYPE html>

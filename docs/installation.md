@@ -1,6 +1,8 @@
 ---
 title: Installation
 weight: 2
+nav_title: Installation
+order: 20
 ---
 
 ## Choose your install path
@@ -22,9 +24,10 @@ LayupBuilder::make('content')->columnSpanFull()
 ## Requirements
 
 - PHP 8.3+
-- Laravel 12+
+- Laravel 12 or 13
 - Filament 5
-- Livewire 4
+
+`livewire/livewire` is suggested only when you build widgets that extend `BaseLivewireWidget`.
 
 ## Prerequisites
 

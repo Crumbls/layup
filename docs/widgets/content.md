@@ -1,6 +1,8 @@
 ---
 title: Content Widgets
 weight: 1
+nav_title: Content Widgets
+order: 10
 ---
 
 Content widgets handle text, typography, data display, and structured content blocks. This is the largest widget category.

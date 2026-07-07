@@ -1,6 +1,8 @@
 ---
 title: Layout Widgets
 weight: 4
+nav_title: Layout Widgets
+order: 40
 ---
 
 Layout widgets control spacing, visual separation, and page navigation anchors.

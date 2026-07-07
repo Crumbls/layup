@@ -1,6 +1,8 @@
 ---
 title: Saving and Publishing
 weight: 3
+nav_title: Saving and Publishing
+order: 30
 ---
 
 ## Saving

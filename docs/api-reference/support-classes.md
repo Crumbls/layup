@@ -1,6 +1,8 @@
 ---
 title: Support Classes
 weight: 4
+nav_title: Support Classes
+order: 40
 ---
 
 ## WidgetRegistry

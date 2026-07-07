@@ -1,6 +1,8 @@
 ---
 title: Creating Custom Widgets
 weight: 1
+nav_title: Creating Custom Widgets
+order: 10
 ---
 
 ## Scaffolding

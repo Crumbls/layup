@@ -1,6 +1,8 @@
 ---
 title: Embedding the Field
 weight: 3
+nav_title: Embedding the Field
+order: 30
 ---
 
 `LayupBuilder` is a Filament form field. Drop it into any form on any model that has a JSON column, and editors get a Divi-style canvas with rows, columns, breakpoint previews, and 96 widgets. The Pages resource that ships with Layup is one application of this field -- everything you can do there, you can do on your own models.

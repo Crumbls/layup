@@ -4,15 +4,15 @@
 declare(strict_types=1);
 
 /**
- * docs-lint -- validate the docs/ tree against Crumbls documentation-site rules.
+ * docs-lint -- validate the docs/ tree against Crumbls package documentation rules.
  *
  * Rules enforced:
- *   1. No legacy /docs/... links, no relative ./ or ../ links
+ *   1. docs/nav.json exists, is valid JSON, and points to files on disk
  *   2. Filenames match ^[a-z0-9][a-z0-9\-]*\.md$ (except _index.md)
  *   3. Every directory under docs/ contains _index.md
  *   4. Every .md file starts with YAML frontmatter
- *   5. Every page has a title; non-root pages have a weight
- *   6. Every /documentation/{pkg}/{ver}/{slug} link resolves to a file on disk
+ *   5. Every page has title, nav_title, and order; non-root pages keep weight for legacy tooling
+ *   6. Relative markdown links resolve to a file on disk
  *
  * Usage:
  *   bin/docs-lint                      # lint this package's docs/
@@ -42,6 +42,18 @@ $packageSlug = basename($packageRoot);
 $filenameRegex = '/^[a-z0-9][a-z0-9\-]*\.md$/';
 $errors = [];
 $mdFiles = [];
+
+$navPath = $docsRoot . '/nav.json';
+if (! is_file($navPath)) {
+    $errors[] = 'nav.json: missing navigation file';
+} else {
+    $nav = json_decode((string) file_get_contents($navPath), true);
+    if (! is_array($nav)) {
+        $errors[] = 'nav.json: invalid JSON';
+    } else {
+        validateNav($nav, $docsRoot, $errors);
+    }
+}
 
 $it = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($docsRoot, FilesystemIterator::SKIP_DOTS),
@@ -94,6 +106,14 @@ foreach ($mdFiles as $path) {
         $errors[] = "{$rel}: frontmatter missing `title`";
     }
 
+    if (! isset($front['nav_title'])) {
+        $errors[] = "{$rel}: frontmatter missing `nav_title`";
+    }
+
+    if (! isset($front['order'])) {
+        $errors[] = "{$rel}: frontmatter missing `order`";
+    }
+
     $needsWeight = ! $isVersionRoot;
 
     if ($needsWeight && ! isset($front['weight'])) {
@@ -101,13 +121,12 @@ foreach ($mdFiles as $path) {
     }
 
     foreach (findLinks($body) as [$linkLine, $href]) {
-        if (str_starts_with($href, '/docs/')) {
-            $errors[] = "{$rel}:{$linkLine}: legacy /docs/... link -- use /documentation/{package}/{version}/...";
+        if (isExternalHref($href) || str_starts_with($href, '#')) {
             continue;
         }
 
-        if (str_starts_with($href, './') || str_starts_with($href, '../')) {
-            $errors[] = "{$rel}:{$linkLine}: relative link `{$href}` -- use absolute /documentation/{package}/{version}/...";
+        if (str_starts_with($href, '/docs/')) {
+            $errors[] = "{$rel}:{$linkLine}: legacy /docs/... link";
             continue;
         }
 
@@ -115,6 +134,13 @@ foreach ($mdFiles as $path) {
             $target = resolveDocTarget($docsRoot, $href, $packageSlug);
             if ($target === null) {
                 $errors[] = "{$rel}:{$linkLine}: broken link `{$href}` (no matching doc file)";
+            }
+        }
+
+        if (isRelativeDocHref($href)) {
+            $target = resolveRelativeTarget($docsRoot, $path, $href);
+            if ($target === null) {
+                $errors[] = "{$rel}:{$linkLine}: broken relative link `{$href}`";
             }
         }
     }
@@ -175,6 +201,72 @@ function findLinks(string $body): array
     return $links;
 }
 
+function validateNav(array $items, string $docsRoot, array &$errors, string $prefix = 'nav.json'): void
+{
+    foreach ($items as $index => $item) {
+        $label = "{$prefix}[{$index}]";
+        if (! is_array($item)) {
+            $errors[] = "{$label}: item must be an object";
+            continue;
+        }
+
+        foreach (['title', 'path', 'order'] as $key) {
+            if (! array_key_exists($key, $item)) {
+                $errors[] = "{$label}: missing `{$key}`";
+            }
+        }
+
+        if (isset($item['path']) && is_string($item['path'])) {
+            $target = realpath($docsRoot . '/' . $item['path']);
+            $root = realpath($docsRoot);
+            if ($target === false || $root === false || ! str_starts_with($target, $root . DIRECTORY_SEPARATOR) || ! is_file($target)) {
+                $errors[] = "{$label}: path `{$item['path']}` does not resolve to a docs file";
+            }
+        }
+
+        if (isset($item['children']) && is_array($item['children'])) {
+            validateNav($item['children'], $docsRoot, $errors, "{$label}.children");
+        }
+    }
+}
+
+function isExternalHref(string $href): bool
+{
+    return (bool) preg_match('/^(https?:|mailto:|tel:)/', $href);
+}
+
+function isRelativeDocHref(string $href): bool
+{
+    if (str_starts_with($href, '/')) {
+        return false;
+    }
+
+    $path = parse_url($href, PHP_URL_PATH);
+
+    return is_string($path) && str_ends_with($path, '.md');
+}
+
+function resolveRelativeTarget(string $docsRoot, string $sourcePath, string $href): ?string
+{
+    $hrefPath = parse_url($href, PHP_URL_PATH);
+    if (! is_string($hrefPath) || $hrefPath === '') {
+        return null;
+    }
+
+    $candidate = realpath(dirname($sourcePath) . '/' . $hrefPath);
+    $root = realpath($docsRoot);
+
+    if ($candidate === false || $root === false) {
+        return null;
+    }
+
+    if (! str_starts_with($candidate, $root . DIRECTORY_SEPARATOR)) {
+        return null;
+    }
+
+    return is_file($candidate) ? $candidate : null;
+}
+
 function resolveDocTarget(string $docsRoot, string $href, string $packageSlug): ?string
 {
     $path = parse_url($href, PHP_URL_PATH);
@@ -188,7 +280,7 @@ function resolveDocTarget(string $docsRoot, string $href, string $packageSlug): 
         return null;
     }
 
-    // Cross-package link: cannot validate against this package's filesystem,
+        // Cross-package link: cannot validate against this package's filesystem,
     // accept as opaque. The site controller resolves it at request time.
     if ($parts[1] !== $packageSlug) {
         return $href;
@@ -202,10 +294,9 @@ function resolveDocTarget(string $docsRoot, string $href, string $packageSlug): 
 
     $slugParts = array_slice($parts, 3);
 
-    // Reject traversal segments and empties before building the path.
-    // Without this, a link like /documentation/layup/v1/../../etc/passwd
-    // would resolve to a file outside $docsRoot and is_file() would
-    // happily accept it, marking a broken link as valid.
+    // Reject traversal segments and empties before building the path. Without
+    // this, a traversal-style docs link could resolve outside $docsRoot and
+    // is_file() would happily accept it, marking a broken link as valid.
     foreach ($slugParts as $segment) {
         if ($segment === '' || $segment === '.' || $segment === '..') {
             return null;

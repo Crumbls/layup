@@ -1,6 +1,8 @@
 ---
 title: Disable the Pages Resource
 weight: 3
+nav_title: Disable the Pages Resource
+order: 30
 ---
 
 The bundled Pages resource adds a `Pages` item to your Filament sidebar with full CRUD, nested pages, scheduled publishing, and frontend routes. Disable it when you only want the `LayupBuilder` field on your own models.
@@ -58,6 +60,6 @@ Run that **after** the package migrations, and treat it as a one-way decision --
 
 ## Related guides
 
-- [Field-only installation](/documentation/layup/v1/field-only-installation) -- the minimal install path that disables the Pages resource from the start
-- [Embedding the field](/documentation/layup/v1/embedding-the-field) -- using `LayupBuilder` on your own models
+- [Field-only installation](../field-only-installation.md) -- the minimal install path that disables the Pages resource from the start
+- [Embedding the field](../embedding-the-field.md) -- using `LayupBuilder` on your own models
 - [Swapping the Page model](swapping-the-page-model.md) -- if you do want the resource but with a custom model

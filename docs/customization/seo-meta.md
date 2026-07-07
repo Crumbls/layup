@@ -1,6 +1,8 @@
 ---
 title: SEO Meta
 weight: 7
+nav_title: SEO Meta
+order: 70
 ---
 
 Layup emits standard meta tags (Open Graph, Twitter Cards, canonical, JSON-LD) on every published page. This page covers the integration point, what's emitted, and the per-page and site-wide knobs you can tune.

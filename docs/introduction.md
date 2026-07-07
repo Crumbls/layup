@@ -1,6 +1,8 @@
 ---
 title: Introduction
 weight: 1
+nav_title: Introduction
+order: 10
 ---
 
 Layup is a Filament form field that turns any JSON column into a visual content editor. The field is the product. The bundled Pages resource is one application of it.
@@ -30,7 +32,7 @@ Laravel developers who use Filament and want a visual content editor either as a
 
 ## Key features
 
-- **95+ built-in widgets** across five categories: Content, Media, Interactive, Layout, and Advanced
+- **96 built-in widgets** across five categories: Content, Media, Interactive, Layout, and Advanced
 - **12-column responsive grid** with per-breakpoint column widths (sm, md, lg, xl)
 - **Three-tab widget forms** -- every widget gets Content, Design, and Advanced tabs out of the box
 - **Breakpoint preview** -- preview your page at different screen sizes directly in the builder

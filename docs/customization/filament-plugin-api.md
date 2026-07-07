@@ -1,6 +1,8 @@
 ---
 title: Filament Plugin API
 weight: 1
+nav_title: Filament Plugin API
+order: 10
 ---
 
 `LayupPlugin` is the main entry point for customizing Layup at the Filament panel level. Every method on the plugin is fluent and returns `$this`, so you can chain them in your panel provider.

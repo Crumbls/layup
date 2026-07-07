@@ -1,6 +1,8 @@
 ---
 title: Livewire-rendered widgets
 weight: 4
+nav_title: Livewire-rendered widgets
+order: 40
 ---
 
 By default, Layup widgets render through Blade view components. Frontend output for `HeadingWidget` resolves to `layup::components.heading`, the data array is passed as `$data`, and the result is plain HTML. This is the right model for static content -- headings, images, text, buttons -- where there is nothing to react to and no server-side state to maintain.

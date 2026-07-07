@@ -1,6 +1,8 @@
 ---
 title: Tailwind Safelist
 weight: 3
+nav_title: Tailwind Safelist
+order: 30
 ---
 
 Layup generates CSS classes dynamically based on page content (column widths, user-added classes, theme utilities). Tailwind's purge process cannot detect these classes in static analysis, so Layup generates a safelist file.

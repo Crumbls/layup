@@ -1,6 +1,8 @@
 ---
 title: Revision History
 weight: 4
+nav_title: Revision History
+order: 40
 ---
 
 Layup automatically saves a revision snapshot every time a page's content changes. This gives you a full version history with the ability to restore any previous version.

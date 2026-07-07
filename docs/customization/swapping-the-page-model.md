@@ -1,6 +1,8 @@
 ---
 title: Swapping the Page Model
 weight: 2
+nav_title: Swapping the Page Model
+order: 20
 ---
 
 The bundled `Crumbls\Layup\Models\Page` works for most installations. Swap it when you need:
@@ -64,4 +66,4 @@ Then, in each panel provider, ensure you publish a separate config or override t
 
 ## When to use a fully custom model instead
 
-If your "page" concept is very different from Layup's -- say, your model is `Article` with a publishing workflow that is unrelated to Layup's `published_at` semantics -- do not try to subclass `Page`. Use [Embedding the field](/documentation/layup/v1/embedding-the-field) instead, paired with [Disable the Pages resource](disable-pages-resource.md). You get the editor without inheriting Layup's CMS opinions.
+If your "page" concept is very different from Layup's -- say, your model is `Article` with a publishing workflow that is unrelated to Layup's `published_at` semantics -- do not try to subclass `Page`. Use [Embedding the field](../embedding-the-field.md) instead, paired with [Disable the Pages resource](disable-pages-resource.md). You get the editor without inheriting Layup's CMS opinions.

@@ -1,6 +1,8 @@
 ---
 title: Grid System
 weight: 6
+nav_title: Grid System
+order: 60
 ---
 
 Layup uses a 12-column flexbox grid. Pages are built from rows containing columns, and columns contain widgets.

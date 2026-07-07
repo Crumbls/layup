@@ -1,6 +1,8 @@
 ---
 title: Creating Pages
 weight: 1
+nav_title: Creating Pages
+order: 10
 ---
 
 ## From the Filament panel

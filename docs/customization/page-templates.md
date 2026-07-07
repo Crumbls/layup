@@ -1,6 +1,8 @@
 ---
 title: Page Templates
 weight: 5
+nav_title: Page Templates
+order: 50
 ---
 
 Templates provide pre-built page layouts that can be loaded into new or existing pages.

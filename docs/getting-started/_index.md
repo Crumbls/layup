@@ -1,6 +1,8 @@
 ---
 title: Getting Started
 weight: 3
+nav_title: Getting Started
+order: 30
 ---
 
 This section walks through the basics of building pages with Layup: creating pages in the Filament panel, adding widgets with the visual builder, configuring rows and columns, and publishing pages to the frontend.
@@ -9,9 +11,9 @@ This section walks through the basics of building pages with Layup: creating pag
 
 Before starting, make sure you have:
 
-1. Installed the package and registered `LayupPlugin` in your panel provider (see [Installation](/documentation/layup/v1/installation))
+1. Installed the package and registered `LayupPlugin` in your panel provider (see [Installation](../installation.md))
 2. Run migrations (`php artisan migrate`)
-3. Set up the Tailwind safelist (see [Installation](/documentation/layup/v1/installation#tailwind-safelist-setup))
+3. Set up the Tailwind safelist (see [Installation](../installation.md#tailwind-safelist-setup))
 
 
 ## Quick start

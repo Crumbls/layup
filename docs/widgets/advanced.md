@@ -1,6 +1,8 @@
 ---
 title: Advanced Widgets
 weight: 5
+nav_title: Advanced Widgets
+order: 50
 ---
 
 Advanced widgets provide low-level control for developers who need to embed raw code or third-party content.

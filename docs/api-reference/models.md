@@ -1,6 +1,8 @@
 ---
 title: Models
 weight: 2
+nav_title: Models
+order: 20
 ---
 
 ## Page

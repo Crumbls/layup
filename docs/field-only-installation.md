@@ -1,6 +1,8 @@
 ---
 title: Field-only Installation
 weight: 2
+nav_title: Field-only Installation
+order: 20
 ---
 
 This is the minimal install path. Use it when you want `LayupBuilder` as a field on your own models and you do **not** want the bundled Pages resource in your Filament sidebar.
@@ -12,10 +14,11 @@ If you want the full Pages CMS (nested pages, scheduled publishing, frontend rou
 Same as the full install:
 
 - PHP 8.3+
-- Laravel 12+
+- Laravel 12 or 13
 - Filament 5
-- Livewire 4
 - A working Filament panel
+
+`livewire/livewire` is suggested only when you build widgets that extend `BaseLivewireWidget`.
 
 ## Step 1: Install via Composer
 

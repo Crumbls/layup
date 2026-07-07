@@ -795,3 +795,24 @@ Before considering a widget complete, verify each item:
 8. **Omitting visibility classes** -- responsive hide/show stops working.
 9. **Using a `getType()` that does not match the view filename** -- widget renders blank.
 10. **Forgetting to register the widget** -- widget type is unknown, pages using it render nothing.
+
+## Documentation Builder Instructions
+
+When creating or repairing Layup documentation, read `.ai/llm-package-documentation-standard.md` first and follow it unless this file is more specific.
+
+Documentation must be verified from source before it is written. Check `composer.json`, `config/layup.php`, `src/LayupServiceProvider.php`, `src/LayupPlugin.php`, `src/Console/Commands`, public models, public support classes, migrations, tests, and existing docs. Do not copy claims from old docs unless the current source still proves them.
+
+Layup supports PHP 8.3+, Laravel 12 or 13, and Filament 5. `livewire/livewire` is suggested for projects that create widgets extending `BaseLivewireWidget`; do not describe Livewire as a required dependency for the standard Blade-widget install unless `composer.json` changes.
+
+Every page under `docs/` must start with YAML front matter containing `title`, `nav_title`, and `order`. Keep the existing `weight` value where present because older documentation tooling may still read it. Use `docs/nav.json` as the source of truth for the new documentation crawler navigation.
+
+Internal documentation links should be stable in-package links such as `installation.md`, `customization/livewire-widgets.md`, or `../embedding-the-field.md`. Do not add new legacy public-site links inside package docs.
+
+Before finishing documentation work, validate navigation, links, and package behavior:
+
+```bash
+bin/docs-lint
+php artisan test
+```
+
+If `bin/docs-lint` still enforces an older site rule, prefer the global standard and update the lint rule instead of changing docs back to the old format.

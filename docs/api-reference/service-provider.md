@@ -1,6 +1,8 @@
 ---
 title: Service Provider
 weight: 3
+nav_title: Service Provider
+order: 30
 ---
 
 ## LayupServiceProvider

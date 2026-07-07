@@ -1,6 +1,8 @@
 ---
 title: Media Widgets
 weight: 2
+nav_title: Media Widgets
+order: 20
 ---
 
 Media widgets handle images, video, audio, and visual presentations.

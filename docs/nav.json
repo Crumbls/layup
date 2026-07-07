@@ -1,0 +1,67 @@
+[
+  {"title": "Introduction", "path": "index.md", "order": 10},
+  {"title": "Installation", "path": "installation.md", "order": 20},
+  {"title": "Usage", "path": "usage.md", "order": 30},
+  {"title": "Configuration", "path": "configuration.md", "order": 40},
+  {"title": "Examples", "path": "examples.md", "order": 50},
+  {"title": "Grid system", "path": "grid-system.md", "order": 60},
+  {"title": "Field-only installation", "path": "field-only-installation.md", "order": 70},
+  {"title": "Embedding the field", "path": "embedding-the-field.md", "order": 80},
+  {
+    "title": "Widgets",
+    "path": "widgets/_index.md",
+    "order": 90,
+    "children": [
+      {"title": "Content widgets", "path": "widgets/content.md", "order": 10},
+      {"title": "Media widgets", "path": "widgets/media.md", "order": 20},
+      {"title": "Interactive widgets", "path": "widgets/interactive.md", "order": 30},
+      {"title": "Layout widgets", "path": "widgets/layout.md", "order": 40},
+      {"title": "Advanced widgets", "path": "widgets/advanced.md", "order": 50}
+    ]
+  },
+  {
+    "title": "Getting started",
+    "path": "getting-started/_index.md",
+    "order": 100,
+    "children": [
+      {"title": "Creating pages", "path": "getting-started/creating-pages.md", "order": 10},
+      {"title": "Adding widgets", "path": "getting-started/adding-widgets.md", "order": 20},
+      {"title": "Publishing", "path": "getting-started/publishing.md", "order": 30}
+    ]
+  },
+  {
+    "title": "Customization",
+    "path": "customization/_index.md",
+    "order": 110,
+    "children": [
+      {"title": "Disable Pages resource", "path": "customization/disable-pages-resource.md", "order": 10},
+      {"title": "Embedding and rendering", "path": "customization/rendering-content.md", "order": 20},
+      {"title": "Frontend rendering", "path": "customization/frontend-rendering.md", "order": 30},
+      {"title": "Custom widgets", "path": "customization/custom-widgets.md", "order": 40},
+      {"title": "Extending widgets", "path": "customization/extending-widgets.md", "order": 50},
+      {"title": "Livewire widgets", "path": "customization/livewire-widgets.md", "order": 60},
+      {"title": "Filament plugin API", "path": "customization/filament-plugin-api.md", "order": 70},
+      {"title": "Theme system", "path": "customization/theme-system.md", "order": 80},
+      {"title": "Tailwind safelist", "path": "customization/tailwind-safelist.md", "order": 90},
+      {"title": "SEO meta", "path": "customization/seo-meta.md", "order": 100},
+      {"title": "Page templates", "path": "customization/page-templates.md", "order": 110},
+      {"title": "Revision history", "path": "customization/revision-history.md", "order": 120},
+      {"title": "Swapping the Page model", "path": "customization/swapping-the-page-model.md", "order": 130},
+      {"title": "Testing", "path": "customization/testing.md", "order": 140}
+    ]
+  },
+  {
+    "title": "API reference",
+    "path": "api-reference/_index.md",
+    "order": 120,
+    "children": [
+      {"title": "Widget contract", "path": "api-reference/widget-contract.md", "order": 10},
+      {"title": "Models", "path": "api-reference/models.md", "order": 20},
+      {"title": "Service provider", "path": "api-reference/service-provider.md", "order": 30},
+      {"title": "Support classes", "path": "api-reference/support-classes.md", "order": 40},
+      {"title": "Commands", "path": "api-reference/commands.md", "order": 50}
+    ]
+  },
+  {"title": "Upgrade guide", "path": "upgrade-guide.md", "order": 130},
+  {"title": "Troubleshooting", "path": "troubleshooting.md", "order": 140}
+]

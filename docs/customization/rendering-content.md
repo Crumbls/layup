@@ -1,6 +1,8 @@
 ---
 title: Rendering Content
 weight: 9
+nav_title: Rendering Content
+order: 90
 ---
 
 There are several ways to render Layup content outside the built-in frontend routes.

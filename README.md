@@ -47,7 +47,6 @@ A Filament form field that turns any JSON column into a visual content editor. D
 - **Dual-render widgets** -- Blade (default) or Livewire per widget, opt-in via `BaseLivewireWidget`
 - **Nested pages** -- parent → child page trees with breadcrumb-aware URL paths
 - **Scheduled publishing** -- pages flip from `scheduled` to `published` automatically at their `published_at` time
-- **1,168 tests, 3,649 assertions**
 
 ### Built-in Widgets (96)
 
@@ -62,19 +61,20 @@ A Filament form field that turns any JSON column into a visual content editor. D
 ## Requirements
 
 - PHP 8.3+
-- Laravel 12+
+- Laravel 12 or 13
 - Filament 5
-- Livewire 4
+
+`livewire/livewire` is suggested only when building widgets that extend `BaseLivewireWidget`.
 
 ## Documentation & Installation
 
 Full documentation is available at **[crumbls.com/documentation/layup](https://crumbls.com/documentation/layup)**.
 
 - [Getting Started](https://crumbls.com/documentation/layup/getting-started) -- creating pages, adding widgets, publishing
-- [Widgets](https://crumbls.com/documentation/layup/widgets) -- all 95 built-in widgets by category
+- [Widgets](https://crumbls.com/documentation/layup/widgets) -- all 96 built-in widgets by category
 - [Configuration](https://crumbls.com/documentation/layup/configuration) -- every config option
 - [Grid System](https://crumbls.com/documentation/layup/grid-system) -- 12-column grid, breakpoints, responsive behavior
-- [Advanced](https://crumbls.com/documentation/layup/advanced) -- custom widgets, theme system, frontend rendering, testing, templates, revisions, Tailwind safelist
+- [Customization](https://crumbls.com/documentation/layup/customization) -- custom widgets, theme system, frontend rendering, testing, templates, revisions, Tailwind safelist
 - [API Reference](https://crumbls.com/documentation/layup/api-reference) -- Widget contract, models, service provider, support classes
 
 ## Contributing
