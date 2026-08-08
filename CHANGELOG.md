@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Widget auto-discovery now runs when a Filament panel and Layup's developer commands initialize the registry.
 - Removed a leftover browser console log from the builder initializer.
 
+## [1.6.0](https://github.com/Crumbls/layup/compare/v1.5.1...v1.6.0) (2026-08-08)
+
+
+### Features
+
+* streamline installation and documentation ([6aa2695](https://github.com/Crumbls/layup/commit/6aa269547956b0dcec1c55db039ef52936fe891e))
+
 ## [1.5.0](https://github.com/Crumbls/layup/compare/v1.4.0...v1.5.0) (2026-07-01)
 
 
