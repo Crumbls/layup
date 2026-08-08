@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Contracts;
 
 use Crumbls\Layup\Support\WidgetContext;
+use Filament\Forms\Components\Component;
 
 /**
  * Contract for all Layup page builder widgets.
@@ -40,7 +41,7 @@ interface Widget
     /**
      * Filament form schema components for editing this widget's data.
      *
-     * @return array<\Filament\Forms\Components\Component>
+     * @return array<Component>
      */
     public static function getFormSchema(): array;
 

@@ -6,6 +6,7 @@ namespace Crumbls\Layup\Models;
 
 use Crumbls\Layup\Concerns\HasLayupContent;
 use Crumbls\Layup\Concerns\HasNestedPath;
+use Crumbls\Layup\Database\Factories\PageFactory;
 use Crumbls\Layup\Support\ContentValidator;
 use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\SafelistCollector;
@@ -21,7 +22,9 @@ class Page extends Model
     use HasFactory, HasLayupContent, HasNestedPath, SoftDeletes;
 
     public const STATUS_PUBLISHED = 'published';
+
     public const STATUS_DRAFT = 'draft';
+
     public const STATUS_SCHEDULED = 'scheduled';
 
     protected static function booted(): void
@@ -473,7 +476,7 @@ class Page extends Model
 
     protected static function newFactory()
     {
-        return \Crumbls\Layup\Database\Factories\PageFactory::new();
+        return PageFactory::new();
     }
 
     /**

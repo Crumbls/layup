@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\Width;
+use Illuminate\Contracts\View\View;
 
 class EditPage extends EditRecord
 {
@@ -105,7 +106,7 @@ class EditPage extends EditRecord
                 ->modalWidth('2xl')
                 ->modalHeading(__('layup::resource.revision_history'))
                 ->modalDescription(__('layup::resource.revision_history_description'))
-                ->modalContent(fn (): \Illuminate\Contracts\View\View => $this->getRevisionHistoryView())
+                ->modalContent(fn (): View => $this->getRevisionHistoryView())
                 ->modalFooterActions([])
                 ->action(fn (): null => null),
             Action::make('saveAsTemplate')
@@ -133,7 +134,7 @@ class EditPage extends EditRecord
         ];
     }
 
-    protected function getRevisionHistoryView(): \Illuminate\Contracts\View\View
+    protected function getRevisionHistoryView(): View
     {
         $revisions = $this->record->revisions()
             ->orderBy('created_at', 'desc')
