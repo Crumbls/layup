@@ -11,10 +11,10 @@ Layup registers these commands from `Crumbls\Layup\LayupServiceProvider`.
 
 | Command | Purpose |
 | --- | --- |
-| `layup:install` | Publishes config, runs migrations, creates the storage link, publishes Filament assets, generates the safelist, and prints setup checks. |
+| `layup:install` | Publishes config, runs only Layup's Pages migrations, creates a local-disk storage link when needed, publishes Filament assets, generates the safelist, and prints setup checks. |
 | `layup:doctor` | Diagnoses common installation issues. |
 | `layup:audit` | Audits saved pages for broken widgets, unused classes, and content issues. |
-| `layup:safelist {--output=} {--stdout} {--static-only}` | Generates the Tailwind safelist from static widget classes and, unless `--static-only` is used, saved page content. |
+| `layup:safelist {--output=} {--stdout} {--static-only}` | Generates the Tailwind safelist from static widget classes and, unless `--static-only` is used, configured Layup content sources. |
 | `layup:list-widgets {--category=} {--custom-only}` | Lists registered widgets with type, label, category, and source. |
 | `layup:debug-widget {type} {--data=}` | Dumps resolved metadata, defaults, merged data, validation rules, assets, and search tags for a widget. |
 | `layup:make-widget {name} {--with-test}` | Scaffolds a widget class, Blade view, and optional Pest test. |

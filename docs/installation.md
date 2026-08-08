@@ -5,13 +5,18 @@ nav_title: Installation
 order: 20
 ---
 
+# Installation
+
 ## Choose your install path
 
 Layup is a Filament form field first; the bundled Pages resource is a turnkey example built on top of it. Pick the path that fits how you plan to use it.
 
-**Path A -- Use Layup as a field on your own model.** Skip the Pages resource. You bring the model, the JSON column, and your own Filament resource. Layup gives you the editor canvas. Continue at [Field-only installation](field-only-installation.md), then read [Embedding the field](embedding-the-field.md).
+| If you want to... | Choose | Start here |
+| --- | --- | --- |
+| Add a visual editor to an existing model and Filament resource | Field-only | [Field-only installation](field-only-installation.md), then [embed the field](embedding-the-field.md) |
+| Manage standalone pages with nesting, publishing, SEO, and frontend routes | Bundled Pages CMS | Continue with this guide |
 
-**Path B -- Use the bundled Pages resource.** A full page CMS with nested pages, scheduled publishing, SEO meta, and frontend routes -- ready to use after `php artisan layup:install`. Continue below.
+This guide covers the bundled Pages CMS path. It creates Layup's page tables and exposes the Pages resource in your Filament panel. The field-only guide is self-contained; do not run this guide's Pages migration steps for that path.
 
 Either way, the field looks like this:
 
@@ -166,13 +171,20 @@ Without the safelist and rebuild steps, the page builder will work in the admin 
 
 ## Verify installation
 
-Run the health check command to confirm everything is set up correctly:
+Run the health check and rebuild your frontend assets after configuring the Tailwind safelist:
 
 ```bash
 php artisan layup:doctor
+npm run build
 ```
 
-Then visit `/admin/pages` (or your panel path) and create a new page. You should see the visual builder with rows, columns, and the widget picker.
+Then verify the complete path:
+
+1. Open `/admin/pages` (or your panel path) and create a page. The visual builder should show rows, columns, and the widget picker.
+2. Add a widget, save the page, and publish it.
+3. Open the page's frontend URL. The widget should render with the styling from your rebuilt assets.
+
+If `layup:doctor` reports a failure, resolve it before creating content. Warnings can be intentional; the command explains the expected fix or configuration choice.
 
 ## Troubleshooting
 

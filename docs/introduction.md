@@ -1,8 +1,8 @@
 ---
 title: Introduction
-weight: 1
-nav_title: Introduction
-order: 10
+weight: 15
+nav_title: Overview
+order: 15
 ---
 
 Layup is a Filament form field that turns any JSON column into a visual content editor. The field is the product. The bundled Pages resource is one application of it.

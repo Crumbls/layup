@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Models\Page;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Builder;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\View;
 
 class DoctorCommand extends Command
 {
+    use RegistersWidgets;
+
     protected $signature = 'layup:doctor';
 
     protected $description = 'Diagnose common Layup setup issues';
@@ -42,6 +45,7 @@ class DoctorCommand extends Command
         $this->checkWidgetViews();
         $this->checkDefaultDataCompleteness();
         $this->checkSafelist();
+        $this->checkSafelistContentSources();
         $this->checkSafelistInTailwind();
         $this->checkUploadDisk();
         $this->checkPageStats();
@@ -78,6 +82,12 @@ class DoctorCommand extends Command
 
     protected function checkConfig(): void
     {
+        if (! config('layup.pages.enabled', true)) {
+            $this->reportPass('Bundled Pages resource is disabled');
+
+            return;
+        }
+
         $modelClass = config('layup.pages.model', Page::class);
 
         if (! class_exists($modelClass)) {
@@ -117,6 +127,12 @@ class DoctorCommand extends Command
 
     protected function checkMigrations(): void
     {
+        if (! config('layup.pages.enabled', true)) {
+            $this->reportPass('Bundled Pages migrations are not required');
+
+            return;
+        }
+
         try {
             $table = config('layup.pages.table', 'layup_pages');
             $exists = \Illuminate\Support\Facades\Schema::hasTable($table);
@@ -194,7 +210,7 @@ class DoctorCommand extends Command
     protected function checkWidgets(): void
     {
         $registry = app(WidgetRegistry::class);
-        $this->ensureWidgetsRegistered($registry);
+        $this->ensureWidgetsRegistered();
 
         $all = $registry->all();
         $builtIn = count(array_filter($all, fn (string $class): bool => str_starts_with($class, 'Crumbls\\Layup\\View\\')));
@@ -310,19 +326,24 @@ class DoctorCommand extends Command
             return;
         }
 
-        $safelistPath = config('layup.safelist.path', 'storage/layup-safelist.txt');
-
-        // Check Tailwind v4 (app.css)
-        $cssPath = resource_path('css/app.css');
-        $tailwindConfig = base_path('tailwind.config.js');
         $found = false;
 
-        if (file_exists($cssPath) && str_contains(file_get_contents($cssPath), 'layup-safelist')) {
-            $found = true;
+        foreach (glob(resource_path('css/*')) ?: [] as $cssPath) {
+            if (is_file($cssPath) && str_contains((string) file_get_contents($cssPath), 'layup-safelist')) {
+                $found = true;
+
+                break;
+            }
         }
 
-        if (! $found && file_exists($tailwindConfig) && str_contains(file_get_contents($tailwindConfig), 'layup-safelist')) {
-            $found = true;
+        if (! $found) {
+            foreach (glob(base_path('tailwind.config.*')) ?: [] as $tailwindConfig) {
+                if (is_file($tailwindConfig) && str_contains((string) file_get_contents($tailwindConfig), 'layup-safelist')) {
+                    $found = true;
+
+                    break;
+                }
+            }
         }
 
         if ($found) {
@@ -345,6 +366,10 @@ class DoctorCommand extends Command
 
     protected function checkPageStats(): void
     {
+        if (! config('layup.pages.enabled', true)) {
+            return;
+        }
+
         try {
             $modelClass = config('layup.pages.model', Page::class);
 
@@ -383,12 +408,33 @@ class DoctorCommand extends Command
         $this->failures++;
     }
 
-    protected function ensureWidgetsRegistered(WidgetRegistry $registry): void
+    protected function checkSafelistContentSources(): void
     {
-        foreach (config('layup.widgets', []) as $class) {
-            if (class_exists($class) && ! $registry->has($class::getType())) {
-                $registry->register($class);
+        $sources = config('layup.safelist.content_sources', []);
+
+        if ($sources === []) {
+            if (! config('layup.pages.enabled', true)) {
+                $this->reportWarn('No safelist content sources are configured; custom Tailwind classes on host models will be omitted');
             }
+
+            return;
+        }
+
+        foreach ($sources as $source) {
+            if (is_string($source)) {
+                $source = ['model' => $source];
+            }
+
+            $model = is_array($source) ? ($source['model'] ?? null) : null;
+            $column = is_array($source) ? ($source['column'] ?? 'content') : null;
+
+            if (! is_string($model) || ! is_subclass_of($model, Model::class) || ! is_string($column) || $column === '') {
+                $this->reportFail('Invalid safelist content source configuration');
+
+                continue;
+            }
+
+            $this->reportPass("Safelist source {$model}.{$column} is configured");
         }
     }
 

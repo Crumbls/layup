@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\View\BaseView;
 use Illuminate\Console\Command;
 
 class DebugWidgetCommand extends Command
 {
+    use RegistersWidgets;
+
     protected $signature = 'layup:debug-widget
         {type : Widget type identifier}
         {--data= : JSON data to pass to the widget}';
@@ -20,12 +23,7 @@ class DebugWidgetCommand extends Command
     {
         $type = $this->argument('type');
         $registry = app(WidgetRegistry::class);
-
-        foreach (config('layup.widgets', []) as $widgetClass) {
-            if (class_exists($widgetClass) && ! $registry->has($widgetClass::getType())) {
-                $registry->register($widgetClass);
-            }
-        }
+        $this->ensureWidgetsRegistered();
 
         $class = $registry->get($type);
 

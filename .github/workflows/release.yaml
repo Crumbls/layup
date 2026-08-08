@@ -10,5 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: google-github-actions/release-please-action@v4
+        id: release-please
         with:
           release-type: simple
+
+      - name: Notify documentation site
+        if: steps.release-please.outputs.release_created == 'true'
+        env:
+          DOCS_SYNC_WEBHOOK_URL: ${{ secrets.DOCS_SYNC_WEBHOOK_URL }}
+          DOCS_SYNC_WEBHOOK_SECRET: ${{ secrets.DOCS_SYNC_WEBHOOK_SECRET }}
+          PACKAGE_VERSION: ${{ steps.release-please.outputs.tag_name }}
+        run: |
+          if [ -z "$DOCS_SYNC_WEBHOOK_URL" ] || [ -z "$DOCS_SYNC_WEBHOOK_SECRET" ]; then
+            echo 'Documentation sync webhook is not configured; skipping notification.'
+            exit 0
+          fi
+
+          payload=$(printf '{"package":"crumbls/layup","version":"%s"}' "$PACKAGE_VERSION")
+          signature="sha256=$(printf '%s' "$payload" | openssl dgst -sha256 -hmac "$DOCS_SYNC_WEBHOOK_SECRET" -hex | sed 's/^.* //')"
+          curl --fail --silent --show-error --retry 3 --retry-all-errors \
+            --header 'Content-Type: application/json' \
+            --header "X-Docs-Signature: $signature" \
+            --data "$payload" \
+            "$DOCS_SYNC_WEBHOOK_URL"

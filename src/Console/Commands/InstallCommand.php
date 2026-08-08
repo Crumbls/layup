@@ -30,8 +30,12 @@ class InstallCommand extends Command
         ]);
         $this->info(__('layup::commands.config_published'));
 
-        // Run migrations
-        $this->call('migrate');
+        // Run only Layup's migrations. Running every pending application
+        // migration from a package installer is surprising and potentially unsafe.
+        $this->call('migrate', [
+            '--path' => realpath(__DIR__.'/../../../database/migrations'),
+            '--realpath' => true,
+        ]);
         $this->info(__('layup::commands.migrations_completed'));
 
         // Ensure storage symlink exists
@@ -81,6 +85,14 @@ class InstallCommand extends Command
 
     protected function ensureStorageLink(): void
     {
+        $disk = config('layup.uploads.disk', 'public');
+
+        if (config("filesystems.disks.{$disk}.driver") !== 'local') {
+            $this->comment("Storage link skipped: upload disk '{$disk}' is not local.");
+
+            return;
+        }
+
         $link = public_path('storage');
 
         if (file_exists($link)) {
@@ -96,7 +108,13 @@ class InstallCommand extends Command
     protected function ensureLayoutExists(): void
     {
         $layout = config('layup.frontend.layout', 'app');
-        $path = resource_path("views/components/{$layout}.blade.php");
+        $path = $this->layoutPath($layout);
+
+        if ($path === null) {
+            $this->components->warn("Could not create the '{$layout}' layout automatically. Add @layupScripts to that layout manually.");
+
+            return;
+        }
 
         if (File::exists($path)) {
             $this->info(__('layup::commands.layout_exists', ['layout' => $layout]));
@@ -114,12 +132,25 @@ class InstallCommand extends Command
             return;
         }
 
-        $stub = __DIR__ . '/../../../stubs/app-layout.blade.php.stub';
+        $stub = __DIR__.'/../../../stubs/app-layout.blade.php.stub';
 
         File::ensureDirectoryExists(dirname($path));
         File::copy($stub, $path);
 
         $this->info(__('layup::commands.layout_created', ['layout' => $layout]));
+    }
+
+    protected function layoutPath(string $layout): ?string
+    {
+        if (str_starts_with($layout, 'layouts::')) {
+            return resource_path('views/layouts/'.str_replace('.', '/', substr($layout, strlen('layouts::'))).'.blade.php');
+        }
+
+        if (str_contains($layout, '::')) {
+            return null;
+        }
+
+        return resource_path('views/components/'.str_replace('.', '/', $layout).'.blade.php');
     }
 
     protected function checkPluginRegistered(): void

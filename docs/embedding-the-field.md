@@ -5,6 +5,8 @@ nav_title: Embedding the Field
 order: 30
 ---
 
+# Embedding the field
+
 `LayupBuilder` is a Filament form field. Drop it into any form on any model that has a JSON column, and editors get a Divi-style canvas with rows, columns, breakpoint previews, and 96 widgets. The Pages resource that ships with Layup is one application of this field -- everything you can do there, you can do on your own models.
 
 This guide walks through wiring the field onto an existing Eloquent model.
@@ -151,7 +153,16 @@ All four fields share the same widget registry, theme, and Tailwind safelist.
 
 The field generates dynamic CSS classes (column widths, spacing, custom styles) regardless of which model stores the content. You still need to configure the Tailwind safelist exactly as documented in [Installation](installation.md#tailwind-safelist-setup), even on a field-only setup.
 
-If you are not using the Pages resource, the auto-sync hook does not fire on your model's saves out of the box. Either run `php artisan layup:safelist` from your build pipeline, or hook a model event:
+If you are not using the Pages resource, configure the model as a safelist content source and hook auto-syncing into its saves. `SafelistCollector::sync()` then reads that source as well as Layup's static classes:
+
+```php
+// config/layup.php
+'safelist' => [
+    'content_sources' => [
+        ['model' => App\Models\Post::class, 'column' => 'content'],
+    ],
+],
+```
 
 ```php
 // app/Providers/AppServiceProvider.php
@@ -165,6 +176,20 @@ public function boot(): void
     });
 }
 ```
+
+Run `php artisan layup:safelist` in the frontend build pipeline as well, so deployments compile any classes already saved by editors.
+
+## Verify the field integration
+
+After completing the model, form, and rendering steps, verify the complete path:
+
+```bash
+php artisan layup:doctor
+php artisan layup:safelist
+npm run build
+```
+
+Then create or edit a record in your Filament resource, add a Heading widget, and save it. Load the Blade view that contains `@layup($post->content)`: the heading should render with its saved content and styling. If the record renders without styling, confirm the model is listed in `safelist.content_sources` and that the asset build ran after regenerating the safelist.
 
 ## What if I do not want the Pages resource at all?
 

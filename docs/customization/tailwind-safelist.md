@@ -15,7 +15,7 @@ The `SafelistCollector` gathers classes from three sources:
 2. **Dynamic classes** -- user-added CSS classes from the Advanced tab of any widget, row, or column
 3. **Extra classes** -- additional classes defined in `config('layup.safelist.extra_classes')`
 
-All published pages are scanned. The result is written to a text file (one class per line).
+Published bundled Pages are scanned when `pages.enabled` is `true`. Add host models with `content_sources` when you use `LayupBuilder` outside the bundled Pages resource. The result is written to a text file (one class per line).
 
 ## Configuration
 
@@ -25,12 +25,16 @@ All published pages are scanned. The result is written to a text file (one class
     'auto_sync' => true,
     'path' => 'storage/layup-safelist.txt',
     'extra_classes' => [],
+    'content_sources' => [
+        ['model' => App\Models\Post::class, 'column' => 'content'],
+    ],
 ],
 ```
 
 - **auto_sync** -- when `true`, the safelist regenerates on every page save and delete
 - **path** -- where the safelist file is written (relative to project root)
 - **extra_classes** -- classes to always include, regardless of page content
+- **content_sources** -- host models to scan in addition to bundled Pages. Each source has a `model` class and optional JSON `column` (default: `content`).
 
 ## Generating manually
 

@@ -4,7 +4,7 @@ slogan: A visual page builder plugin for Filament with 96 drag-and-drop widgets.
 githubUrl: https://github.com/crumbls/layup
 branch: main
 nav_title: v1
-order: 10
+order: 0
 ---
 
 Layup is a visual page builder plugin for Filament 5. It provides Divi-style editing with a 12-column responsive grid, breakpoint previews, undo/redo, and a searchable widget picker.

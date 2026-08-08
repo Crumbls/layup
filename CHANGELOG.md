@@ -5,6 +5,15 @@ All notable changes to Layup will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- `layup:install` now runs only Layup's own Pages migrations instead of every pending application migration, skips storage linking for remote upload disks, and resolves dot and Livewire layout names correctly.
+- Field-only installs can disable both bundled Pages features, skip Pages migrations, and configure host models as Tailwind safelist content sources.
+- Widget auto-discovery now runs when a Filament panel and Layup's developer commands initialize the registry.
+- Removed a leftover browser console log from the builder initializer.
+
 ## [1.5.0](https://github.com/Crumbls/layup/compare/v1.4.0...v1.5.0) (2026-07-01)
 
 

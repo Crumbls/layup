@@ -7,12 +7,15 @@ namespace Crumbls\Layup;
 use Crumbls\Layup\Contracts\Widget;
 use Crumbls\Layup\Resources\PageResource;
 use Crumbls\Layup\Support\LayupTheme;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
 class LayupPlugin implements Plugin
 {
+    use RegistersWidgets;
+
     /** @var array<class-string<Widget>> Extra widgets registered via the plugin constructor */
     protected array $extraWidgets = [];
 
@@ -190,13 +193,15 @@ class LayupPlugin implements Plugin
         $registry = app(WidgetRegistry::class);
 
         if ($this->useConfigWidgets) {
-            foreach (config('layup.widgets', []) as $widget) {
-                $registry->register($widget);
-            }
+            $this->registerConfiguredWidgets($registry);
         }
 
+        $this->discoverAppWidgets($registry);
+
         foreach ($this->extraWidgets as $widget) {
-            $registry->register($widget);
+            if (! $registry->has($widget::getType())) {
+                $registry->register($widget);
+            }
         }
 
         foreach ($this->removedWidgets as $type) {

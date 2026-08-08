@@ -5,7 +5,9 @@ declare(strict_types=1);
 use Crumbls\Layup\Events\SafelistChanged;
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\SafelistCollector;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
 
 it('returns static classes from safelist file', function (): void {
     $classes = SafelistCollector::staticClasses();
@@ -206,6 +208,48 @@ it('includes extra_classes from config', function (): void {
         ->and($all)->toContain('bg-brand-500');
 
     config(['layup.safelist.extra_classes' => []]);
+});
+
+it('collects classes from configured host-model content sources', function (): void {
+    Schema::create('safelist_posts', function ($table): void {
+        $table->id();
+        $table->json('body')->nullable();
+    });
+
+    $post = new class extends Model
+    {
+        protected $table = 'safelist_posts';
+
+        protected $guarded = [];
+
+        public $timestamps = false;
+
+        protected function casts(): array
+        {
+            return ['body' => 'array'];
+        }
+    };
+
+    $post::query()->create([
+        'body' => ['rows' => [[
+            'id' => 'row-1',
+            'settings' => ['class' => 'host-model-class'],
+            'columns' => [],
+        ]]],
+    ]);
+
+    config([
+        'layup.pages.enabled' => false,
+        'layup.safelist.content_sources' => [[
+            'model' => $post::class,
+            'column' => 'body',
+        ]],
+    ]);
+
+    expect(SafelistCollector::classes())->toContain('host-model-class');
+
+    Schema::drop('safelist_posts');
+    config(['layup.pages.enabled' => true, 'layup.safelist.content_sources' => []]);
 });
 
 it('extracts classes from sections structure', function (): void {

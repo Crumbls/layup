@@ -6,6 +6,7 @@ namespace Crumbls\Layup\Support;
 
 use Crumbls\Layup\Events\SafelistChanged;
 use Crumbls\Layup\Models\Page;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 /**
@@ -32,21 +33,91 @@ use Illuminate\Support\Facades\File;
 class SafelistCollector
 {
     /**
-     * Collect all unique CSS classes from all published pages,
+     * Collect all unique CSS classes from configured content sources,
      * merged with the static safelist of all possible plugin classes.
      *
      * @return array<string>
      */
     public static function classes(): array
     {
-        $modelClass = config('layup.pages.model', Page::class);
-
         return array_values(array_unique(array_merge(
             static::staticClasses(),
             PageLayout::allPresetClasses(),
             config('layup.safelist.extra_classes', []),
-            static::classesForPages($modelClass::published()->get()),
+            static::classesFromConfiguredSources(),
         )));
+    }
+
+    /**
+     * Collect classes from the bundled Page model and any host-model sources.
+     *
+     * @return array<string>
+     */
+    protected static function classesFromConfiguredSources(): array
+    {
+        $sources = config('layup.safelist.content_sources', []);
+
+        if (! is_array($sources)) {
+            logger()->warning('Layup: safelist.content_sources must be an array.');
+            $sources = [];
+        }
+
+        if (config('layup.pages.enabled', true)) {
+            array_unshift($sources, [
+                'model' => config('layup.pages.model', Page::class),
+                'published' => true,
+            ]);
+        }
+
+        $classes = [];
+
+        foreach ($sources as $source) {
+            if (is_string($source)) {
+                $source = ['model' => $source];
+            }
+
+            if (! is_array($source)) {
+                continue;
+            }
+
+            $modelClass = $source['model'] ?? null;
+            $column = $source['column'] ?? 'content';
+
+            if (
+                ! is_string($modelClass)
+                || ! is_subclass_of($modelClass, Model::class)
+                || ! is_string($column)
+                || $column === ''
+            ) {
+                logger()->warning('Layup: invalid safelist content source.', ['source' => $source]);
+
+                continue;
+            }
+
+            try {
+                $query = $modelClass::query()->select([$column]);
+
+                if (($source['published'] ?? false) === true && method_exists($modelClass, 'scopePublished')) {
+                    $query->published();
+                }
+
+                foreach ($query->cursor() as $record) {
+                    $content = $record->getAttribute($column);
+
+                    if (is_array($content)) {
+                        $classes = array_merge($classes, static::classesFromContent($content));
+                    }
+                }
+            } catch (\Throwable $e) {
+                logger()->warning('Layup: safelist content source could not be read.', [
+                    'model' => $modelClass,
+                    'column' => $column,
+                    'exception' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return array_values(array_unique($classes));
     }
 
     /**

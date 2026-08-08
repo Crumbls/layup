@@ -5,7 +5,7 @@ nav_title: Disable the Pages Resource
 order: 30
 ---
 
-The bundled Pages resource adds a `Pages` item to your Filament sidebar with full CRUD, nested pages, scheduled publishing, and frontend routes. Disable it when you only want the `LayupBuilder` field on your own models.
+The bundled Pages resource adds a `Pages` item to your Filament sidebar with full CRUD and scheduled publishing. Disable it when you only want the `LayupBuilder` field on your own models.
 
 ## Configure
 
@@ -21,15 +21,17 @@ Set `pages.enabled` to `false` in `config/layup.php`:
 
 Restart any running Filament panels (or clear the route cache if you are caching routes).
 
+To disable the bundled `/pages/*` frontend routes as well, set `frontend.enabled` to `false`. The [field-only installation](../field-only-installation.md) guide disables both settings.
+
 ## What disappears
 
 | Feature | Status when disabled |
 |---|---|
 | `Pages` resource in Filament sidebar | Removed |
-| Public frontend routes (`/pages/*`) | Not registered |
+| Public frontend routes (`/pages/*`) | Unchanged; disable separately with `frontend.enabled = false` |
 | Scheduled publishing command | Still registered, but has nothing to act on |
 | `Page` model | Still loadable -- just no UI or routes use it |
-| `layup_pages` and `layup_page_revisions` tables | Still created if you ran migrations |
+| `layup_pages` and `layup_page_revisions` tables | Existing tables are unchanged; new migrations are not loaded while disabled |
 
 The widget registry, theme system, `LayupBuilder` field, Tailwind safelist generation, and Blade directives all keep working. Disabling the Pages resource only removes the bundled CMS UI -- not the underlying primitives.
 
@@ -42,11 +44,11 @@ The widget registry, theme system, `LayupBuilder` field, Tailwind safelist gener
 - All `php artisan layup:*` commands (`safelist`, `make-widget`, `doctor`, etc.)
 - Theme overrides via the plugin API
 
-## Migration cleanup (optional)
+## Existing database tables
 
-The package's migrations create `layup_pages` and `layup_page_revisions` tables even when `pages.enabled = false`. The tables sit empty and cost nothing -- leave them in place if there is any chance you might enable the Pages resource later.
+Existing Pages tables remain available after you disable the resource. On a new installation, Layup does not load Pages migrations when `pages.enabled` is `false`.
 
-If you are certain you will never use the Pages resource and want a strictly clean schema, you can write a migration in your own application that drops the tables:
+If you no longer need existing Pages data and are certain you will never re-enable the resource, you can remove those tables with an application migration:
 
 ```php
 public function up(): void
@@ -56,7 +58,7 @@ public function up(): void
 }
 ```
 
-Run that **after** the package migrations, and treat it as a one-way decision -- enabling the Pages resource later will require recreating the tables manually.
+Treat this as a one-way decision -- re-enabling the Pages resource later requires recreating the tables through a migration.
 
 ## Related guides
 

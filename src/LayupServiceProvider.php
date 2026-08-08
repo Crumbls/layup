@@ -18,6 +18,7 @@ use Crumbls\Layup\Console\Commands\PublishScheduledCommand;
 use Crumbls\Layup\Console\Commands\SearchCommand;
 use Crumbls\Layup\Support\LayupTheme;
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\View\Components\LayupSeo;
 use Crumbls\Layup\View\Components\LayupWidgetComponent;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
@@ -30,7 +31,7 @@ class LayupServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/layup.php', 'layup');
+        $this->mergeConfigFrom(__DIR__.'/../config/layup.php', 'layup');
 
         $this->app->singleton(WidgetRegistry::class, fn (): WidgetRegistry => new WidgetRegistry);
         $this->app->singleton(LayupTheme::class, fn (): LayupTheme => new LayupTheme);
@@ -56,9 +57,11 @@ class LayupServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'layup');
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'layup');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'layup');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'layup');
+        if (config('layup.pages.enabled', true)) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        }
 
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -80,50 +83,50 @@ class LayupServiceProvider extends ServiceProvider
         }
 
         if (config('layup.frontend.enabled', true)) {
-            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         }
 
         FilamentAsset::register([
-            Css::make('layup', __DIR__ . '/../resources/css/layup.css'),
+            Css::make('layup', __DIR__.'/../resources/css/layup.css'),
         ], 'crumbls/layup');
 
         $this->publishes([
-            __DIR__ . '/../config/layup.php' => config_path('layup.php'),
+            __DIR__.'/../config/layup.php' => config_path('layup.php'),
         ], 'layup-config');
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/layup'),
+            __DIR__.'/../resources/views' => resource_path('views/vendor/layup'),
         ], 'layup-views');
 
         $this->publishes([
-            __DIR__ . '/../routes/web.php' => base_path('routes/layup.php'),
+            __DIR__.'/../routes/web.php' => base_path('routes/layup.php'),
         ], 'layup-routes');
 
         $this->publishes([
-            __DIR__ . '/../resources/js/layup.js' => resource_path('js/vendor/layup.js'),
+            __DIR__.'/../resources/js/layup.js' => resource_path('js/vendor/layup.js'),
         ], 'layup-scripts');
 
         $this->publishes([
-            __DIR__ . '/../resources/templates' => resource_path('layup/templates'),
+            __DIR__.'/../resources/templates' => resource_path('layup/templates'),
         ], 'layup-templates');
 
         $this->publishes([
-            __DIR__ . '/../resources/lang' => $this->app->langPath('vendor/layup'),
+            __DIR__.'/../resources/lang' => $this->app->langPath('vendor/layup'),
         ], 'layup-translations');
 
         $this->publishes([
-            __DIR__ . '/../stubs/layup-widget.php.stub' => base_path('stubs/layup-widget.php.stub'),
-            __DIR__ . '/../stubs/layup-widget-view.blade.php.stub' => base_path('stubs/layup-widget-view.blade.php.stub'),
-            __DIR__ . '/../stubs/layup-widget-test.php.stub' => base_path('stubs/layup-widget-test.php.stub'),
+            __DIR__.'/../stubs/layup-widget.php.stub' => base_path('stubs/layup-widget.php.stub'),
+            __DIR__.'/../stubs/layup-widget-view.blade.php.stub' => base_path('stubs/layup-widget-view.blade.php.stub'),
+            __DIR__.'/../stubs/layup-widget-test.php.stub' => base_path('stubs/layup-widget-test.php.stub'),
         ], 'layup-stubs');
 
         Blade::component('layup-widget', LayupWidgetComponent::class);
-        Blade::component('layup-seo', \Crumbls\Layup\View\Components\LayupSeo::class);
+        Blade::component('layup-seo', LayupSeo::class);
 
         Blade::directive('layupScripts', fn (): string => "<?php \Crumbls\Layup\Support\ThemeResolver::ensureBooted(); echo '<style>' . app(\Crumbls\Layup\Support\LayupTheme::class)->toCss() . '</style>'; ?>"
-            . "<?php if(config('layup.frontend.include_scripts', true)): ?>"
-            . '<script>' . file_get_contents(__DIR__ . '/../resources/js/layup.js') . '</script>'
-            . '<?php endif; ?>');
+            ."<?php if(config('layup.frontend.include_scripts', true)): ?>"
+            .'<script>'.file_get_contents(__DIR__.'/../resources/js/layup.js').'</script>'
+            .'<?php endif; ?>');
 
         Blade::directive('layup', fn (string $expression): string => "<?php echo (new \Crumbls\Layup\Support\LayupContent({$expression}))->toHtml(); ?>");
 

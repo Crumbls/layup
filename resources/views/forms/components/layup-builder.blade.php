@@ -15,9 +15,6 @@
                 widgetRegistry: @js($widgetRegistry),
                 translations: @js($translations),
                 initialLivePreviews: @js($initialLivePreviews),
-                geocode: function() {
-                console.log('tf');
-                }
             })"
 
             {{ $getExtraAttributeBag() }}

@@ -27,7 +27,7 @@ The defaults work out of the box. Most installations only touch a handful of key
 | Change the layout component pages render in | [Frontend](#frontend) (`layout`) |
 | Adjust auto-save / revision retention | [Revisions](#revisions) |
 | Tune scheduled-publishing behavior | [Scheduling](#scheduling) |
-| Change the Tailwind safelist file path | [Safelist](#safelist) |
+| Change the Tailwind safelist file path or host-model sources | [Safelist](#safelist) |
 | Change responsive breakpoint widths | [Breakpoints](#breakpoints) |
 | Add or remove preset row layouts in the editor | [Row templates](#row-templates) |
 
@@ -78,7 +78,7 @@ The filesystem disk used for media uploads (images, files). Must be publicly acc
 
 - **table** -- database table name for pages. Change this if you need multiple Layup instances with separate tables.
 - **model** -- the Eloquent model class. Extend `Page` and point here to add custom behavior.
-- **enabled** -- whether the Pages resource is registered in the Filament admin panel. Set to `false` when you're using Layup purely as a rendering engine (e.g. attaching `HasLayupContent` to your own models and managing content through your own Filament resources). Disabling the resource does not affect frontend rendering or the database -- it only removes the admin UI. Pages already in the database still render normally via the frontend controller or `@layup` directive.
+- **enabled** -- whether the Pages resource is registered in the Filament admin panel. Set to `false` when you're using Layup purely as a rendering engine (e.g. attaching `HasLayupContent` to your own models and managing content through your own Filament resources). It does not disable frontend routes; set `frontend.enabled` to `false` when you do not use the bundled Page model. Existing Pages tables are unchanged, but new installs do not load Pages migrations while this setting is `false`.
 - **default_slug** -- if set, this slug is served when the frontend prefix is hit without a slug.
 - **max_depth** -- maximum depth for parent → child page chains. Top-level pages count as depth 1. Used by the nested-path resolver and as a backstop against accidental cycles when walking ancestors.
 
@@ -141,6 +141,9 @@ The filesystem disk used for media uploads (images, files). Must be publicly acc
     'auto_sync' => true,
     'path' => 'storage/layup-safelist.txt',
     'extra_classes' => [],
+    'content_sources' => [
+        ['model' => App\Models\Post::class, 'column' => 'content'],
+    ],
 ],
 ```
 
@@ -148,6 +151,7 @@ The filesystem disk used for media uploads (images, files). Must be publicly acc
 - **auto_sync** -- regenerate the safelist file automatically on page save/delete
 - **path** -- output path for the safelist file (relative to project root)
 - **extra_classes** -- additional CSS classes to always include in the safelist
+- **content_sources** -- host models to scan for Layup content. Each entry requires an Eloquent `model` class and accepts a JSON `column` name (default: `content`). Use this when `LayupBuilder` is attached to models other than the bundled Page model.
 
 ## Breakpoints
 

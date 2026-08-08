@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Console\Commands;
 
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Illuminate\Console\Command;
 
 class ListWidgetsCommand extends Command
 {
+    use RegistersWidgets;
+
     protected $signature = 'layup:list-widgets
         {--category= : Filter by category}
         {--custom-only : Show only custom (non-built-in) widgets}';
@@ -18,7 +21,7 @@ class ListWidgetsCommand extends Command
     public function handle(): int
     {
         $registry = app(WidgetRegistry::class);
-        $this->ensureWidgetsRegistered($registry);
+        $this->ensureWidgetsRegistered();
 
         $widgets = $registry->all();
 
@@ -71,14 +74,5 @@ class ListWidgetsCommand extends Command
     protected function detectSource(string $class): string
     {
         return str_starts_with($class, 'Crumbls\\Layup\\View\\') ? 'built-in' : 'custom';
-    }
-
-    protected function ensureWidgetsRegistered(WidgetRegistry $registry): void
-    {
-        foreach (config('layup.widgets', []) as $class) {
-            if (class_exists($class) && ! $registry->has($class::getType())) {
-                $registry->register($class);
-            }
-        }
     }
 }

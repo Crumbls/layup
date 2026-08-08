@@ -6,11 +6,14 @@ namespace Crumbls\Layup\Console\Commands;
 
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\ContentWalker;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Illuminate\Console\Command;
 
 class SearchCommand extends Command
 {
+    use RegistersWidgets;
+
     protected $signature = 'layup:search
         {type? : Widget type to search for}
         {--unused : Find registered widget types not used in any page}';
@@ -76,7 +79,7 @@ class SearchCommand extends Command
     protected function handleUnused(): int
     {
         $registry = app(WidgetRegistry::class);
-        $this->ensureWidgetsRegistered($registry);
+        $this->ensureWidgetsRegistered();
 
         $registeredTypes = array_keys($registry->all());
 
@@ -113,14 +116,5 @@ class SearchCommand extends Command
         }
 
         return self::SUCCESS;
-    }
-
-    protected function ensureWidgetsRegistered(WidgetRegistry $registry): void
-    {
-        foreach (config('layup.widgets', []) as $class) {
-            if (class_exists($class) && ! $registry->has($class::getType())) {
-                $registry->register($class);
-            }
-        }
     }
 }

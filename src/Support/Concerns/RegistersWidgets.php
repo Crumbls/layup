@@ -19,15 +19,18 @@ trait RegistersWidgets
     {
         $registry = app(WidgetRegistry::class);
 
-        if (count($registry->all()) > 0) {
-            return;
-        }
-
-        foreach (config('layup.widgets', []) as $widgetClass) {
-            $registry->register($widgetClass);
-        }
+        $this->registerConfiguredWidgets($registry);
 
         $this->discoverAppWidgets($registry);
+    }
+
+    protected function registerConfiguredWidgets(WidgetRegistry $registry): void
+    {
+        foreach (config('layup.widgets', []) as $widgetClass) {
+            if (class_exists($widgetClass) && ! $registry->has($widgetClass::getType())) {
+                $registry->register($widgetClass);
+            }
+        }
     }
 
     protected function discoverAppWidgets(WidgetRegistry $registry): void

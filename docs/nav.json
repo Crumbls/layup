@@ -1,5 +1,6 @@
 [
   {"title": "Introduction", "path": "index.md", "order": 10},
+  {"title": "Overview", "path": "introduction.md", "order": 15},
   {"title": "Installation", "path": "installation.md", "order": 20},
   {"title": "Usage", "path": "usage.md", "order": 30},
   {"title": "Configuration", "path": "configuration.md", "order": 40},

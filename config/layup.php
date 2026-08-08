@@ -1,6 +1,103 @@
 <?php
 
 declare(strict_types=1);
+use Crumbls\Layup\Models\Page;
+use Crumbls\Layup\View\AccordionWidget;
+use Crumbls\Layup\View\AlertWidget;
+use Crumbls\Layup\View\AnchorWidget;
+use Crumbls\Layup\View\AnimatedHeadingWidget;
+use Crumbls\Layup\View\AudioWidget;
+use Crumbls\Layup\View\AvatarGroupWidget;
+use Crumbls\Layup\View\BackToTopWidget;
+use Crumbls\Layup\View\BadgeWidget;
+use Crumbls\Layup\View\BannerWidget;
+use Crumbls\Layup\View\BarCounterWidget;
+use Crumbls\Layup\View\BeforeAfterWidget;
+use Crumbls\Layup\View\BlockquoteWidget;
+use Crumbls\Layup\View\BlurbWidget;
+use Crumbls\Layup\View\BreadcrumbsWidget;
+use Crumbls\Layup\View\ButtonWidget;
+use Crumbls\Layup\View\CallToActionWidget;
+use Crumbls\Layup\View\CardWidget;
+use Crumbls\Layup\View\ChangelogWidget;
+use Crumbls\Layup\View\CodeWidget;
+use Crumbls\Layup\View\ComparisonTableWidget;
+use Crumbls\Layup\View\ContactFormWidget;
+use Crumbls\Layup\View\ContentToggleWidget;
+use Crumbls\Layup\View\CookieConsentWidget;
+use Crumbls\Layup\View\CountdownWidget;
+use Crumbls\Layup\View\CtaBannerWidget;
+use Crumbls\Layup\View\DividerWidget;
+use Crumbls\Layup\View\EmbedWidget;
+use Crumbls\Layup\View\FaqWidget;
+use Crumbls\Layup\View\FeatureGridWidget;
+use Crumbls\Layup\View\FeatureListWidget;
+use Crumbls\Layup\View\FileDownloadWidget;
+use Crumbls\Layup\View\FlipCardWidget;
+use Crumbls\Layup\View\GalleryWidget;
+use Crumbls\Layup\View\GradientTextWidget;
+use Crumbls\Layup\View\HeadingWidget;
+use Crumbls\Layup\View\HeroWidget;
+use Crumbls\Layup\View\HighlightBoxWidget;
+use Crumbls\Layup\View\HotspotWidget;
+use Crumbls\Layup\View\HtmlWidget;
+use Crumbls\Layup\View\IconBoxWidget;
+use Crumbls\Layup\View\IconListWidget;
+use Crumbls\Layup\View\IconWidget;
+use Crumbls\Layup\View\ImageCardWidget;
+use Crumbls\Layup\View\ImageHotspotWidget;
+use Crumbls\Layup\View\ImageTextWidget;
+use Crumbls\Layup\View\ImageWidget;
+use Crumbls\Layup\View\ListWidget;
+use Crumbls\Layup\View\LoginWidget;
+use Crumbls\Layup\View\LogoGridWidget;
+use Crumbls\Layup\View\LogoSliderWidget;
+use Crumbls\Layup\View\LottieWidget;
+use Crumbls\Layup\View\MapWidget;
+use Crumbls\Layup\View\MarqueeWidget;
+use Crumbls\Layup\View\MasonryWidget;
+use Crumbls\Layup\View\MenuWidget;
+use Crumbls\Layup\View\MetricWidget;
+use Crumbls\Layup\View\ModalWidget;
+use Crumbls\Layup\View\NewsletterWidget;
+use Crumbls\Layup\View\NotificationBarWidget;
+use Crumbls\Layup\View\NumberCounterWidget;
+use Crumbls\Layup\View\PageTitleWidget;
+use Crumbls\Layup\View\PersonWidget;
+use Crumbls\Layup\View\PostListWidget;
+use Crumbls\Layup\View\PriceWidget;
+use Crumbls\Layup\View\PricingTableWidget;
+use Crumbls\Layup\View\PricingToggleWidget;
+use Crumbls\Layup\View\ProgressCircleWidget;
+use Crumbls\Layup\View\QuoteCarouselWidget;
+use Crumbls\Layup\View\RichTextWidget;
+use Crumbls\Layup\View\SearchWidget;
+use Crumbls\Layup\View\SectionHeadingWidget;
+use Crumbls\Layup\View\SeparatorWidget;
+use Crumbls\Layup\View\ShareButtonsWidget;
+use Crumbls\Layup\View\SkillBarWidget;
+use Crumbls\Layup\View\SliderWidget;
+use Crumbls\Layup\View\SocialFollowWidget;
+use Crumbls\Layup\View\SocialProofWidget;
+use Crumbls\Layup\View\SpacerWidget;
+use Crumbls\Layup\View\StarRatingWidget;
+use Crumbls\Layup\View\StatCardWidget;
+use Crumbls\Layup\View\StepProcessWidget;
+use Crumbls\Layup\View\TableOfContentsWidget;
+use Crumbls\Layup\View\TableWidget;
+use Crumbls\Layup\View\TabsWidget;
+use Crumbls\Layup\View\TeamGridWidget;
+use Crumbls\Layup\View\TestimonialCarouselWidget;
+use Crumbls\Layup\View\TestimonialGridWidget;
+use Crumbls\Layup\View\TestimonialSliderWidget;
+use Crumbls\Layup\View\TestimonialWidget;
+use Crumbls\Layup\View\TextColumnsWidget;
+use Crumbls\Layup\View\TextWidget;
+use Crumbls\Layup\View\TimelineWidget;
+use Crumbls\Layup\View\ToggleWidget;
+use Crumbls\Layup\View\TypewriterWidget;
+use Crumbls\Layup\View\VideoPlaylistWidget;
+use Crumbls\Layup\View\VideoWidget;
 
 return [
     /*
@@ -14,110 +111,110 @@ return [
     */
     'widgets' => [
         // Content
-        \Crumbls\Layup\View\TextWidget::class,
-        \Crumbls\Layup\View\HeadingWidget::class,
-        \Crumbls\Layup\View\PageTitleWidget::class,
-        \Crumbls\Layup\View\BlurbWidget::class,
-        \Crumbls\Layup\View\IconWidget::class,
-        \Crumbls\Layup\View\AccordionWidget::class,
-        \Crumbls\Layup\View\ToggleWidget::class,
-        \Crumbls\Layup\View\TabsWidget::class,
-        \Crumbls\Layup\View\PersonWidget::class,
-        \Crumbls\Layup\View\TestimonialWidget::class,
-        \Crumbls\Layup\View\NumberCounterWidget::class,
-        \Crumbls\Layup\View\BarCounterWidget::class,
+        TextWidget::class,
+        HeadingWidget::class,
+        PageTitleWidget::class,
+        BlurbWidget::class,
+        IconWidget::class,
+        AccordionWidget::class,
+        ToggleWidget::class,
+        TabsWidget::class,
+        PersonWidget::class,
+        TestimonialWidget::class,
+        NumberCounterWidget::class,
+        BarCounterWidget::class,
 
         // Media
-        \Crumbls\Layup\View\ImageWidget::class,
-        \Crumbls\Layup\View\GalleryWidget::class,
-        \Crumbls\Layup\View\VideoWidget::class,
-        \Crumbls\Layup\View\AudioWidget::class,
-        \Crumbls\Layup\View\SliderWidget::class,
-        \Crumbls\Layup\View\MapWidget::class,
+        ImageWidget::class,
+        GalleryWidget::class,
+        VideoWidget::class,
+        AudioWidget::class,
+        SliderWidget::class,
+        MapWidget::class,
 
         // Interactive
-        \Crumbls\Layup\View\ButtonWidget::class,
-        \Crumbls\Layup\View\CallToActionWidget::class,
-        \Crumbls\Layup\View\CountdownWidget::class,
-        \Crumbls\Layup\View\PricingTableWidget::class,
-        \Crumbls\Layup\View\SocialFollowWidget::class,
+        ButtonWidget::class,
+        CallToActionWidget::class,
+        CountdownWidget::class,
+        PricingTableWidget::class,
+        SocialFollowWidget::class,
 
         // Layout
-        \Crumbls\Layup\View\SpacerWidget::class,
-        \Crumbls\Layup\View\DividerWidget::class,
+        SpacerWidget::class,
+        DividerWidget::class,
 
         // Advanced
-        \Crumbls\Layup\View\HtmlWidget::class,
-        \Crumbls\Layup\View\CodeWidget::class,
-        \Crumbls\Layup\View\EmbedWidget::class,
-        \Crumbls\Layup\View\AlertWidget::class,
-        \Crumbls\Layup\View\TableWidget::class,
-        \Crumbls\Layup\View\ProgressCircleWidget::class,
-        \Crumbls\Layup\View\MenuWidget::class,
-        \Crumbls\Layup\View\SearchWidget::class,
-        \Crumbls\Layup\View\ContactFormWidget::class,
-        \Crumbls\Layup\View\StarRatingWidget::class,
-        \Crumbls\Layup\View\LogoGridWidget::class,
-        \Crumbls\Layup\View\BlockquoteWidget::class,
-        \Crumbls\Layup\View\FeatureListWidget::class,
-        \Crumbls\Layup\View\TimelineWidget::class,
-        \Crumbls\Layup\View\StatCardWidget::class,
-        \Crumbls\Layup\View\MarqueeWidget::class,
-        \Crumbls\Layup\View\BeforeAfterWidget::class,
-        \Crumbls\Layup\View\TeamGridWidget::class,
-        \Crumbls\Layup\View\NotificationBarWidget::class,
-        \Crumbls\Layup\View\HeroWidget::class,
-        \Crumbls\Layup\View\BreadcrumbsWidget::class,
-        \Crumbls\Layup\View\FaqWidget::class,
-        \Crumbls\Layup\View\LoginWidget::class,
-        \Crumbls\Layup\View\NewsletterWidget::class,
-        \Crumbls\Layup\View\PostListWidget::class,
-        \Crumbls\Layup\View\SeparatorWidget::class,
-        \Crumbls\Layup\View\BackToTopWidget::class,
-        \Crumbls\Layup\View\CookieConsentWidget::class,
-        \Crumbls\Layup\View\ShareButtonsWidget::class,
-        \Crumbls\Layup\View\ModalWidget::class,
-        \Crumbls\Layup\View\TypewriterWidget::class,
-        \Crumbls\Layup\View\CardWidget::class,
-        \Crumbls\Layup\View\TableOfContentsWidget::class,
-        \Crumbls\Layup\View\StepProcessWidget::class,
-        \Crumbls\Layup\View\GradientTextWidget::class,
-        \Crumbls\Layup\View\FlipCardWidget::class,
-        \Crumbls\Layup\View\PricingToggleWidget::class,
-        \Crumbls\Layup\View\ImageHotspotWidget::class,
-        \Crumbls\Layup\View\LottieWidget::class,
-        \Crumbls\Layup\View\MasonryWidget::class,
-        \Crumbls\Layup\View\RichTextWidget::class,
-        \Crumbls\Layup\View\ListWidget::class,
-        \Crumbls\Layup\View\AnchorWidget::class,
-        \Crumbls\Layup\View\BannerWidget::class,
-        \Crumbls\Layup\View\ContentToggleWidget::class,
-        \Crumbls\Layup\View\LogoSliderWidget::class,
-        \Crumbls\Layup\View\TestimonialSliderWidget::class,
-        \Crumbls\Layup\View\IconBoxWidget::class,
-        \Crumbls\Layup\View\AnimatedHeadingWidget::class,
-        \Crumbls\Layup\View\TestimonialCarouselWidget::class,
-        \Crumbls\Layup\View\ComparisonTableWidget::class,
-        \Crumbls\Layup\View\VideoPlaylistWidget::class,
-        \Crumbls\Layup\View\BadgeWidget::class,
-        \Crumbls\Layup\View\AvatarGroupWidget::class,
-        \Crumbls\Layup\View\TestimonialGridWidget::class,
-        \Crumbls\Layup\View\FileDownloadWidget::class,
-        \Crumbls\Layup\View\ChangelogWidget::class,
-        \Crumbls\Layup\View\SkillBarWidget::class,
-        \Crumbls\Layup\View\PriceWidget::class,
-        \Crumbls\Layup\View\HotspotWidget::class,
-        \Crumbls\Layup\View\MetricWidget::class,
-        \Crumbls\Layup\View\FeatureGridWidget::class,
-        \Crumbls\Layup\View\HighlightBoxWidget::class,
-        \Crumbls\Layup\View\SocialProofWidget::class,
-        \Crumbls\Layup\View\CtaBannerWidget::class,
-        \Crumbls\Layup\View\IconListWidget::class,
-        \Crumbls\Layup\View\ImageCardWidget::class,
-        \Crumbls\Layup\View\ImageTextWidget::class,
-        \Crumbls\Layup\View\QuoteCarouselWidget::class,
-        \Crumbls\Layup\View\SectionHeadingWidget::class,
-        \Crumbls\Layup\View\TextColumnsWidget::class,
+        HtmlWidget::class,
+        CodeWidget::class,
+        EmbedWidget::class,
+        AlertWidget::class,
+        TableWidget::class,
+        ProgressCircleWidget::class,
+        MenuWidget::class,
+        SearchWidget::class,
+        ContactFormWidget::class,
+        StarRatingWidget::class,
+        LogoGridWidget::class,
+        BlockquoteWidget::class,
+        FeatureListWidget::class,
+        TimelineWidget::class,
+        StatCardWidget::class,
+        MarqueeWidget::class,
+        BeforeAfterWidget::class,
+        TeamGridWidget::class,
+        NotificationBarWidget::class,
+        HeroWidget::class,
+        BreadcrumbsWidget::class,
+        FaqWidget::class,
+        LoginWidget::class,
+        NewsletterWidget::class,
+        PostListWidget::class,
+        SeparatorWidget::class,
+        BackToTopWidget::class,
+        CookieConsentWidget::class,
+        ShareButtonsWidget::class,
+        ModalWidget::class,
+        TypewriterWidget::class,
+        CardWidget::class,
+        TableOfContentsWidget::class,
+        StepProcessWidget::class,
+        GradientTextWidget::class,
+        FlipCardWidget::class,
+        PricingToggleWidget::class,
+        ImageHotspotWidget::class,
+        LottieWidget::class,
+        MasonryWidget::class,
+        RichTextWidget::class,
+        ListWidget::class,
+        AnchorWidget::class,
+        BannerWidget::class,
+        ContentToggleWidget::class,
+        LogoSliderWidget::class,
+        TestimonialSliderWidget::class,
+        IconBoxWidget::class,
+        AnimatedHeadingWidget::class,
+        TestimonialCarouselWidget::class,
+        ComparisonTableWidget::class,
+        VideoPlaylistWidget::class,
+        BadgeWidget::class,
+        AvatarGroupWidget::class,
+        TestimonialGridWidget::class,
+        FileDownloadWidget::class,
+        ChangelogWidget::class,
+        SkillBarWidget::class,
+        PriceWidget::class,
+        HotspotWidget::class,
+        MetricWidget::class,
+        FeatureGridWidget::class,
+        HighlightBoxWidget::class,
+        SocialProofWidget::class,
+        CtaBannerWidget::class,
+        IconListWidget::class,
+        ImageCardWidget::class,
+        ImageTextWidget::class,
+        QuoteCarouselWidget::class,
+        SectionHeadingWidget::class,
+        TextColumnsWidget::class,
     ],
 
     /*
@@ -172,7 +269,7 @@ return [
     */
     'pages' => [
         'table' => 'layup_pages',
-        'model' => \Crumbls\Layup\Models\Page::class,
+        'model' => Page::class,
         'enabled' => true,
         'default_slug' => null,
 
@@ -351,6 +448,10 @@ return [
     | the safelist. If new classes are detected, a SafelistChanged event
     | is dispatched so you can trigger a frontend rebuild.
     |
+    | When using Layup on your own models, list each model and its content
+    | column in 'content_sources'. These sources are scanned in addition to
+    | bundled Pages (when enabled).
+    |
     | Run `php artisan layup:safelist` to manually regenerate.
     |
     */
@@ -359,6 +460,9 @@ return [
         'auto_sync' => true,
         'path' => 'storage/layup-safelist.txt',
         'extra_classes' => [], // Additional classes to always include in the safelist
+        'content_sources' => [
+            // ['model' => App\Models\Post::class, 'column' => 'content'],
+        ],
     ],
 
     /*

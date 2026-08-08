@@ -57,7 +57,7 @@ For Tailwind v4:
 
 For Tailwind v3, include `./storage/layup-safelist.txt` in `content`.
 
-If your app uses field-only mode, the built-in Page model events will not auto-sync the safelist for your custom model. Run the safelist command in your build pipeline or sync it from your model events.
+If your app uses field-only mode, add each host model to `safelist.content_sources` and sync the safelist from its model events. Run the safelist command in your build pipeline as well.
 
 ## A widget appears blank
 

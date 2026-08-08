@@ -101,6 +101,25 @@ If you're building a widget package for others to use, publish it as a Composer 
 
 Keep PRs focused — one feature or fix per PR. Large refactors should be discussed in an issue first.
 
+## Releasing documentation
+
+Package documentation is versioned with the package. Documentation changes in this repository become public after a release; pushing a documentation-only branch does not update the documentation site.
+
+Before merging a documentation change, run:
+
+```bash
+bin/docs-lint
+```
+
+When release-please publishes a Layup release, the release workflow sends the package name and tag to the documentation site's webhook. The site then fetches the Markdown from that release's GitHub reference and serves it with the matching documentation version.
+
+Maintainers must configure these Layup repository secrets for the notification step:
+
+- `DOCS_SYNC_WEBHOOK_URL` -- the documentation site's `/webhooks/docs` endpoint
+- `DOCS_SYNC_WEBHOOK_SECRET` -- the shared secret matching the site's `DOCS_WEBHOOK_SECRET` setting
+
+The workflow safely skips notification when either secret is missing. For an unpublished local preview, run the documentation site's local sync command with this package as its source path; see the `crumbls-docs` repository README.
+
 ## Reporting Issues
 
 Open an issue with:

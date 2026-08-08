@@ -7,12 +7,15 @@ namespace Crumbls\Layup\Console\Commands;
 use Crumbls\Layup\Models\Page;
 use Crumbls\Layup\Support\ContentValidator;
 use Crumbls\Layup\Support\ContentWalker;
+use Crumbls\Layup\Support\Concerns\RegistersWidgets;
 use Crumbls\Layup\Support\SafelistCollector;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Illuminate\Console\Command;
 
 class AuditCommand extends Command
 {
+    use RegistersWidgets;
+
     protected $signature = 'layup:audit';
 
     protected $description = 'Audit Layup pages -- check for broken widgets, unused classes, and content issues';
@@ -33,11 +36,7 @@ class AuditCommand extends Command
 
         // Widget registry
         $registry = app(WidgetRegistry::class);
-        foreach (config('layup.widgets', []) as $class) {
-            if (class_exists($class) && ! $registry->has($class::getType())) {
-                $registry->register($class);
-            }
-        }
+        $this->ensureWidgetsRegistered();
         $this->line(__('layup::commands.registered_widgets', ['count' => count($registry->all())]));
 
         // Validate all pages
