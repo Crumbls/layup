@@ -111,7 +111,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg></button></div></div>
 
                             {{-- Columns --}}
-                            <div class="lyp-columns" :style="'--lyp-col-gap:' + (row.settings.gap ? row.settings.gap.replace('gap-','').replace('0','0px').replace('2','0.5rem').replace('4','1rem').replace('6','1.5rem').replace('8','2rem').replace('12','3rem') : '1rem')">
+                                <div class="lyp-columns" :style="rowLayoutStyle(row)">
                                 <template x-for="(col, colIndex) in row.columns" :key="col.id">
                                 <div style="display: contents;">
                                     {{-- Resize handle before column (except first) --}}
@@ -125,7 +125,7 @@
                                     <div
                                         class="lyp-col"
                                         :class="{ 'lyp-col--drop-target': drag.active && (drag.fromPicker || !(drag.sourceRowId === row.id && drag.sourceColId === col.id && col.widgets.length === 1)) }"
-                                        :style="'grid-column: span ' + getColSpan(col) + ' / span ' + getColSpan(col)"
+                                                    :style="columnLayoutStyle(row, col)"
                                         @click.self="$wire.editColumn(row.id, col.id)"
                                         @dragover.prevent="onDragOverCol($event, row.id, col.id)"
                                         @dragleave="onDragLeaveCol($event)"
@@ -490,6 +490,29 @@
                 return row ? row.columns.find(c => c.id === colId) : null;
             },
             getColSpan(col) { return col.span?.[this.currentBreakpoint] ?? col.span?.lg ?? 6; },
+            rowLayoutStyle(row) {
+                const settings = row.settings || {};
+                const gaps = { 'gap-0': '0px', 'gap-2': '0.5rem', 'gap-4': '1rem', 'gap-6': '1.5rem', 'gap-8': '2rem', 'gap-12': '3rem' };
+                const align = { start: 'flex-start', end: 'flex-end', center: 'center', baseline: 'baseline', stretch: 'stretch' };
+                if (settings.layout === 'grid') {
+                    return { display: 'grid', '--lyp-col-gap': gaps[settings.gap] ?? '1rem', alignItems: align[settings.align] ?? 'stretch' };
+                }
+                const justify = { start: 'flex-start', end: 'flex-end', center: 'center', between: 'space-between', around: 'space-around', evenly: 'space-evenly' };
+                return {
+                    display: 'flex',
+                    '--lyp-col-gap': '1rem',
+                    flexDirection: ['row', 'column', 'row-reverse', 'column-reverse'].includes(settings.direction) ? settings.direction : 'row',
+                    flexWrap: ['nowrap', 'wrap', 'wrap-reverse'].includes(settings.wrap) ? settings.wrap : 'wrap',
+                    justifyContent: justify[settings.justify] ?? 'flex-start',
+                    alignItems: align[settings.align] ?? 'stretch',
+                };
+            },
+            columnLayoutStyle(row, col) {
+                const span = this.getColSpan(col);
+                return row.settings?.layout === 'grid'
+                    ? { gridColumn: 'span ' + span + ' / span ' + span, minWidth: '0' }
+                    : { width: 'calc((100% + var(--lyp-col-gap)) * ' + span + ' / 12 - var(--lyp-col-gap))', minWidth: '0' };
+            },
             getWidgetLabel(type) { const w = this.widgetRegistry.find(r => r.type === type); return w ? w.label : type; },
             getWidgetCategories() {
                 const cats = {};
