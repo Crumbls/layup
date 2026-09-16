@@ -6,8 +6,9 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="py-3 px-4 text-center text-sm {{ $vis }} {{ $data['class'] ?? '' }}"
      style="background-color: {{ $bg }}; color: {{ $textColor }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
-     @if(!empty($data['dismissible'])) x-data="{ show: true }" x-show="show" x-transition @endif
+     x-data="{ show: true }"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
+     @if(!empty($data['dismissible'])) x-show="show" x-transition @endif
 >
     <div class="flex items-center justify-center gap-3">
         <span>{{ $data['text'] ?? '' }}</span>

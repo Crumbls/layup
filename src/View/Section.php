@@ -95,9 +95,13 @@ class Section extends BaseView
     public static function buildSectionStyles(array $settings): string
     {
         $styles = [];
+        $inlineCss = $settings['inline_css'] ?? '';
+        unset($settings['inline_css']);
 
-        if (! empty($settings['background_color'])) {
-            $styles[] = "background-color: {$settings['background_color']}";
+        $sharedStyles = parent::buildInlineStyles($settings);
+
+        if ($sharedStyles !== '') {
+            $styles[] = rtrim($sharedStyles, '; ');
         }
 
         if (! empty($settings['background_gradient'])) {
@@ -118,8 +122,8 @@ class Section extends BaseView
             $styles[] = "min-height: {$settings['min_height']}";
         }
 
-        if (! empty($settings['inline_css'])) {
-            $styles[] = $settings['inline_css'];
+        if ($inlineCss !== '') {
+            $styles[] = $inlineCss;
         }
 
         return implode('; ', $styles);

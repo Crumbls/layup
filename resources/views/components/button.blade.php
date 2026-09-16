@@ -9,6 +9,7 @@
 @endphp
 <a href="{{ $data['url'] ?? '#' }}"
    @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+   x-data="{ hover: false }"
    class="inline-block rounded font-medium transition-all duration-200
        {{ match($data['style'] ?? 'primary') {
            'primary'   => 'layup-bg-primary text-white layup-hover-bg-primary',
@@ -26,14 +27,13 @@
        {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}"
    @if(!empty($data['new_tab'])) target="_blank" rel="noopener noreferrer" @endif
    @if($hasHover)
-       x-data="{ hover: false }"
        @mouseenter="hover = true"
        @mouseleave="hover = false"
        :style="hover ? '{{ $hoverStyle }}' : '{{ $baseStyle }}'"
    @else
        style="{{ $baseStyle }}"
    @endif
-   {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+   {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
 >
     {{ $data['label'] ?? __('layup::frontend.button.click_me') }}
 </a>

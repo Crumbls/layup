@@ -2,10 +2,12 @@
     $bg = $data['bg_color'] ?? 'var(--layup-secondary)';
     $pos = ($data['position'] ?? 'bottom') === 'top' ? 'top-0' : 'bottom-0';
 @endphp
-<div x-data="{ show: !localStorage.getItem('layup_cookie_consent') }"
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+     x-data="{ show: !localStorage.getItem('layup_cookie_consent') }"
      x-show="show" x-transition
-     class="fixed {{ $pos }} left-0 right-0 z-50 px-4 py-4"
-     style="background-color: {{ $bg }}"
+     class="fixed {{ $pos }} left-0 right-0 z-50 px-4 py-4 {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}"
+     style="background-color: {{ $bg }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
 >
     <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
         <p class="text-sm flex-1" style="color: var(--layup-on-secondary);">

@@ -11,7 +11,7 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-2xl md:text-3xl font-bold {{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{
         words: {{ json_encode(array_values($wordList)) }},
         current: '',
