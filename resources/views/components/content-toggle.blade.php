@@ -2,7 +2,7 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{ open: {{ !empty($data['start_open']) ? 'true' : 'false' }} }"
 >
     <div x-show="open" x-collapse class="prose">{!! $data['content'] ?? '' !!}</div>

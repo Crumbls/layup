@@ -6,7 +6,7 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-center {{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{ submitted: false }"
 >
     @if(!empty($data['heading']))

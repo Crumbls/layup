@@ -4,6 +4,7 @@
 class="relative overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}"
         x-data="layupSlider({{ $slideCount }}, {{ ($data['autoplay'] ?? true) ? 'true' : 'false' }}, {{ $data['speed'] ?? 5000 }})"
         style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+        {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
         role="region"
         aria-roledescription="carousel"
         aria-label="{{ $data['label'] ?? 'Image slideshow' }}"

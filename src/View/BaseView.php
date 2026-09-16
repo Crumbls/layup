@@ -500,46 +500,48 @@ abstract class BaseView extends Component
     }
 
     /**
-     * Build Alpine.js animation attributes for entrance animations.
-     * Returns a string of Alpine directives to add to the element.
+     * Build Alpine.js attributes for an entrance animation.
      */
-    public static function animationAttributes(array $data): string
+    public static function animationAttributes(array $data, bool $hasAlpineData = false): string
     {
-        $animation = $data['animation'] ?? '';
-        if (empty($animation)) {
+        $expression = static::animationExpression($data);
+
+        if ($expression === '') {
             return '';
         }
 
-        $duration = $data['animation_duration'] ?? '500';
+        $alpineData = $hasAlpineData ? '' : 'x-data="{}" ';
 
-        $initial = match ($animation) {
-            'fade-in' => 'opacity: 0',
-            'slide-up' => 'opacity: 0; transform: translateY(2rem)',
-            'slide-down' => 'opacity: 0; transform: translateY(-2rem)',
-            'slide-left' => 'opacity: 0; transform: translateX(2rem)',
-            'slide-right' => 'opacity: 0; transform: translateX(-2rem)',
-            'zoom-in' => 'opacity: 0; transform: scale(0.9)',
+        return $alpineData . 'x-intersect.once="' . $expression . '"';
+    }
+
+    /**
+     * Build the JavaScript expression used to run an entrance animation.
+     */
+    public static function animationExpression(array $data): string
+    {
+        $animation = $data['animation'] ?? '';
+        $duration = is_numeric($data['animation_duration'] ?? null)
+            ? max(0, min(10000, (int) $data['animation_duration']))
+            : 500;
+
+        $keyframes = match ($animation) {
+            'fade-in' => '[{ opacity: 0 }, { opacity: 1 }]',
+            'slide-up' => "[{ opacity: 0, transform: 'translateY(2rem)' }, { opacity: 1, transform: 'translateY(0)' }]",
+            'slide-down' => "[{ opacity: 0, transform: 'translateY(-2rem)' }, { opacity: 1, transform: 'translateY(0)' }]",
+            'slide-left' => "[{ opacity: 0, transform: 'translateX(2rem)' }, { opacity: 1, transform: 'translateX(0)' }]",
+            'slide-right' => "[{ opacity: 0, transform: 'translateX(-2rem)' }, { opacity: 1, transform: 'translateX(0)' }]",
+            'zoom-in' => "[{ opacity: 0, transform: 'scale(0.9)' }, { opacity: 1, transform: 'scale(1)' }]",
             default => '',
         };
 
-        $final = match ($animation) {
-            'fade-in' => 'opacity: 1',
-            'slide-up', 'slide-down' => 'opacity: 1; transform: translateY(0)',
-            'slide-left', 'slide-right' => 'opacity: 1; transform: translateX(0)',
-            'zoom-in' => 'opacity: 1; transform: scale(1)',
-            default => '',
-        };
-
-        if ($initial === '' || $initial === '0') {
+        if ($keyframes === '') {
             return '';
         }
 
         return sprintf(
-            'x-data="{ shown: false }" x-intersect.once="shown = true" '
-            . ':style="shown ? \'%s; transition: all %sms ease-out\' : \'%s; transition: all %sms ease-out\'"',
-            $final,
-            $duration,
-            $initial,
+            "if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) { \$el.animate(%s, { duration: %d, easing: 'ease-out', fill: 'both' }); }",
+            $keyframes,
             $duration,
         );
     }

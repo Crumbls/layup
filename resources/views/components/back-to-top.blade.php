@@ -9,10 +9,12 @@
     };
     $showAfter = $data['show_after'] ?? 300;
 @endphp
-<div x-data="{ visible: false }"
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+     x-data="{ visible: false }"
      @scroll.window="visible = window.scrollY > {{ $showAfter }}"
-     class="fixed bottom-6 z-50"
-     style="{{ $pos }}"
+     class="fixed bottom-6 z-50 {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}"
+     style="{{ $pos }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
 >
     <button x-show="visible" x-transition
             @click="window.scrollTo({ top: 0, behavior: 'smooth' })"

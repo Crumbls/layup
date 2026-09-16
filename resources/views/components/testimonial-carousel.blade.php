@@ -7,7 +7,7 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="relative {{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="layupSlider({{ count($testimonials) }}, {{ $autoplay ? 'true' : 'false' }}, {{ $speed }})"
 >
     @foreach($testimonials as $i => $t)

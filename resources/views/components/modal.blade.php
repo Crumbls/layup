@@ -11,7 +11,7 @@
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{ open: false }"
 >
     <button @click="open = true"

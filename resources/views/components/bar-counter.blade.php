@@ -1,4 +1,4 @@
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="space-y-3 {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}">
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="space-y-3 {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @foreach(($data['bars'] ?? []) as $bar)
         <div x-data="layupBarCounter({{ (int)($bar['percent'] ?? 0) }}, {{ ($data['animate'] ?? true) ? 'true' : 'false' }})" x-intersect.once="start()">
             <div class="flex justify-between text-sm mb-1">

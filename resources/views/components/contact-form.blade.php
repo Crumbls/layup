@@ -3,7 +3,7 @@
       @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
       class="space-y-4 {{ $vis }} {{ $data['class'] ?? '' }}"
       style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
       x-data="{ submitted: false }"
       @submit.prevent="
           fetch($el.action, { method: 'POST', body: new FormData($el) })

@@ -9,7 +9,7 @@
 <nav @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="border dark:border-gray-700 rounded-lg p-4 {{ $sticky ? 'sticky top-4' : '' }} {{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{
         open: {{ $collapsible ? 'false' : 'true' }},
         items: [],
