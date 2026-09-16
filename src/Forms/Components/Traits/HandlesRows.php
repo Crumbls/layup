@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Forms\Components\Traits;
 
-use Crumbls\Layup\View\Row;
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\View\Row;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
@@ -76,7 +76,11 @@ trait HandlesRows
                 $state = $this->getState();
                 $row = collect($state['rows'] ?? [])->firstWhere('id', $id);
 
-                return $row['settings'] ?? [];
+                $settings = array_replace(['layout' => 'flex', 'gap' => 'gap-4'], $row['settings'] ?? []);
+                $settings['layout'] = ($settings['layout'] ?? null) === 'grid' ? 'grid' : 'flex';
+                $settings['gap'] = in_array($settings['gap'], Row::GAPS, true) ? $settings['gap'] : 'gap-4';
+
+                return $settings;
             })
             ->schema(Row::getFormSchema())
             ->action(function (array $data, array $arguments): void {
@@ -90,7 +94,7 @@ trait HandlesRows
                 $state['rows'] = collect($state['rows'] ?? [])
                     ->map(function (array $row) use ($id, $data): array {
                         if ($row['id'] === $id) {
-                            $row['settings'] = $data;
+                            $row['settings'] = array_replace($row['settings'] ?? [], $data);
                         }
 
                         return $row;
@@ -163,6 +167,7 @@ trait HandlesRows
             'id' => $id,
             'order' => $position,
             'settings' => [
+                'layout' => 'flex',
                 'direction' => 'row',
                 'justify' => 'start',
                 'align' => 'stretch',

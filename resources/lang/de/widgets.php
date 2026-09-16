@@ -241,6 +241,8 @@ return [
     */
 
     'row' => [
+        'layout' => 'Layout',
+        'gap' => 'Rasterabstand',
         'direction' => 'Richtung',
         'row_horizontal' => 'Zeile (Horizontal)',
         'column_vertical' => 'Spalte (Vertikal)',
