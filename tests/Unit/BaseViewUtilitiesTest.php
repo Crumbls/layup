@@ -112,6 +112,53 @@ it('buildInlineStyles appends inline CSS', function (): void {
     expect($result)->toContain('transform: rotate(5deg);');
 });
 
+it('buildInlineStyles includes per-side padding and margin', function (): void {
+    $result = Row::buildInlineStyles([
+        'padding' => [
+            'unit' => 'rem',
+            'top' => 1,
+            'right' => 2,
+            'bottom' => 3,
+            'left' => 4,
+        ],
+        'margin' => [
+            'unit' => '%',
+            'top' => 5,
+            'right' => 6,
+            'bottom' => 7,
+            'left' => 8,
+        ],
+    ]);
+
+    expect($result)
+        ->toContain('padding-top: 1rem;')
+        ->toContain('padding-right: 2rem;')
+        ->toContain('padding-bottom: 3rem;')
+        ->toContain('padding-left: 4rem;')
+        ->toContain('margin-top: 5%;')
+        ->toContain('margin-right: 6%;')
+        ->toContain('margin-bottom: 7%;')
+        ->toContain('margin-left: 8%;');
+});
+
+it('buildInlineStyles preserves zero spacing values and ignores invalid values', function (): void {
+    $result = Row::buildInlineStyles([
+        'padding' => [
+            'unit' => 'invalid',
+            'top' => 0,
+            'right' => '0',
+            'bottom' => null,
+            'left' => 'not-numeric',
+        ],
+    ]);
+
+    expect($result)
+        ->toContain('padding-top: 0px;')
+        ->toContain('padding-right: 0px;')
+        ->not->toContain('padding-bottom:')
+        ->not->toContain('padding-left:');
+});
+
 it('buildInlineStyles combines multiple properties', function (): void {
     $result = Row::buildInlineStyles([
         'text_color' => '#000',
