@@ -102,6 +102,25 @@ it('renders row with background color', function (): void {
     expect($html)->toContain('background-color: #ff0000');
 });
 
+it('renders row with shared design and advanced settings', function (): void {
+    $row = Row::make([
+        'padding' => ['unit' => 'rem', 'top' => 1, 'right' => 2, 'bottom' => 3, 'left' => 4],
+        'margin' => ['unit' => 'px', 'top' => 5, 'right' => 6, 'bottom' => 7, 'left' => 8],
+        'hide_on' => ['sm'],
+        'class' => 'custom-row',
+        'animation' => 'fade-in',
+    ]);
+
+    $html = $row->render()->toHtml();
+
+    expect($html)
+        ->toContain('padding-top: 1rem;')
+        ->toContain('margin-left: 8px;')
+        ->toContain('hidden md:block')
+        ->toContain('custom-row')
+        ->toContain('x-intersect');
+});
+
 // --- Column rendering ---
 
 it('renders column with correct responsive width classes', function (): void {
@@ -142,6 +161,25 @@ it('renders only column with no gutter', function (): void {
     expect($html)->not->toContain('md:pr-2')
         ->and($html)->not->toContain('md:pl-2')
         ->and($html)->not->toContain('md:px-2');
+});
+
+it('renders column with shared design and advanced settings', function (): void {
+    $column = Column::make([
+        'padding' => ['unit' => 'em', 'top' => 1, 'right' => 2, 'bottom' => 3, 'left' => 4],
+        'margin' => ['unit' => '%', 'top' => 5, 'right' => 6, 'bottom' => 7, 'left' => 8],
+        'hide_on' => ['lg'],
+        'class' => 'custom-column',
+        'animation' => 'slide-up',
+    ]);
+
+    $html = $column->render()->toHtml();
+
+    expect($html)
+        ->toContain('padding-bottom: 3em;')
+        ->toContain('margin-right: 6%;')
+        ->toContain('lg:hidden xl:block')
+        ->toContain('custom-column')
+        ->toContain('x-intersect');
 });
 
 // --- Visibility classes ---

@@ -40,6 +40,7 @@
         @if(!empty($data['overflow']) && $data['overflow'] !== 'visible')overflow: {{ $data['overflow'] }};@endif
         {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}
     "
+    {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
 >
     @foreach($children as $child)
         {!! $child->render() !!}
