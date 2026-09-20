@@ -14,6 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Widget auto-discovery now runs when a Filament panel and Layup's developer commands initialize the registry.
 - Removed a leftover browser console log from the builder initializer.
 
+## [1.6.2](https://github.com/Crumbls/layup/compare/v1.6.1...v1.6.2) (2026-09-16)
+
+
+### Bug Fixes
+
+* apply shared settings across widget renderers ([2db38dc](https://github.com/Crumbls/layup/commit/2db38dcba3beac7fc4beb1e3396eeb93877d8551))
+* render shared spacing on rows and columns ([825ad6d](https://github.com/Crumbls/layup/commit/825ad6dc9bb0bd9303e914f38abcaa069234d91c))
+
 ## [1.6.1](https://github.com/Crumbls/layup/compare/v1.6.0...v1.6.1) (2026-08-25)
 
 
