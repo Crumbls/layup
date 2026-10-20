@@ -14,6 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Widget auto-discovery now runs when a Filament panel and Layup's developer commands initialize the registry.
 - Removed a leftover browser console log from the builder initializer.
 
+## [1.7.0](https://github.com/Crumbls/layup/compare/v1.6.2...v1.7.0) - 2026-10-20
+
+### Fixed
+
+- New pages now retain content from the selected built-in or saved custom template. Clearing the selection creates a blank page, and changing templates uses the final selection. Fixes [#78](https://github.com/Crumbls/layup/issues/78).
+
+### Documentation
+
+- Documented the New Page template workflow and corrected the built-in landing-page template slug in examples.
+
 ## [1.6.1](https://github.com/Crumbls/layup/compare/v1.6.0...v1.6.1) (2026-08-25)
 
 

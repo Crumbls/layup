@@ -15,7 +15,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -88,16 +87,7 @@ class ListPages extends ListRecords
                         ->label(__('layup::resource.start_from_template'))
                         ->options(PageTemplate::options())
                         ->placeholder(__('layup::resource.blank_page'))
-                        ->nullable()
-                        ->reactive()
-                        ->afterStateUpdated(function ($state, Set $set): void {
-                            if ($state) {
-                                $template = PageTemplate::get($state);
-                                if ($template) {
-                                    $set('content', $template['content']);
-                                }
-                            }
-                        }),
+                        ->nullable(),
                     TextInput::make('title')
                         ->label(__('layup::resource.title'))
                         ->required()
@@ -113,12 +103,15 @@ class ListPages extends ListRecords
                     $modelClass = config('layup.pages.model', Page::class);
                     $parentId = $data['parent_id'] ?? null;
                     $slug = $this->uniqueSlugUnder(Str::slug($data['title']), $parentId);
+                    $template = filled($data['template'] ?? null)
+                        ? PageTemplate::get($data['template'])
+                        : null;
 
                     $record = $modelClass::create([
                         'title' => $data['title'],
                         'slug' => $slug,
                         'parent_id' => $parentId,
-                        'content' => $data['content'] ?? ['rows' => []],
+                        'content' => $template['content'] ?? ['rows' => []],
                         'status' => Page::STATUS_DRAFT,
                     ]);
 
