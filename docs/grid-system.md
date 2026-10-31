@@ -5,7 +5,7 @@ nav_title: Grid System
 order: 60
 ---
 
-Layup uses a 12-column flexbox grid. Pages are built from rows containing columns, and columns contain widgets.
+Layup uses a 12-column layout with Flex (the default) and Tailwind Grid modes. Pages are built from rows containing columns, and columns contain widgets.
 
 ## Structure
 
@@ -24,7 +24,11 @@ Page
 
 ## Rows
 
-Rows are flex containers rendered as `<div>` elements with flex utilities. Each row holds one or more columns.
+Each row holds one or more columns. In Row Settings, choose **Flex** or **Grid** using the Layout field. New rows default to Flex; missing, null, and unrecognized layout values also render as Flex.
+
+Grid rows render with `grid grid-cols-12`. Their columns reuse the same responsive spans through `col-span-*`, `md:col-span-*`, `lg:col-span-*`, and `xl:col-span-*` utilities. Grid gap choices are `gap-0`, `gap-2`, `gap-4`, `gap-6`, `gap-8`, and `gap-12`; missing or unsupported gap values fall back to `gap-4`. Grid uses gaps instead of the Flex column padding gutters. Regenerate the Tailwind safelist and rebuild your frontend CSS after upgrading.
+
+Direction, Justify, and Wrap appear only in Flex mode. Align and Full width apply to both modes. Switching modes preserves settings for the other mode. The builder canvas reflects the selected layout and Grid gap.
 
 Row settings control flex behavior:
 
@@ -38,7 +42,7 @@ Row settings control flex behavior:
 
 ## Columns
 
-Columns are flex items with a span from 1 to 12. A span of 12 is full width, 6 is half, 4 is one-third, etc.
+Columns have a span from 1 to 12 in both modes. A span of 12 fills a row, 6 occupies half the tracks, and 4 occupies one-third. In Grid mode, the available width accounts for the selected gap.
 
 ### Responsive spans
 

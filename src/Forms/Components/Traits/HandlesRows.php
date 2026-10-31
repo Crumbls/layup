@@ -76,7 +76,11 @@ trait HandlesRows
                 $state = $this->getState();
                 $row = collect(ContentWalker::extractRows($state))->firstWhere('id', $id);
 
-                return BaseView::normalizeSettingsForForm($row['settings'] ?? []);
+                $settings = array_replace(['layout' => 'flex', 'gap' => 'gap-4'], $row['settings'] ?? []);
+                $settings['layout'] = ($settings['layout'] ?? null) === 'grid' ? 'grid' : 'flex';
+                $settings['gap'] = in_array($settings['gap'], Row::GAPS, true) ? $settings['gap'] : 'gap-4';
+
+                return BaseView::normalizeSettingsForForm($settings);
             })
             ->schema(Row::getFormSchema())
             ->action(function (array $data, array $arguments): void {
@@ -89,7 +93,7 @@ trait HandlesRows
                 $state = $this->getState();
                 $state = ContentWalker::mapRows($state, function (array $row) use ($id, $data): array {
                     if ($row['id'] === $id) {
-                        $row['settings'] = $data;
+                        $row['settings'] = array_replace($row['settings'] ?? [], $data);
                     }
 
                     return $row;
@@ -134,7 +138,7 @@ trait HandlesRows
             $order = min(max(0, $position ?? 0), count($rows));
             $row = [
                 'id' => 'row_' . Str::random(8), 'order' => $order,
-                'settings' => ['direction' => 'row', 'justify' => 'start', 'align' => 'stretch', 'wrap' => 'wrap', 'full_width' => false],
+                'settings' => ['layout' => 'flex', 'direction' => 'row', 'justify' => 'start', 'align' => 'stretch', 'wrap' => 'wrap', 'full_width' => false],
                 'columns' => array_map(fn ($span): array => [
                     'id' => 'col_' . Str::random(8),
                     'span' => ['sm' => 12, 'md' => (int) $span, 'lg' => (int) $span, 'xl' => (int) $span],

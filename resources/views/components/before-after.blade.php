@@ -1,21 +1,12 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $pos = $data['initial_position'] ?? 50;
 @endphp
 @if(!empty($data['before_image']) && !empty($data['after_image']))
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="relative overflow-hidden select-none {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{ pos: {{ $pos }}, dragging: false }"
      @mousedown="dragging = true"
      @mouseup.window="dragging = false"
@@ -30,5 +21,3 @@
     <span class="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">{{ $data['before_label'] ?? __('layup::frontend.before_after.before') }}</span>
     <span class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">{{ $data['after_label'] ?? __('layup::frontend.before_after.after') }}</span></div>
 @endif
-
-@if($entranceAttributes !== '')</div>@endif

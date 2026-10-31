@@ -66,8 +66,8 @@ it('keeps custom section CSS after generated background and height styles', func
 
 it('animates individual properties without replacing the saved padding and styles', function (): void {
     $attributes = BaseView::animationAttributes(['animation' => 'slide-up', 'opacity' => '0.5']);
-    expect($attributes)->toContain('shown ? {', 'opacity: 0.5', "transform: 'translateY(0)'")
-        ->not->toContain("shown ? '");
+    expect($attributes)->toContain('$el.animate', 'opacity: 0.5', "transform: 'translateY(0)'")
+        ->not->toContain(':style=');
 });
 
 it('keeps hover and entrance animation bindings on separate button elements', function (): void {
@@ -76,7 +76,7 @@ it('keeps hover and entrance animation bindings on separate button elements', fu
     preg_match('/<a\b[^>]*>/s', $html, $match);
     expect(substr_count($match[0], 'x-data='))->toBe(1);
     expect(substr_count($match[0], ':style='))->toBe(1);
-    expect($html)->toContain('<span', 'x-intersect.once');
+    expect($html)->toContain('x-intersect.once', '$el.animate');
 });
 
 it('does not duplicate Alpine state or style bindings on interactive widget roots', function (string $type): void {
@@ -95,3 +95,18 @@ it('does not duplicate Alpine state or style bindings on interactive widget root
     expect($duplicates)->toBeEmpty();
     expect($html)->toContain('x-intersect.once');
 })->with(['accordion', 'countdown', 'gallery', 'tabs', 'toggle', 'slider', 'number-counter', 'pricing-toggle', 'content-toggle', 'typewriter']);
+
+it('preserves quoted custom CSS in button hover bindings', function (): void {
+    $data = array_merge(\Crumbls\Layup\View\ButtonWidget::getDefaultData(), [
+        'hover_bg_color' => '#000000', 'inline_css' => "font-family: 'Roboto', sans-serif;",
+    ]);
+    $html = \Crumbls\Layup\View\ButtonWidget::make($data)->render()->render();
+    $previous = libxml_use_internal_errors(true);
+    $document = new DOMDocument;
+    $document->loadHTML($html);
+    $anchor = $document->getElementsByTagName('a')->item(0);
+    expect($anchor->getAttribute(':style'))->toContain('\\u0027Roboto\\u0027')->not->toContain("'Roboto'");
+    expect($anchor->getAttribute('style'))->toContain("font-family: 'Roboto', sans-serif;");
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous);
+});

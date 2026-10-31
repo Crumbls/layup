@@ -5,7 +5,17 @@ nav_title: Page Templates
 order: 50
 ---
 
-Templates provide pre-built page layouts that can be loaded into new or existing pages.
+# Page templates
+
+Templates provide pre-built content for new pages.
+
+## Create a page from a template
+
+Open **Pages**, click **New Page**, choose a template under **Start from template**, enter a title, and submit. The new draft opens in the editor with a copy of the selected template's content. Both built-in templates and custom templates saved from existing pages appear in the selector.
+
+Leave the selector empty or choose **Blank Page** to create an empty page. If you change or clear the selection before submitting, the final selection determines the content.
+
+Fixed in v1.7.0: selecting a template now preserves its content when creating a page. Pages previously created empty are not changed by upgrading.
 
 ## Built-in templates
 
@@ -84,10 +94,10 @@ use Crumbls\Layup\Support\PageTemplate;
 $templates = PageTemplate::all();
 
 // Get a single template by slug
-$template = PageTemplate::get('landing');
-// Returns: ['name' => 'Landing', 'description' => '...', 'content' => [...]]
+$template = PageTemplate::get('landing-page');
+// Includes: ['name' => 'Landing Page', 'description' => '...', 'content' => [...]]
 
 // Get options for a select dropdown
 $options = PageTemplate::options();
-// Returns: ['blank' => 'Blank', 'landing' => 'Landing', ...]
+// Includes: ['blank' => 'Blank Page', 'landing-page' => 'Landing Page', ...]
 ```

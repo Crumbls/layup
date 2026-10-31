@@ -88,6 +88,8 @@ it('saves shared and responsive section settings through its action form', funct
         ->set('mountedActions.0.data.padding.top', 24)
         ->set('mountedActions.0.data.responsive.md.padding.top', 0)
         ->set('mountedActions.0.data.id', 'hero')
+        ->set('mountedActions.0.data.opacity', '1')
+        ->set('mountedActions.0.data.responsive.md.opacity', '0')
         ->call('callMountedAction')
         ->assertHasNoErrors();
     expect($component->get('data.content.sections.0.settings.padding.top'))->toEqual(24);

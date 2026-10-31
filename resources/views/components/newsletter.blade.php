@@ -1,21 +1,12 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $layout = $data['layout'] ?? 'inline';
     $btnColor = $data['button_color'] ?? 'var(--layup-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-center {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="{ submitted: false }"
 >
     @if(!empty($data['heading']))
@@ -39,5 +30,3 @@
     <div x-show="submitted" x-transition class="font-semibold py-4" style="color: var(--layup-success);">
         ✓ {{ $data['success_message'] ?? __('layup::frontend.newsletter.subscribed') }}
     </div></div>
-
-@if($entranceAttributes !== '')</div>@endif

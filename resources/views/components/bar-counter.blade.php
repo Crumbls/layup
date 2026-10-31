@@ -1,13 +1,4 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="space-y-3 {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}">
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="space-y-3 {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @foreach(($data['bars'] ?? []) as $bar)
         <div x-data="layupBarCounter({{ (int)($bar['percent'] ?? 0) }}, {{ ($data['animate'] ?? true) ? 'true' : 'false' }})" x-intersect.once="start()">
             <div class="flex justify-between text-sm mb-1">
@@ -22,5 +13,3 @@
                 ></div></div></div>
     @endforeach
 </div>
-
-@if($entranceAttributes !== '')</div>@endif

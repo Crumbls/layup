@@ -43,5 +43,6 @@ it('keeps responsive opacity separate from entrance animation visibility', funct
     $data = ['animation' => 'fade-in', 'responsive' => ['md' => ['opacity' => '0.5']]];
     expect(BaseView::responsiveStyles($data))->toContain('--layup-responsive-opacity: 0.5 !important;')
         ->not->toContain('{opacity: 0.5 !important;');
-    expect(BaseView::animationAttributes($data))->toContain("opacity: 'var(--layup-responsive-opacity, 1)'", 'opacity: 0');
+    expect(BaseView::animationAttributes($data))->toContain('opacity: getComputedStyle($el).opacity', 'opacity: 0');
+    expect(BaseView::buildInlineStyles($data))->toContain('--layup-responsive-opacity: 1;', 'opacity: var(--layup-responsive-opacity, 1);');
 });

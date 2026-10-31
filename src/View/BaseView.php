@@ -353,6 +353,8 @@ abstract class BaseView extends Component
                 ->label(__('layup::widgets.shared.opacity'))
                 ->options([
                     '' => __('layup::widgets.shared.opacity_default'),
+                    '1' => '100%',
+                    '0' => '0%',
                     '0.9' => '90%',
                     '0.8' => '80%',
                     '0.7' => '70%',
@@ -507,6 +509,7 @@ abstract class BaseView extends Component
         if (! empty($data['animation']) && ! empty($data['responsive'])) {
             $baseOpacity = is_numeric($data['opacity'] ?? null) ? min(1, max(0, (float) $data['opacity'])) : 1;
             $styles[] = "--layup-responsive-opacity: {$baseOpacity};";
+            $styles[] = "opacity: var(--layup-responsive-opacity, {$baseOpacity});";
         }
 
         $signature = empty($data['responsive']) ? '' : ResponsiveStyles::signature($data);
@@ -551,50 +554,57 @@ abstract class BaseView extends Component
     }
 
     /**
-     * Build Alpine.js animation attributes for entrance animations.
-     * Returns a string of Alpine directives to add to the element.
+     * Build Alpine.js attributes for an entrance animation.
      */
-    public static function animationAttributes(array $data): string
+    public static function animationAttributes(array $data, bool $hasAlpineData = false): string
+    {
+        $expression = static::animationExpression($data);
+
+        if ($expression === '') {
+            return '';
+        }
+
+        $alpineData = $hasAlpineData ? '' : 'x-data="{}" ';
+
+        return $alpineData . 'x-intersect.once="' . $expression . '"';
+    }
+
+    /**
+     * Build the JavaScript expression used to run an entrance animation.
+     */
+    public static function animationExpression(array $data): string
     {
         $animation = $data['animation'] ?? '';
-        if (empty($animation)) {
-            return '';
-        }
-
         $duration = is_numeric($data['animation_duration'] ?? null)
-            ? min(10000, max(0, (int) $data['animation_duration']))
+            ? max(0, min(10000, (int) $data['animation_duration']))
             : 500;
-        $opacity = is_numeric($data['opacity'] ?? null) ? min(1, max(0, (float) $data['opacity'])) : 1;
-        $initialTransform = match ($animation) {
-            'fade-in' => null,
-            'slide-up' => 'translateY(2rem)',
-            'slide-down' => 'translateY(-2rem)',
-            'slide-left' => 'translateX(2rem)',
-            'slide-right' => 'translateX(-2rem)',
-            'zoom-in' => 'scale(0.9)',
-            default => false,
+
+        $keyframes = match ($animation) {
+            'fade-in' => '[{ opacity: 0 }, { opacity: 1 }]',
+            'slide-up' => "[{ opacity: 0, transform: 'translateY(2rem)' }, { opacity: 1, transform: 'translateY(0)' }]",
+            'slide-down' => "[{ opacity: 0, transform: 'translateY(-2rem)' }, { opacity: 1, transform: 'translateY(0)' }]",
+            'slide-left' => "[{ opacity: 0, transform: 'translateX(2rem)' }, { opacity: 1, transform: 'translateX(0)' }]",
+            'slide-right' => "[{ opacity: 0, transform: 'translateX(-2rem)' }, { opacity: 1, transform: 'translateX(0)' }]",
+            'zoom-in' => "[{ opacity: 0, transform: 'scale(0.9)' }, { opacity: 1, transform: 'scale(1)' }]",
+            default => '',
         };
-        if ($initialTransform === false) {
+
+        if ($keyframes === '') {
             return '';
         }
-        $finalTransform = match ($animation) {
-            'slide-up', 'slide-down' => 'translateY(0)',
-            'slide-left', 'slide-right' => 'translateX(0)',
-            'zoom-in' => 'scale(1)',
-            default => null,
-        };
-        $initial = "opacity: 0, transition: 'opacity {$duration}ms ease-out, transform {$duration}ms ease-out'";
-        $finalOpacity = empty($data['responsive']) ? $opacity : "'var(--layup-responsive-opacity, {$opacity})'";
-        $final = "opacity: {$finalOpacity}, transition: 'opacity {$duration}ms ease-out, transform {$duration}ms ease-out'";
-        if ($initialTransform !== null) {
-            $initial .= ", transform: '{$initialTransform}'";
-            $final .= ", transform: '{$finalTransform}'";
+
+        if (! empty($data['responsive'])) {
+            $keyframes = str_replace('opacity: 1', 'opacity: getComputedStyle($el).opacity', $keyframes);
+        } elseif (is_numeric($data['opacity'] ?? null)) {
+            $opacity = min(1, max(0, (float) $data['opacity']));
+            $keyframes = str_replace('opacity: 1', "opacity: {$opacity}", $keyframes);
         }
 
-        // Object bindings update animation properties without replacing padding,
-        // borders, backgrounds or the responsive style selector on the element.
-        return 'x-data="{ shown: false }" x-intersect.once="shown = true" '
-            . ':style="shown ? { ' . $final . ' } : { ' . $initial . ' }"';
+        return sprintf(
+            "if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) { \$el.animate(%s, { duration: %d, easing: 'ease-out', fill: 'none' }); }",
+            $keyframes,
+            $duration,
+        );
     }
 
     /**

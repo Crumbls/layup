@@ -1,13 +1,4 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $percent = (int)($data['percent'] ?? 75);
     $size = (int)($data['size'] ?? 120);
@@ -16,13 +7,13 @@
     $circumference = 2 * M_PI * $radius;
     $color = $data['color'] ?? 'var(--layup-primary)';
     $animate = ($data['animate'] ?? true) ? 'true' : 'false';
+    $entranceAnimation = \Crumbls\Layup\View\BaseView::animationExpression($data);
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-center {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
      x-data="{ shown: false, percent: 0 }"
-     x-intersect.once="shown = true; if ({{ $animate }}) { let t = 0; const iv = setInterval(() => { t += 2; percent = Math.min(t, {{ $percent }}); if (t >= {{ $percent }}) clearInterval(iv); }, 20); } else { percent = {{ $percent }}; }"
+     x-intersect.once="@if($entranceAnimation !== ''){!! $entranceAnimation !!}; @endif shown = true; if ({{ $animate }}) { let t = 0; const iv = setInterval(() => { t += 2; percent = Math.min(t, {{ $percent }}); if (t >= {{ $percent }}) clearInterval(iv); }, 20); } else { percent = {{ $percent }}; }"
 >
     <svg width="{{ $size }}" height="{{ $size }}" class="inline-block">
         <circle cx="{{ $size/2 }}" cy="{{ $size/2 }}" r="{{ $radius }}"
@@ -40,5 +31,3 @@
         <div class="mt-2 text-sm font-medium">{{ $data['title'] }}</div>
     @endif
 </div>
-
-@if($entranceAttributes !== '')</div>@endif

@@ -1,18 +1,9 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
 <form action="{{ $data['action'] ?? '/contact' }}" method="POST"
       @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
       class="space-y-4 {{ $vis }} {{ $data['class'] ?? '' }}"
-      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
+      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+      {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
       x-data="{ submitted: false }"
       @submit.prevent="
           fetch($el.action, { method: 'POST', body: new FormData($el) })
@@ -38,5 +29,3 @@
             </button></div></template>
     <div x-show="submitted" x-transition class="text-center py-8">
         <div class="text-lg font-semibold" style="color: var(--layup-success);">✓ {{ $data['success_message'] ?? __('layup::frontend.contact_form.message_sent') }}</div></div></form>
-
-@if($entranceAttributes !== '')</div>@endif

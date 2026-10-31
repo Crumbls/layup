@@ -1,4 +1,4 @@
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="rounded overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="height:{{ $data['height'] ?? '300px' }};{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="rounded overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="height: {{ $data['height'] ?? '300px' }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @if(!empty($data['embed']))
         @if(config('layup.allow_raw_html', true))
             {!! $data['embed'] !!}

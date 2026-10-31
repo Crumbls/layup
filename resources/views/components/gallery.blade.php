@@ -1,13 +1,4 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $lightbox = !empty($data['lightbox']);
     $showCaptions = !empty($data['show_captions']);
@@ -23,9 +14,9 @@
 </style>
 <div id="{{ $galId }}"
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
-     @if($lightbox) x-data="layupLightbox()" @endif
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     x-data="{{ $lightbox ? 'layupLightbox()' : '{}' }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
 >
     @foreach(($data['images'] ?? []) as $idx => $image)
         @php
@@ -60,5 +51,3 @@
                 <button @click="next()" class="absolute right-4 text-white text-3xl hover:text-gray-300">&#8250;</button></div></template>
     @endif
 </div>
-
-@if($entranceAttributes !== '')</div>@endif

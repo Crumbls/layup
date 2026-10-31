@@ -1,13 +1,4 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $testimonials = $data['testimonials'] ?? [];
     $autoplay = !empty($data['autoplay']);
@@ -15,8 +6,8 @@
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="relative {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
      x-data="layupSlider({{ count($testimonials) }}, {{ $autoplay ? 'true' : 'false' }}, {{ $speed }})"
 >
     @foreach($testimonials as $i => $t)
@@ -42,5 +33,3 @@
         </div>
     @endif
 </div>
-
-@if($entranceAttributes !== '')</div>@endif

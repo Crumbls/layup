@@ -234,7 +234,7 @@ it('generates animation attributes for fade-in', function (): void {
     expect($attrs)->toContain('x-data')
         ->and($attrs)->toContain('x-intersect')
         ->and($attrs)->toContain('opacity: 0')
-        ->and($attrs)->toContain('500ms');
+        ->and($attrs)->toContain('duration: 500');
 });
 
 it('returns empty string for no animation', function (): void {

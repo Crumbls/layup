@@ -241,6 +241,8 @@ return [
     */
 
     'row' => [
+        'layout' => 'Layout',
+        'gap' => 'Grid gap',
         'direction' => 'Direction',
         'row_horizontal' => 'Row (Horizontal)',
         'column_vertical' => 'Column (Vertical)',

@@ -1,18 +1,10 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php $slideCount = count($data['slides'] ?? []); @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php $slideCount = count($data['slides'] ?? []); @endphp
 <section
         @if(!empty($data['id'])) id="{{ $data['id'] }}" @endif
 class="relative overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}"
         x-data="layupSlider({{ $slideCount }}, {{ ($data['autoplay'] ?? true) ? 'true' : 'false' }}, {{ $data['speed'] ?? 5000 }})"
-        style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+        style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+        {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
         role="region"
         aria-roledescription="carousel"
         aria-label="{{ $data['label'] ?? 'Image slideshow' }}"
@@ -100,5 +92,3 @@ class="relative overflow-hidden {{ \Crumbls\Layup\View\BaseView::visibilityClass
         @endif
     @endif
 </section>
-
-@if($entranceAttributes !== '')</div>@endif

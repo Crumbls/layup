@@ -39,3 +39,28 @@ it('builds section styles with min height', function (): void {
 it('returns empty string for empty settings', function (): void {
     expect(Section::buildSectionStyles([]))->toBe('');
 });
+
+it('includes shared design styles in section styles', function (): void {
+    $styles = Section::buildSectionStyles([
+        'text_color' => '#112233',
+        'padding' => [
+            'unit' => 'rem',
+            'top' => 1,
+            'right' => 2,
+            'bottom' => 3,
+            'left' => 4,
+        ],
+        'margin' => [
+            'unit' => 'px',
+            'top' => 5,
+            'right' => 6,
+            'bottom' => 7,
+            'left' => 8,
+        ],
+    ]);
+
+    expect($styles)
+        ->toContain('color: #112233;')
+        ->toContain('padding-top: 1rem;')
+        ->toContain('margin-left: 8px');
+});

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Section creation, selection, settings, duplication, reordering, and confirmed deletion in the visual builder, with legacy row documents preserved.
 - Shared Design overrides per breakpoint for sections, rows, columns, and built-in Blade widgets, with inherited values and selected-breakpoint live previews.
-- Editable All sides spacing controls alongside per-side overrides and units.
+- Editable All sides spacing controls alongside per-side overrides and units, plus explicit 0% and 100% opacity values.
 
 ### Fixed
 
@@ -28,6 +28,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Field-only installs can disable both bundled Pages features, skip Pages migrations, and configure host models as Tailwind safelist content sources.
 - Widget auto-discovery now runs when a Filament panel and Layup's developer commands initialize the registry.
 - Removed a leftover browser console log from the builder initializer.
+
+## [1.7.0](https://github.com/Crumbls/layup/compare/v1.6.2...v1.7.0) - 2026-10-20
+
+### Fixed
+
+- New pages now retain content from the selected built-in or saved custom template. Clearing the selection creates a blank page, and changing templates uses the final selection. Fixes [#78](https://github.com/Crumbls/layup/issues/78).
+
+### Documentation
+
+- Documented the New Page template workflow and corrected the built-in landing-page template slug in examples.
+
+## [1.6.1](https://github.com/Crumbls/layup/compare/v1.6.0...v1.6.1) (2026-08-25)
+
+
+### Bug Fixes
+
+* harden package release security ([8e8122f](https://github.com/Crumbls/layup/commit/8e8122f3ecfda56631e913291c31f5cc3f91b9d3))
+
+## [1.6.0](https://github.com/Crumbls/layup/compare/v1.5.1...v1.6.0) (2026-08-08)
+
+
+### Features
+
+* streamline installation and documentation ([6aa2695](https://github.com/Crumbls/layup/commit/6aa269547956b0dcec1c55db039ef52936fe891e))
 
 ## [1.5.0](https://github.com/Crumbls/layup/compare/v1.4.0...v1.5.0) (2026-07-01)
 

@@ -6,10 +6,13 @@ namespace Crumbls\Layup\View;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Contracts\View\View;
 
 class Row extends BaseView
 {
+    public const GAPS = ['gap-0', 'gap-2', 'gap-4', 'gap-6', 'gap-8', 'gap-12'];
+
     /**
      * @param  array<Column>  $columns
      */
@@ -24,6 +27,25 @@ class Row extends BaseView
     public static function getContentFormSchema(): array
     {
         return [
+            Select::make('layout')
+                ->label(__('layup::widgets.row.layout'))
+                ->options(['flex' => 'Flex', 'grid' => 'Grid'])
+                ->default('flex')
+                ->selectablePlaceholder(false)
+                ->live(),
+            Select::make('gap')
+                ->label(__('layup::widgets.row.gap'))
+                ->options([
+                    'gap-0' => '0',
+                    'gap-2' => '0.5rem',
+                    'gap-4' => '1rem',
+                    'gap-6' => '1.5rem',
+                    'gap-8' => '2rem',
+                    'gap-12' => '3rem',
+                ])
+                ->default('gap-4')
+                ->selectablePlaceholder(false)
+                ->visible(fn (Get $get): bool => $get('layout') === 'grid'),
             Select::make('direction')
                 ->label(__('layup::widgets.row.direction'))
                 ->options([
@@ -32,7 +54,8 @@ class Row extends BaseView
                     'row-reverse' => __('layup::widgets.row.row_reverse'),
                     'column-reverse' => __('layup::widgets.row.column_reverse'),
                 ])
-                ->default('row'),
+                ->default('row')
+                ->visible(fn (Get $get): bool => $get('layout') !== 'grid'),
             Select::make('justify')
                 ->label(__('layup::widgets.row.justify_content'))
                 ->options([
@@ -43,7 +66,8 @@ class Row extends BaseView
                     'around' => __('layup::widgets.row.space_around'),
                     'evenly' => __('layup::widgets.row.space_evenly'),
                 ])
-                ->default('start'),
+                ->default('start')
+                ->visible(fn (Get $get): bool => $get('layout') !== 'grid'),
             Select::make('align')
                 ->label(__('layup::widgets.row.align_items'))
                 ->options([
@@ -61,12 +85,26 @@ class Row extends BaseView
                     'wrap' => __('layup::widgets.row.wrap_option'),
                     'wrap-reverse' => __('layup::widgets.row.wrap_reverse'),
                 ])
-                ->default('wrap'),
+                ->default('wrap')
+                ->visible(fn (Get $get): bool => $get('layout') !== 'grid'),
             Toggle::make('full_width')
                 ->label(__('layup::widgets.row.full_width'))
                 ->helperText(__('layup::widgets.row.full_width_helper'))
                 ->default(false),
         ];
+    }
+
+    protected static function withLiveValidation(array $components): array
+    {
+        $components = parent::withLiveValidation($components);
+
+        foreach ($components as $component) {
+            if ($component instanceof Select && $component->getName() === 'layout') {
+                $component->live();
+            }
+        }
+
+        return $components;
     }
 
     public function render(): View

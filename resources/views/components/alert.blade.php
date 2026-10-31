@@ -1,13 +1,4 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $type = $data['type'] ?? 'info';
     $typeStyle = match($type) {
@@ -25,9 +16,10 @@
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="border-l-4 p-4 rounded-r {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ $typeStyle }} {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
-
-     @if(!empty($data['dismissible'])) x-data="{ show: true }" x-show="show" x-transition @endif
+     style="{{ $typeStyle }} {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
+     x-data="{ show: true }"
+     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
+     @if(!empty($data['dismissible'])) x-show="show" x-transition @endif
 >
     <div class="flex items-start gap-3">
         <span class="text-lg font-bold shrink-0">{{ $icon }}</span>
@@ -43,5 +35,3 @@
             <button @click="show = false" class="text-current opacity-50 hover:opacity-100 shrink-0">&times;</button>
         @endif
     </div></div>
-
-@if($entranceAttributes !== '')</div>@endif

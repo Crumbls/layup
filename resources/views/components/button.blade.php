@@ -1,20 +1,15 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $hasHover = !empty($data['hover_bg_color']) || !empty($data['hover_text_color']);
-    $baseStyle = \Crumbls\Layup\View\BaseView::buildInlineStyles($designData);
+    $baseStyle = \Crumbls\Layup\View\BaseView::buildInlineStyles($data);
     if (!empty($data['bg_color'])) $baseStyle .= " background-color: {$data['bg_color']};";
     if (!empty($data['text_color_override'])) $baseStyle .= " color: {$data['text_color_override']};";
     $hoverStyle = $baseStyle;
     if (!empty($data['hover_bg_color'])) $hoverStyle = str_replace("background-color: {$data['bg_color']}", "background-color: {$data['hover_bg_color']}", $hoverStyle) ?: $hoverStyle . " background-color: {$data['hover_bg_color']};";
     if (!empty($data['hover_text_color'])) $hoverStyle .= " color: {$data['hover_text_color']};";
 @endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if(!empty($data['animation']))<span class="inline-block" {!! \Crumbls\Layup\View\BaseView::animationAttributes($animationData) !!}>@endif
 <a href="{{ $data['url'] ?? '#' }}"
    @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+   x-data="{ hover: false }"
    class="inline-block rounded font-medium transition-all duration-200
        {{ match($data['style'] ?? 'primary') {
            'primary'   => 'layup-bg-primary text-white layup-hover-bg-primary',
@@ -33,13 +28,12 @@
    @if(!empty($data['new_tab'])) target="_blank" rel="noopener noreferrer" @endif
    style="{{ $baseStyle }}"
    @if($hasHover)
-       x-data="{ hover: false }"
        @mouseenter="hover = true"
        @mouseleave="hover = false"
        :style="hover ? @js($hoverStyle) : @js($baseStyle)"
 
    @endif
+   {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}
 >
     {{ $data['label'] ?? __('layup::frontend.button.click_me') }}
 </a>
-@if(!empty($data['animation']))</span>@endif

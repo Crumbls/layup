@@ -1,13 +1,4 @@
-@php
-    $designData = $data;
-    unset($designData['animation']);
-    $animationData = $data;
-    unset($animationData['responsive'], $animationData['opacity']);
-    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
-@endphp
-{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
-@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="text-center {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" x-data="layupCountdown('{{ $data['target_date'] ?? '' }}')" x-init="start()" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}">
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="text-center {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" x-data="layupCountdown('{{ $data['target_date'] ?? '' }}')" x-init="start()" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data, hasAlpineData: true) !!}>
     @if(!empty($data['title']))
         <div class="text-lg font-semibold mb-4">{{ $data['title'] }}</div>
     @endif
@@ -36,5 +27,3 @@
     <div x-show="expired" class="text-xl font-semibold" style="color: var(--layup-success);">
         {{ $data['expired_message'] ?? __('layup::frontend.countdown.time_is_up') }}
     </div></div>
-
-@if($entranceAttributes !== '')</div>@endif

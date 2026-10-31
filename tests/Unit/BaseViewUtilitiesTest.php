@@ -190,8 +190,33 @@ it('animationAttributes returns Alpine directives for fade-in', function (): voi
     $result = Row::animationAttributes(['animation' => 'fade-in']);
     expect($result)->toContain('x-data');
     expect($result)->toContain('x-intersect');
+    expect($result)->toContain('$el.animate');
     expect($result)->toContain('opacity: 0');
     expect($result)->toContain('opacity: 1');
+});
+
+it('animationAttributes can reuse an existing Alpine scope', function (): void {
+    $result = Row::animationAttributes(
+        ['animation' => 'fade-in'],
+        hasAlpineData: true,
+    );
+
+    expect($result)
+        ->not->toContain('x-data')
+        ->toContain('x-intersect.once')
+        ->toContain('$el.animate');
+});
+
+it('animationExpression can be combined with an existing intersection handler', function (): void {
+    $result = Row::animationExpression([
+        'animation' => 'slide-up',
+        'animation_duration' => '700',
+    ]);
+
+    expect($result)
+        ->toContain('$el.animate')
+        ->toContain('translateY(2rem)')
+        ->toContain('duration: 700');
 });
 
 it('animationAttributes uses custom duration', function (): void {
@@ -199,13 +224,13 @@ it('animationAttributes uses custom duration', function (): void {
         'animation' => 'slide-up',
         'animation_duration' => '1000',
     ]);
-    expect($result)->toContain('1000ms');
+    expect($result)->toContain('duration: 1000');
     expect($result)->toContain('translateY');
 });
 
 it('animationAttributes defaults to 500ms duration', function (): void {
     $result = Row::animationAttributes(['animation' => 'zoom-in']);
-    expect($result)->toContain('500ms');
+    expect($result)->toContain('duration: 500');
 });
 
 it('animationAttributes handles all animation types', function (): void {
