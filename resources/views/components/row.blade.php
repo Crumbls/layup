@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $fullWidth = !empty($data['full_width']);
     $maxWidth = \Crumbls\Layup\Support\PageLayout::resolve($page ?? null);
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
@@ -11,6 +11,8 @@
 >
     <div class="flex flex-wrap {{ $fullWidth ? '' : $maxWidth . ' mx-auto' }}"
         style="
+            flex-direction: {{ in_array($data['direction'] ?? 'row', ['row', 'column', 'row-reverse', 'column-reverse'], true) ? ($data['direction'] ?? 'row') : 'row' }};
+            flex-wrap: {{ in_array($data['wrap'] ?? 'wrap', ['wrap', 'nowrap', 'wrap-reverse'], true) ? ($data['wrap'] ?? 'wrap') : 'wrap' }};
             @if(!empty($data['justify']) && $data['justify'] !== 'start')justify-content: {{ match($data['justify']) { 'center' => 'center', 'end' => 'flex-end', 'between' => 'space-between', 'around' => 'space-around', 'evenly' => 'space-evenly', default => 'flex-start' } }};@endif
             @if(!empty($data['align']) && $data['align'] !== 'stretch')align-items: {{ match($data['align']) { 'start' => 'flex-start', 'end' => 'flex-end', 'center' => 'center', 'baseline' => 'baseline', default => 'stretch' } }};@endif
         "

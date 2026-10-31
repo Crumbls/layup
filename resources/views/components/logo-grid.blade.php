@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $cols = $data['columns'] ?? 4;
     $maxH = $data['max_height'] ?? '3rem';

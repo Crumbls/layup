@@ -65,3 +65,13 @@ php artisan layup:make-widget MyWidget --with-test
 ```
 
 This creates `tests/Unit/Layup/MyWidgetTest.php` with contract, defaults, and render assertions.
+
+## Builder state regressions
+
+The builder's JavaScript state tests use Node's built-in test runner and do not require an npm install:
+
+```bash
+node --test tests/JavaScript/builder-state.test.cjs
+```
+
+These tests exercise delayed row responses, section switching, undo/redo, and native text-input undo with the Livewire transport stubbed. The PHP `BuilderFormTest` separately exercises the mounted Filament field and its action forms.

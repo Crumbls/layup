@@ -1,4 +1,4 @@
-<{{ $data['level'] ?? 'h2' }}
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}<{{ $data['level'] ?? 'h2' }}
     @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
     class="{{ match($data['level'] ?? 'h2') {
         'h1' => 'text-2xl md:text-4xl font-bold',

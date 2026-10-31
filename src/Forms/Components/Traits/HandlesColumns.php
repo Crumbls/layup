@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Forms\Components\Traits;
 
+use Crumbls\Layup\Support\ContentWalker;
+use Crumbls\Layup\View\BaseView;
 use Crumbls\Layup\View\Column;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -36,20 +38,18 @@ trait HandlesColumns
                 }
 
                 $state = $this->getState();
-                $state['rows'] = collect($state['rows'] ?? [])
-                    ->map(function (array $row) use ($rowId, $columnId): array {
-                        if ($row['id'] !== $rowId) {
-                            return $row;
-                        }
-
-                        $row['columns'] = collect($row['columns'])
-                            ->reject(fn ($col) => $col['id'] === $columnId)
-                            ->values()
-                            ->all();
-
+                $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId): array {
+                    if ($row['id'] !== $rowId) {
                         return $row;
-                    })
-                    ->all();
+                    }
+
+                    $row['columns'] = collect($row['columns'])
+                        ->reject(fn ($col) => $col['id'] === $columnId)
+                        ->values()
+                        ->all();
+
+                    return $row;
+                });
 
                 $this->state($state);
 
@@ -83,7 +83,7 @@ trait HandlesColumns
                 }
 
                 $state = $this->getState();
-                $row = collect($state['rows'] ?? [])->firstWhere('id', $rowId);
+                $row = collect(ContentWalker::extractRows($state))->firstWhere('id', $rowId);
                 $col = collect($row['columns'] ?? [])->firstWhere('id', $columnId);
 
                 if (! $col) {
@@ -91,7 +91,7 @@ trait HandlesColumns
                 }
 
                 return array_merge(
-                    $col['settings'] ?? [],
+                    BaseView::normalizeSettingsForForm($col['settings'] ?? []),
                     ['span' => $col['span'] ?? ['sm' => 12, 'md' => 6, 'lg' => 6, 'xl' => 6]],
                 );
             })
@@ -105,29 +105,27 @@ trait HandlesColumns
                 }
 
                 $state = $this->getState();
-                $state['rows'] = collect($state['rows'] ?? [])
-                    ->map(function (array $row) use ($rowId, $columnId, $data): array {
-                        if ($row['id'] !== $rowId) {
-                            return $row;
-                        }
-
-                        $row['columns'] = collect($row['columns'])
-                            ->map(function (array $col) use ($columnId, $data): array {
-                                if ($col['id'] !== $columnId) {
-                                    return $col;
-                                }
-
-                                $col['span'] = $data['span'] ?? $col['span'];
-                                unset($data['span']);
-                                $col['settings'] = $data;
-
-                                return $col;
-                            })
-                            ->all();
-
+                $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $data): array {
+                    if ($row['id'] !== $rowId) {
                         return $row;
-                    })
-                    ->all();
+                    }
+
+                    $row['columns'] = collect($row['columns'])
+                        ->map(function (array $col) use ($columnId, $data): array {
+                            if ($col['id'] !== $columnId) {
+                                return $col;
+                            }
+
+                            $col['span'] = $data['span'] ?? $col['span'];
+                            unset($data['span']);
+                            $col['settings'] = $data;
+
+                            return $col;
+                        })
+                        ->all();
+
+                    return $row;
+                });
 
                 $this->state($state);
 
@@ -139,7 +137,7 @@ trait HandlesColumns
 
                 // Find the updated column to send full data back
                 $updatedCol = null;
-                foreach ($state['rows'] as $r) {
+                foreach (ContentWalker::extractRows($state) as $r) {
                     if ($r['id'] === $rowId) {
                         foreach ($r['columns'] as $c) {
                             if ($c['id'] === $columnId) {
@@ -169,30 +167,28 @@ trait HandlesColumns
     {
         $state = $this->getState();
 
-        if (! is_array($state) || ! isset($state['rows'])) {
+        if (! is_array($state) || (! isset($state['rows']) && ! isset($state['sections']))) {
             return [];
         }
 
         $column = null;
 
-        $state['rows'] = collect($state['rows'])
-            ->map(function (array $row) use ($rowId, $span, &$column): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                $column = [
-                    'id' => 'col_' . Str::random(8),
-                    'span' => ['sm' => 12, 'md' => $span, 'lg' => $span, 'xl' => $span],
-                    'settings' => ['padding' => 'p-4', 'background' => 'transparent'],
-                    'widgets' => [],
-                ];
-
-                $row['columns'][] = $column;
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $span, &$column): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $column = [
+                'id' => 'col_' . Str::random(8),
+                'span' => ['sm' => 12, 'md' => $span, 'lg' => $span, 'xl' => $span],
+                'settings' => ['padding' => ['unit' => 'rem', 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1]],
+                'widgets' => [],
+            ];
+
+            $row['columns'][] = $column;
+
+            return $row;
+        });
 
         if (! $column) {
             return [];
@@ -215,36 +211,34 @@ trait HandlesColumns
     {
         $state = $this->getState();
 
-        if (! is_array($state) || ! isset($state['rows'])) {
+        if (! is_array($state) || (! isset($state['rows']) && ! isset($state['sections']))) {
             return false;
         }
 
-        $state['rows'] = collect($state['rows'])
-            ->map(function (array $row) use ($rowId, $columnId, $direction): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                $cols = collect($row['columns']);
-                $index = $cols->search(fn ($c) => $c['id'] === $columnId);
-
-                if ($index === false) {
-                    return $row;
-                }
-
-                $newIndex = $direction === 'left' ? $index - 1 : $index + 1;
-
-                if ($newIndex < 0 || $newIndex >= $cols->count()) {
-                    return $row;
-                }
-
-                $arr = $cols->all();
-                [$arr[$index], $arr[$newIndex]] = [$arr[$newIndex], $arr[$index]];
-                $row['columns'] = array_values($arr);
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $direction): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $cols = collect($row['columns']);
+            $index = $cols->search(fn ($c) => $c['id'] === $columnId);
+
+            if ($index === false) {
+                return $row;
+            }
+
+            $newIndex = $direction === 'left' ? $index - 1 : $index + 1;
+
+            if ($newIndex < 0 || $newIndex >= $cols->count()) {
+                return $row;
+            }
+
+            $arr = $cols->all();
+            [$arr[$index], $arr[$newIndex]] = [$arr[$newIndex], $arr[$index]];
+            $row['columns'] = array_values($arr);
+
+            return $row;
+        });
 
         $this->state($state);
 
@@ -257,25 +251,23 @@ trait HandlesColumns
     {
         $state = $this->getState();
 
-        if (! is_array($state) || ! isset($state['rows'])) {
+        if (! is_array($state) || (! isset($state['rows']) && ! isset($state['sections']))) {
             return false;
         }
 
-        $state['rows'] = collect($state['rows'])
-            ->map(function (array $row) use ($rowId, $spans): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                foreach ($row['columns'] as $i => &$col) {
-                    if (isset($spans[$i])) {
-                        $col['span'] = $spans[$i];
-                    }
-                }
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $spans): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            foreach ($row['columns'] as $i => &$col) {
+                if (isset($spans[$i])) {
+                    $col['span'] = $spans[$i];
+                }
+            }
+
+            return $row;
+        });
 
         $this->state($state);
 

@@ -6,6 +6,7 @@ namespace Crumbls\Layup\View;
 
 use Crumbls\Layup\Forms\Components\ColorPicker;
 use Crumbls\Layup\Forms\Components\SpacingPicker;
+use Crumbls\Layup\Support\ResponsiveStyles;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
@@ -13,6 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component as SchemaComponent;
+use Filament\Schemas\Components\Section as FormSection;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Contracts\Support\Htmlable;
@@ -132,6 +134,22 @@ abstract class BaseView extends Component
         return new static($data, $children);
     }
 
+    public static function normalizeSettingsForForm(array $data): array
+    {
+        foreach (['padding', 'margin'] as $property) {
+            if (array_key_exists($property, $data)) {
+                $data[$property] = SpacingPicker::normalize($data[$property]);
+            }
+        }
+        foreach ($data['responsive'] ?? [] as $key => $values) {
+            if (is_array($values)) {
+                $data['responsive'][$key] = static::normalizeSettingsForForm($values);
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * Full form schema with tabs.
      */
@@ -237,6 +255,25 @@ abstract class BaseView extends Component
      * @return array<\Filament\Schemas\Components\Component>
      */
     public static function getDesignFormSchema(): array
+    {
+        $overrides = [];
+        foreach (config('layup.breakpoints', []) as $key => $breakpoint) {
+            $overrides[] = FormSection::make($breakpoint['label'] ?? $key)
+                ->statePath("responsive.{$key}")
+                ->schema(static::getSharedDesignFormSchema())
+                ->collapsed();
+        }
+
+        return [
+            ...static::getSharedDesignFormSchema(),
+            FormSection::make(__('layup::builder.responsive_settings'))
+                ->description(__('layup::builder.responsive_help'))
+                ->schema($overrides)
+                ->collapsed(),
+        ];
+    }
+
+    protected static function getSharedDesignFormSchema(): array
     {
         return [
             ColorPicker::make('text_color')
@@ -346,8 +383,7 @@ abstract class BaseView extends Component
             TextInput::make('id')
                 ->label(__('layup::widgets.shared.id'))
                 ->helperText(__('layup::widgets.shared.id_helper'))
-                ->nullable()
-                ->unique(ignoreRecord: true),
+                ->nullable(),
             TextInput::make('class')
                 ->label(__('layup::widgets.shared.css_classes'))
                 ->helperText(__('layup::widgets.shared.css_classes_helper'))
@@ -454,7 +490,7 @@ abstract class BaseView extends Component
         if (! empty($data['box_shadow'])) {
             $styles[] = "box-shadow: {$data['box_shadow']};";
         }
-        if (! empty($data['opacity'])) {
+        if (isset($data['opacity']) && $data['opacity'] !== '') {
             $styles[] = "opacity: {$data['opacity']};";
         }
 
@@ -468,7 +504,22 @@ abstract class BaseView extends Component
             $styles[] = $data['inline_css'];
         }
 
+        if (! empty($data['animation']) && ! empty($data['responsive'])) {
+            $baseOpacity = is_numeric($data['opacity'] ?? null) ? min(1, max(0, (float) $data['opacity'])) : 1;
+            $styles[] = "--layup-responsive-opacity: {$baseOpacity};";
+        }
+
+        $signature = empty($data['responsive']) ? '' : ResponsiveStyles::signature($data);
+        if ($signature !== '') {
+            $styles[] = "--layup-style: {$signature};";
+        }
+
         return implode(' ', $styles);
+    }
+
+    public static function responsiveStyles(array $data): string
+    {
+        return ResponsiveStyles::render($data);
     }
 
     /**
@@ -478,15 +529,15 @@ abstract class BaseView extends Component
      */
     private static function appendSpacingStyles(array &$styles, array $data, string $property): void
     {
-        $spacing = $data[$property] ?? null;
-
-        if (! is_array($spacing)) {
-            return;
-        }
+        $spacing = SpacingPicker::normalize($data[$property] ?? null);
 
         $unit = in_array($spacing['unit'] ?? null, ['px', 'rem', 'em', '%'], true)
             ? $spacing['unit']
             : 'px';
+
+        if (is_numeric($spacing['all'] ?? null)) {
+            $styles[] = "{$property}: {$spacing['all']}{$unit};";
+        }
 
         foreach (['top', 'right', 'bottom', 'left'] as $side) {
             $value = $spacing[$side] ?? null;
@@ -510,38 +561,40 @@ abstract class BaseView extends Component
             return '';
         }
 
-        $duration = $data['animation_duration'] ?? '500';
-
-        $initial = match ($animation) {
-            'fade-in' => 'opacity: 0',
-            'slide-up' => 'opacity: 0; transform: translateY(2rem)',
-            'slide-down' => 'opacity: 0; transform: translateY(-2rem)',
-            'slide-left' => 'opacity: 0; transform: translateX(2rem)',
-            'slide-right' => 'opacity: 0; transform: translateX(-2rem)',
-            'zoom-in' => 'opacity: 0; transform: scale(0.9)',
-            default => '',
+        $duration = is_numeric($data['animation_duration'] ?? null)
+            ? min(10000, max(0, (int) $data['animation_duration']))
+            : 500;
+        $opacity = is_numeric($data['opacity'] ?? null) ? min(1, max(0, (float) $data['opacity'])) : 1;
+        $initialTransform = match ($animation) {
+            'fade-in' => null,
+            'slide-up' => 'translateY(2rem)',
+            'slide-down' => 'translateY(-2rem)',
+            'slide-left' => 'translateX(2rem)',
+            'slide-right' => 'translateX(-2rem)',
+            'zoom-in' => 'scale(0.9)',
+            default => false,
         };
-
-        $final = match ($animation) {
-            'fade-in' => 'opacity: 1',
-            'slide-up', 'slide-down' => 'opacity: 1; transform: translateY(0)',
-            'slide-left', 'slide-right' => 'opacity: 1; transform: translateX(0)',
-            'zoom-in' => 'opacity: 1; transform: scale(1)',
-            default => '',
-        };
-
-        if ($initial === '' || $initial === '0') {
+        if ($initialTransform === false) {
             return '';
         }
+        $finalTransform = match ($animation) {
+            'slide-up', 'slide-down' => 'translateY(0)',
+            'slide-left', 'slide-right' => 'translateX(0)',
+            'zoom-in' => 'scale(1)',
+            default => null,
+        };
+        $initial = "opacity: 0, transition: 'opacity {$duration}ms ease-out, transform {$duration}ms ease-out'";
+        $finalOpacity = empty($data['responsive']) ? $opacity : "'var(--layup-responsive-opacity, {$opacity})'";
+        $final = "opacity: {$finalOpacity}, transition: 'opacity {$duration}ms ease-out, transform {$duration}ms ease-out'";
+        if ($initialTransform !== null) {
+            $initial .= ", transform: '{$initialTransform}'";
+            $final .= ", transform: '{$finalTransform}'";
+        }
 
-        return sprintf(
-            'x-data="{ shown: false }" x-intersect.once="shown = true" '
-            . ':style="shown ? \'%s; transition: all %sms ease-out\' : \'%s; transition: all %sms ease-out\'"',
-            $final,
-            $duration,
-            $initial,
-            $duration,
-        );
+        // Object bindings update animation properties without replacing padding,
+        // borders, backgrounds or the responsive style selector on the element.
+        return 'x-data="{ shown: false }" x-intersect.once="shown = true" '
+            . ':style="shown ? { ' . $final . ' } : { ' . $initial . ' }"';
     }
 
     /**

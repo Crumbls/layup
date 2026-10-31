@@ -1,4 +1,13 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $testimonials = $data['testimonials'] ?? [];
     $speed = (int)($data['autoplay_speed'] ?? 5000);
@@ -6,8 +15,8 @@
 @if(count($testimonials) > 0)
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
      x-data="{
         current: 0,
         total: {{ count($testimonials) }},
@@ -48,3 +57,5 @@
     @endif
 </div>
 @endif
+
+@if($entranceAttributes !== '')</div>@endif

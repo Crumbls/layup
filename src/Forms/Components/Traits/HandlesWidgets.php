@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Crumbls\Layup\Forms\Components\Traits;
 
 use Crumbls\Layup\Support\ContentValidator;
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\View\BaseView;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
@@ -34,7 +36,7 @@ trait HandlesWidgets
                     $arguments['widgetId'] ?? null,
                 );
 
-                return $widget['data'] ?? [];
+                return BaseView::normalizeSettingsForForm($widget['data'] ?? []);
             })
             ->form(function (array $arguments) use ($registry): array {
                 $widget = $this->findWidget(
@@ -61,35 +63,33 @@ trait HandlesWidgets
                 $data = $registry->fireOnSave($widgetType, $data);
 
                 $state = $this->getState();
-                $state['rows'] = collect($state['rows'] ?? [])
-                    ->map(function (array $row) use ($rowId, $columnId, $widgetId, $data): array {
-                        if ($row['id'] !== $rowId) {
-                            return $row;
-                        }
-
-                        $row['columns'] = collect($row['columns'])
-                            ->map(function (array $col) use ($columnId, $widgetId, $data): array {
-                                if ($col['id'] !== $columnId) {
-                                    return $col;
-                                }
-
-                                $col['widgets'] = collect($col['widgets'])
-                                    ->map(function (array $widget) use ($widgetId, $data): array {
-                                        if ($widget['id'] === $widgetId) {
-                                            $widget['data'] = $data;
-                                        }
-
-                                        return $widget;
-                                    })
-                                    ->all();
-
-                                return $col;
-                            })
-                            ->all();
-
+                $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $widgetId, $data): array {
+                    if ($row['id'] !== $rowId) {
                         return $row;
-                    })
-                    ->all();
+                    }
+
+                    $row['columns'] = collect($row['columns'])
+                        ->map(function (array $col) use ($columnId, $widgetId, $data): array {
+                            if ($col['id'] !== $columnId) {
+                                return $col;
+                            }
+
+                            $col['widgets'] = collect($col['widgets'])
+                                ->map(function (array $widget) use ($widgetId, $data): array {
+                                    if ($widget['id'] === $widgetId) {
+                                        $widget['data'] = $data;
+                                    }
+
+                                    return $widget;
+                                })
+                                ->all();
+
+                            return $col;
+                        })
+                        ->all();
+
+                    return $row;
+                });
 
                 $this->state($state);
 
@@ -147,30 +147,28 @@ trait HandlesWidgets
                 }
 
                 $state = $this->getState();
-                $state['rows'] = collect($state['rows'] ?? [])
-                    ->map(function (array $row) use ($rowId, $columnId, $widgetId): array {
-                        if ($row['id'] !== $rowId) {
-                            return $row;
-                        }
-
-                        $row['columns'] = collect($row['columns'])
-                            ->map(function (array $col) use ($columnId, $widgetId): array {
-                                if ($col['id'] !== $columnId) {
-                                    return $col;
-                                }
-
-                                $col['widgets'] = collect($col['widgets'])
-                                    ->reject(fn ($w) => $w['id'] === $widgetId)
-                                    ->values()
-                                    ->all();
-
-                                return $col;
-                            })
-                            ->all();
-
+                $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $widgetId): array {
+                    if ($row['id'] !== $rowId) {
                         return $row;
-                    })
-                    ->all();
+                    }
+
+                    $row['columns'] = collect($row['columns'])
+                        ->map(function (array $col) use ($columnId, $widgetId): array {
+                            if ($col['id'] !== $columnId) {
+                                return $col;
+                            }
+
+                            $col['widgets'] = collect($col['widgets'])
+                                ->reject(fn ($w) => $w['id'] === $widgetId)
+                                ->values()
+                                ->all();
+
+                            return $col;
+                        })
+                        ->all();
+
+                    return $row;
+                });
 
                 $this->state($state);
 
@@ -208,31 +206,29 @@ trait HandlesWidgets
 
         $state = $this->getState();
 
-        $state['rows'] = collect($state['rows'] ?? [])
-            ->map(function (array $row) use ($rowId, $columnId, $widget, $position): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($columnId, $widget, $position): array {
-                        if ($col['id'] !== $columnId) {
-                            return $col;
-                        }
-
-                        if ($position < 0) {
-                            $col['widgets'][] = $widget;
-                        } else {
-                            array_splice($col['widgets'], $position, 0, [$widget]);
-                        }
-
-                        return $col;
-                    })
-                    ->all();
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $widget, $position): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $row['columns'] = collect($row['columns'])
+                ->map(function (array $col) use ($columnId, $widget, $position): array {
+                    if ($col['id'] !== $columnId) {
+                        return $col;
+                    }
+
+                    if ($position < 0) {
+                        $col['widgets'][] = $widget;
+                    } else {
+                        array_splice($col['widgets'], $position, 0, [$widget]);
+                    }
+
+                    return $col;
+                })
+                ->all();
+
+            return $row;
+        });
 
         $this->state($state);
 
@@ -247,41 +243,39 @@ trait HandlesWidgets
         $clone = null;
         $registry = app(WidgetRegistry::class);
 
-        $state['rows'] = collect($state['rows'] ?? [])
-            ->map(function (array $row) use ($rowId, $columnId, $widgetId, &$clone, $registry): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($columnId, $widgetId, &$clone, $registry): array {
-                        if ($col['id'] !== $columnId) {
-                            return $col;
-                        }
-
-                        $index = collect($col['widgets'])->search(fn ($w) => $w['id'] === $widgetId);
-                        if ($index === false) {
-                            return $col;
-                        }
-
-                        $original = $col['widgets'][$index];
-                        $type = $original['type'];
-
-                        $clone = [
-                            'id' => 'widget_' . Str::random(8),
-                            'type' => $type,
-                            'data' => $registry->fireOnDuplicate($type, $original['data'] ?? []),
-                        ];
-
-                        array_splice($col['widgets'], $index + 1, 0, [$clone]);
-
-                        return $col;
-                    })
-                    ->all();
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $widgetId, &$clone, $registry): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $row['columns'] = collect($row['columns'])
+                ->map(function (array $col) use ($columnId, $widgetId, &$clone, $registry): array {
+                    if ($col['id'] !== $columnId) {
+                        return $col;
+                    }
+
+                    $index = collect($col['widgets'])->search(fn ($w) => $w['id'] === $widgetId);
+                    if ($index === false) {
+                        return $col;
+                    }
+
+                    $original = $col['widgets'][$index];
+                    $type = $original['type'];
+
+                    $clone = [
+                        'id' => 'widget_' . Str::random(8),
+                        'type' => $type,
+                        'data' => $registry->fireOnDuplicate($type, $original['data'] ?? []),
+                    ];
+
+                    array_splice($col['widgets'], $index + 1, 0, [$clone]);
+
+                    return $col;
+                })
+                ->all();
+
+            return $row;
+        });
 
         if (! $clone) {
             return [];
@@ -304,40 +298,38 @@ trait HandlesWidgets
     {
         $state = $this->getState();
 
-        $state['rows'] = collect($state['rows'] ?? [])
-            ->map(function (array $row) use ($rowId, $columnId, $widgetId, $direction): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($columnId, $widgetId, $direction): array {
-                        if ($col['id'] !== $columnId) {
-                            return $col;
-                        }
-
-                        $widgets = collect($col['widgets']);
-                        $index = $widgets->search(fn ($w) => $w['id'] === $widgetId);
-                        if ($index === false) {
-                            return $col;
-                        }
-
-                        $newIndex = $direction === 'up' ? $index - 1 : $index + 1;
-                        if ($newIndex < 0 || $newIndex >= $widgets->count()) {
-                            return $col;
-                        }
-
-                        $arr = $widgets->all();
-                        [$arr[$index], $arr[$newIndex]] = [$arr[$newIndex], $arr[$index]];
-                        $col['widgets'] = array_values($arr);
-
-                        return $col;
-                    })
-                    ->all();
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $widgetId, $direction): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $row['columns'] = collect($row['columns'])
+                ->map(function (array $col) use ($columnId, $widgetId, $direction): array {
+                    if ($col['id'] !== $columnId) {
+                        return $col;
+                    }
+
+                    $widgets = collect($col['widgets']);
+                    $index = $widgets->search(fn ($w) => $w['id'] === $widgetId);
+                    if ($index === false) {
+                        return $col;
+                    }
+
+                    $newIndex = $direction === 'up' ? $index - 1 : $index + 1;
+                    if ($newIndex < 0 || $newIndex >= $widgets->count()) {
+                        return $col;
+                    }
+
+                    $arr = $widgets->all();
+                    [$arr[$index], $arr[$newIndex]] = [$arr[$newIndex], $arr[$index]];
+                    $col['widgets'] = array_values($arr);
+
+                    return $col;
+                })
+                ->all();
+
+            return $row;
+        });
 
         $this->state($state);
 
@@ -356,62 +348,62 @@ trait HandlesWidgets
     ): bool {
         $state = $this->getState();
         $widget = null;
+        $target = collect(ContentWalker::extractRows($state))->firstWhere('id', $targetRowId);
+        if (! $target || ! collect($target['columns'] ?? [])->contains('id', $targetColId)) {
+            return false;
+        }
 
         // Remove from source
-        $state['rows'] = collect($state['rows'] ?? [])
-            ->map(function (array $row) use ($sourceRowId, $sourceColId, $widgetId, &$widget): array {
-                if ($row['id'] !== $sourceRowId) {
-                    return $row;
-                }
-
-                $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($sourceColId, $widgetId, &$widget): array {
-                        if ($col['id'] !== $sourceColId) {
-                            return $col;
-                        }
-
-                        $index = collect($col['widgets'])->search(fn ($w) => $w['id'] === $widgetId);
-                        if ($index === false) {
-                            return $col;
-                        }
-
-                        $widget = $col['widgets'][$index];
-                        array_splice($col['widgets'], $index, 1);
-
-                        return $col;
-                    })
-                    ->all();
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($sourceRowId, $sourceColId, $widgetId, &$widget): array {
+            if ($row['id'] !== $sourceRowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $row['columns'] = collect($row['columns'])
+                ->map(function (array $col) use ($sourceColId, $widgetId, &$widget): array {
+                    if ($col['id'] !== $sourceColId) {
+                        return $col;
+                    }
+
+                    $index = collect($col['widgets'])->search(fn ($w) => $w['id'] === $widgetId);
+                    if ($index === false) {
+                        return $col;
+                    }
+
+                    $widget = $col['widgets'][$index];
+                    array_splice($col['widgets'], $index, 1);
+
+                    return $col;
+                })
+                ->all();
+
+            return $row;
+        });
 
         if (! $widget) {
             return false;
         }
 
         // Insert into target
-        $state['rows'] = collect($state['rows'])
-            ->map(function (array $row) use ($targetRowId, $targetColId, $widget, $position): array {
-                if ($row['id'] !== $targetRowId) {
-                    return $row;
-                }
-
-                $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($targetColId, $widget, $position): array {
-                        if ($col['id'] !== $targetColId) {
-                            return $col;
-                        }
-
-                        array_splice($col['widgets'], $position, 0, [$widget]);
-
-                        return $col;
-                    })
-                    ->all();
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($targetRowId, $targetColId, $widget, $position): array {
+            if ($row['id'] !== $targetRowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $row['columns'] = collect($row['columns'])
+                ->map(function (array $col) use ($targetColId, $widget, $position): array {
+                    if ($col['id'] !== $targetColId) {
+                        return $col;
+                    }
+
+                    array_splice($col['widgets'], $position, 0, [$widget]);
+
+                    return $col;
+                })
+                ->all();
+
+            return $row;
+        });
 
         $this->state($state);
 
@@ -424,35 +416,33 @@ trait HandlesWidgets
     {
         $state = $this->getState();
 
-        $state['rows'] = collect($state['rows'] ?? [])
-            ->map(function (array $row) use ($rowId, $columnId, $widgetId, $content): array {
-                if ($row['id'] !== $rowId) {
-                    return $row;
-                }
-
-                $row['columns'] = collect($row['columns'])
-                    ->map(function (array $col) use ($columnId, $widgetId, $content): array {
-                        if ($col['id'] !== $columnId) {
-                            return $col;
-                        }
-
-                        $col['widgets'] = collect($col['widgets'])
-                            ->map(function (array $widget) use ($widgetId, $content): array {
-                                if ($widget['id'] === $widgetId) {
-                                    $widget['data']['content'] = $content;
-                                }
-
-                                return $widget;
-                            })
-                            ->all();
-
-                        return $col;
-                    })
-                    ->all();
-
+        $state = ContentWalker::mapRows($state, function (array $row) use ($rowId, $columnId, $widgetId, $content): array {
+            if ($row['id'] !== $rowId) {
                 return $row;
-            })
-            ->all();
+            }
+
+            $row['columns'] = collect($row['columns'])
+                ->map(function (array $col) use ($columnId, $widgetId, $content): array {
+                    if ($col['id'] !== $columnId) {
+                        return $col;
+                    }
+
+                    $col['widgets'] = collect($col['widgets'])
+                        ->map(function (array $widget) use ($widgetId, $content): array {
+                            if ($widget['id'] === $widgetId) {
+                                $widget['data']['content'] = $content;
+                            }
+
+                            return $widget;
+                        })
+                        ->all();
+
+                    return $col;
+                })
+                ->all();
+
+            return $row;
+        });
 
         $this->state($state);
 
@@ -468,7 +458,7 @@ trait HandlesWidgets
         }
 
         $state = $this->getState();
-        $row = collect($state['rows'] ?? [])->firstWhere('id', $rowId);
+        $row = collect(ContentWalker::extractRows($state))->firstWhere('id', $rowId);
 
         if (! $row) {
             return null;
@@ -506,7 +496,7 @@ trait HandlesWidgets
         $state = $this->getState();
         $previews = [];
 
-        foreach ($state['rows'] ?? [] as $row) {
+        foreach (ContentWalker::extractRows($state) as $row) {
             foreach ($row['columns'] ?? [] as $column) {
                 foreach ($column['widgets'] ?? [] as $widget) {
                     $id = $widget['id'] ?? null;
@@ -542,7 +532,7 @@ trait HandlesWidgets
         }
 
         try {
-            $rendered = $class::make(array_merge($class::getDefaultData(), $data))->render();
+            $rendered = $class::make($class::prepareForRender(array_merge($class::getDefaultData(), $data)))->render();
         } catch (\Throwable $e) {
             return '';
         }

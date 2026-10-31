@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Crumbls\Layup\Forms\Components\Traits;
 
-use Crumbls\Layup\View\Row;
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\WidgetRegistry;
+use Crumbls\Layup\View\BaseView;
+use Crumbls\Layup\View\Row;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
@@ -37,10 +39,8 @@ trait HandlesRows
                 $id = $arguments['id'];
 
                 $state = $this->getState();
-                $state['rows'] = collect($state['rows'] ?? [])
-                    ->reject(fn ($row) => $row['id'] === $id)
-                    ->values()
-                    ->all();
+                $state = ContentWalker::mapRowGroups($state, fn (array $rows): array => array_values(array_filter($rows, fn (array $row): bool => $row['id'] !== $id))
+                );
 
                 $this->state($state);
 
@@ -74,9 +74,9 @@ trait HandlesRows
                 }
 
                 $state = $this->getState();
-                $row = collect($state['rows'] ?? [])->firstWhere('id', $id);
+                $row = collect(ContentWalker::extractRows($state))->firstWhere('id', $id);
 
-                return $row['settings'] ?? [];
+                return BaseView::normalizeSettingsForForm($row['settings'] ?? []);
             })
             ->schema(Row::getFormSchema())
             ->action(function (array $data, array $arguments): void {
@@ -87,15 +87,13 @@ trait HandlesRows
                 }
 
                 $state = $this->getState();
-                $state['rows'] = collect($state['rows'] ?? [])
-                    ->map(function (array $row) use ($id, $data): array {
-                        if ($row['id'] === $id) {
-                            $row['settings'] = $data;
-                        }
+                $state = ContentWalker::mapRows($state, function (array $row) use ($id, $data): array {
+                    if ($row['id'] === $id) {
+                        $row['settings'] = $data;
+                    }
 
-                        return $row;
-                    })
-                    ->all();
+                    return $row;
+                });
 
                 $this->state($state);
 
@@ -118,67 +116,36 @@ trait HandlesRows
 
     #[Renderless]
     #[ExposedLivewireMethod]
-    public function rowAdd(mixed $columns = [12], ?int $position = 0): array
+    public function rowAdd(mixed $columns = [12], ?int $position = 0, ?string $sectionId = null): array
     {
         if (is_string($columns)) {
-            $decoded = json_decode($columns, true);
-            $columns = is_array($decoded) ? $decoded : [$columns];
+            $columns = json_decode($columns, true) ?? [$columns];
         }
-
-        if (is_int($columns)) {
-            $columns = [$columns];
-        }
-
-        if (! is_array($columns) || empty($columns)) {
-            $columns = [12];
-        }
-
-        $position = max(0, $position);
-
-        $columns = array_filter($columns, 'is_numeric');
-
-        if (array_sum($columns) != 12) {
+        $columns = is_array($columns) ? $columns : [$columns];
+        if ($columns === [] || count(array_filter($columns, fn ($span): bool => is_numeric($span) && (int) $span == $span && $span > 0 && $span <= 12)) !== count($columns) || array_sum($columns) != 12) {
             return [];
         }
 
-        $state = $this->getState();
+        $row = [];
+        $state = ContentWalker::mapRowGroups($this->getState() ?? [], function (array $rows, ?string $id) use ($sectionId, $columns, $position, &$row): array {
+            if ($id !== $sectionId) {
+                return $rows;
+            }
+            $order = min(max(0, $position ?? 0), count($rows));
+            $row = [
+                'id' => 'row_' . Str::random(8), 'order' => $order,
+                'settings' => ['direction' => 'row', 'justify' => 'start', 'align' => 'stretch', 'wrap' => 'wrap', 'full_width' => false],
+                'columns' => array_map(fn ($span): array => [
+                    'id' => 'col_' . Str::random(8),
+                    'span' => ['sm' => 12, 'md' => (int) $span, 'lg' => (int) $span, 'xl' => (int) $span],
+                    'settings' => ['padding' => ['unit' => 'rem', 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1]],
+                    'widgets' => [],
+                ], array_values($columns)),
+            ];
+            array_splice($rows, $order, 0, [$row]);
 
-        if (! is_array($state)) {
-            $state = [];
-        }
-
-        if (! array_key_exists('rows', $state) || ! is_array($state['rows'])) {
-            $state['rows'] = [];
-        }
-
-        $existingIds = array_column($state['rows'], 'id');
-
-        do {
-            $id = 'row_' . Str::random(8);
-        } while (in_array($id, $existingIds));
-
-        $position = min($position, count($state['rows']));
-
-        $row = [
-            'id' => $id,
-            'order' => $position,
-            'settings' => [
-                'direction' => 'row',
-                'justify' => 'start',
-                'align' => 'stretch',
-                'wrap' => 'wrap',
-                'full_width' => false,
-            ],
-            'columns' => collect($columns)->map(fn (int $span): array => [
-                'id' => 'col_' . Str::random(8),
-                'span' => ['sm' => 12, 'md' => $span, 'lg' => $span, 'xl' => $span],
-                'settings' => ['padding' => 'p-4', 'background' => 'transparent'],
-                'widgets' => [],
-            ])->values()->all(),
-        ];
-
-        array_splice($state['rows'], $position, 0, [$row]);
-
+            return $rows;
+        });
         $this->state($state);
 
         return $row;
@@ -188,34 +155,18 @@ trait HandlesRows
     #[ExposedLivewireMethod]
     public function rowDuplicate(string $id): array
     {
-        $state = $this->getState();
+        $clone = [];
+        $state = ContentWalker::mapRowGroups($this->getState() ?? [], function (array $rows) use ($id, &$clone): array {
+            $index = array_search($id, array_column($rows, 'id'), true);
+            if ($index !== false) {
+                $clone = $this->rowDeepClone($rows[$index]);
+                $clone['order'] = $index + 1;
+                array_splice($rows, $index + 1, 0, [$clone]);
+            }
 
-        if (! is_array($state) || ! isset($state['rows']) || ! is_array($state['rows'])) {
-            return [];
-        }
-
-        $existingIds = array_column($state['rows'], 'id');
-        $position = array_search($id, $existingIds);
-
-        if ($position === false) {
-            return [];
-        }
-
-        $original = $state['rows'][$position];
-        $position++;
-
-        $clone = $this->rowDeepClone($original);
-        $clone['order'] = $position;
-
-        array_splice($state['rows'], $position, 0, [$clone]);
-
+            return $rows;
+        });
         $this->state($state);
-
-        Notification::make()
-            ->title(__('layup::notifications.row_duplicated'))
-            ->success()
-            ->duration(2000)
-            ->send();
 
         return $clone;
     }
@@ -224,59 +175,45 @@ trait HandlesRows
     #[ExposedLivewireMethod]
     public function rowMove(string $id, string $direction): array
     {
-        $state = $this->getState();
+        $moved = [];
+        $state = ContentWalker::mapRowGroups($this->getState() ?? [], function (array $rows) use ($id, $direction, &$moved): array {
+            $index = array_search($id, array_column($rows, 'id'), true);
+            if ($index === false) {
+                return $rows;
+            }
+            $target = $direction === 'up' ? $index - 1 : $index + 1;
+            if (isset($rows[$target])) {
+                [$rows[$index], $rows[$target]] = [$rows[$target], $rows[$index]];
+            }
+            $moved = $rows;
 
-        if (! is_array($state) || ! isset($state['rows'])) {
-            return [];
-        }
-
-        $rows = collect($state['rows']);
-        $index = $rows->search(fn ($r) => $r['id'] === $id);
-
-        if ($index === false) {
-            return [];
-        }
-
-        $newIndex = $direction === 'up' ? $index - 1 : $index + 1;
-
-        if ($newIndex < 0 || $newIndex >= $rows->count()) {
-            return [];
-        }
-
-        $arr = $rows->all();
-        [$arr[$index], $arr[$newIndex]] = [$arr[$newIndex], $arr[$index]];
-        $state['rows'] = array_values($arr);
-
+            return $rows;
+        });
         $this->state($state);
 
-        return $state['rows'];
+        return $moved;
     }
 
     #[Renderless]
     #[ExposedLivewireMethod]
     public function rowMoveTo(string $id, int $targetIndex): bool
     {
-        $state = $this->getState();
+        $found = false;
+        $state = ContentWalker::mapRowGroups($this->getState() ?? [], function (array $rows) use ($id, $targetIndex, &$found): array {
+            $index = array_search($id, array_column($rows, 'id'), true);
+            if ($index === false) {
+                return $rows;
+            }
+            $found = true;
+            $row = $rows[$index];
+            array_splice($rows, $index, 1);
+            array_splice($rows, max(0, min($targetIndex, count($rows))), 0, [$row]);
 
-        if (! is_array($state) || ! isset($state['rows'])) {
-            return false;
-        }
-
-        $rows = $state['rows'];
-        $sourceIndex = collect($rows)->search(fn ($r) => $r['id'] === $id);
-
-        if ($sourceIndex === false) {
-            return false;
-        }
-
-        $row = $rows[$sourceIndex];
-        array_splice($rows, $sourceIndex, 1);
-        array_splice($rows, $targetIndex, 0, [$row]);
-
-        $state['rows'] = $rows;
+            return $rows;
+        });
         $this->state($state);
 
-        return true;
+        return $found;
     }
 
     // ─── Helpers ─────────────────────────────────────────────

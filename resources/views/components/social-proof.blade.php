@@ -1,4 +1,4 @@
-@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
 @php $tag = !empty($data['link_url']) ? 'a' : 'div'; @endphp
 <{{ $tag }}
     @if(!empty($data['link_url']))href="{{ $data['link_url'] }}" target="_blank"@endif

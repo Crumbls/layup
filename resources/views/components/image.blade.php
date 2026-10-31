@@ -1,4 +1,4 @@
-@if(!empty($data['src']))
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@if(!empty($data['src']))
 <figure @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="{{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @if(!empty($data['link_url']))<a href="{{ $data['link_url'] }}" @if(!empty($data['link_new_tab']))target="_blank" rel="noopener noreferrer"@endif>@endif
     @php

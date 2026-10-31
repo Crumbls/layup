@@ -16,6 +16,26 @@ class ContentValidator
             return new ValidationResult(['Content must be an array.']);
         }
 
+        if (array_key_exists('sections', $content)) {
+            if (! is_array($content['sections'])) {
+                return new ValidationResult(['"sections" must be an array.']);
+            }
+
+            foreach ($content['sections'] as $index => $section) {
+                if (! is_array($section)) {
+                    $errors[] = "Section {$index}: must be an array.";
+
+                    continue;
+                }
+
+                foreach ($this->validate(['rows' => $section['rows'] ?? null])->errors() as $error) {
+                    $errors[] = "Section {$index}: {$error}";
+                }
+            }
+
+            return new ValidationResult($errors);
+        }
+
         if (! array_key_exists('rows', $content)) {
             return new ValidationResult(['Missing "rows" key.']);
         }

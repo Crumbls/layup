@@ -1,11 +1,20 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $style = $data['style'] ?? 'accordion';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="space-y-3 {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
 >
     @foreach(($data['items'] ?? []) as $i => $item)
         @if($style === 'accordion')
@@ -25,3 +34,5 @@
         @endif
     @endforeach
 </div>
+
+@if($entranceAttributes !== '')</div>@endif

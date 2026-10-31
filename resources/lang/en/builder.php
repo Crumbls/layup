@@ -3,6 +3,16 @@
 declare(strict_types=1);
 
 return [
+    'all_sides' => 'All sides',
+    'section' => 'Section',
+    'add_section' => 'Add section',
+    'section_settings' => 'Section settings',
+    'delete_section' => 'Delete section',
+    'delete_section_confirm' => 'Delete this section and all rows, columns, and widgets inside it?',
+    'move_up' => 'Move up',
+    'move_down' => 'Move down',
+    'responsive_settings' => 'Responsive overrides',
+    'responsive_help' => 'Unset values inherit from smaller breakpoints and the base settings.',
 
     /*
     |--------------------------------------------------------------------------

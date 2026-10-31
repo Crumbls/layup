@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $iconSize = match($data['icon_size'] ?? 'md') {
         'sm' => 'text-sm gap-2',
         'lg' => 'text-lg gap-4',

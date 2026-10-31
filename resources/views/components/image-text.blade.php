@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $pos = $data['image_position'] ?? 'left';
     $w = match($data['image_width'] ?? '1/2') { '1/3' => 'w-1/3', '2/5' => 'w-2/5', '3/5' => 'w-3/5', default => 'w-1/2' };

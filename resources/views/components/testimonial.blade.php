@@ -1,4 +1,4 @@
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="border-l-4 pl-4 md:pl-6 py-2{{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="border-color: var(--layup-primary); {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="border-l-4 pl-4 md:pl-6 py-2{{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" style="border-color: var(--layup-primary); {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}" {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}>
     @if(!empty($data['rating']))
         <div class="mb-2" style="color: var(--layup-warning);">@for($i = 0; $i < (int)$data['rating']; $i++)★@endfor</div>
     @endif

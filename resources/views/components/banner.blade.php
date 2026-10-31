@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $bg = $data['bg_color'] ?? 'var(--layup-primary)';
     $tc = $data['text_color_banner'] ?? 'var(--layup-on-primary)';

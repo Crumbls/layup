@@ -27,6 +27,22 @@ The canvas toolbar gives you:
 - **Breakpoint preview** -- switch between sm, md, lg, and xl views to see responsive behavior
 - **Undo/Redo** -- step through content history within the current editing session
 
+## Sections
+
+Use **Add section** to create a section, then choose the section to edit from the selector above the canvas. Adding the first section to an existing row-based page preserves its rows in a section. You can duplicate, reorder, configure, or delete sections. Deleting a section asks for confirmation and removes its rows, columns, and widgets.
+
+**Section settings** includes backgrounds, overlays, minimum height, and the shared Design and Advanced controls. Row, column, and widget operations affect the selected section without flattening the rest of the page. Undo and redo retain the whole document, including other sections.
+
+## Responsive design settings
+
+Open **Design → Responsive overrides** on a section, row, column, or widget. Each configured breakpoint has its own shared Design fields, including typography, alignment, spacing, borders, shadows, opacity, and background color. Unset fields inherit the base value or the last value set at a smaller breakpoint. The first configured breakpoint is the mobile base; later breakpoints use their configured pixel widths.
+
+For padding and margin, **All sides** supplies a uniform value. Individual sides override that value, including an explicit zero. Units are `px`, `rem`, `em`, and `%`. Existing numeric and uniform spacing tokens such as `p-4` remain readable and are normalized when settings are opened.
+
+The breakpoint toolbar applies responsive overrides to supported live widget previews using the selected size. The canvas is still an editor representation; it does not reproduce the complete frontend layout.
+
+Published Blade overrides must call `BaseView::responsiveStyles($data)` as well as `BaseView::buildInlineStyles($data)` to render responsive overrides. Compare your published views with the package templates when upgrading.
+
 ## Adding rows
 
 Click **Add Row** and choose a column layout from the predefined templates:

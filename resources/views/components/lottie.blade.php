@@ -1,4 +1,4 @@
-@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
 @if(!empty($data['src']))
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"

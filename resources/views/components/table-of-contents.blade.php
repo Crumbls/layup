@@ -1,4 +1,13 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $levels = $data['heading_levels'] ?? ['h2', 'h3'];
     $numbered = !empty($data['numbered']);
@@ -8,8 +17,8 @@
 @endphp
 <nav @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="border dark:border-gray-700 rounded-lg p-4 {{ $sticky ? 'sticky top-4' : '' }} {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
      x-data="{
         open: {{ $collapsible ? 'false' : 'true' }},
         items: [],
@@ -31,3 +40,5 @@
         <template x-for="item in items" :key="item.id">
             <li :class="item.level === 'h3' ? 'ml-4' : (item.level === 'h4' ? 'ml-8' : '')">
                 <a :href="'#' + item.id" x-text="item.text" class="layup-text-primary hover:underline"></a></li></template></{{ $numbered ? 'ol' : 'ul' }}></nav>
+
+@if($entranceAttributes !== '')</div>@endif

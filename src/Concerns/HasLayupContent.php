@@ -124,6 +124,13 @@ trait HasLayupContent
      */
     public function toHtml(): string
     {
+        if (array_key_exists('sections', $this->getLayupContent())) {
+            return implode("\n", array_map(
+                fn (array $section): string => view('layup::components.section', ['section' => $section])->render(),
+                $this->getSectionTree(),
+            ));
+        }
+
         $tree = $this->getContentTree();
 
         return implode("\n", array_filter(array_map(

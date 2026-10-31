@@ -19,7 +19,8 @@
 
             {{ $getExtraAttributeBag() }}
             class="lyp-wrap"
-            x-on:content-updated.window="pushHistory(); content = Array.isArray($event.detail) ? $event.detail[0] : $event.detail"
+            :data-layup-breakpoint="currentBreakpoint"
+            x-on:content-updated.window="content = Array.isArray($event.detail) ? $event.detail[0] : $event.detail; pushHistory()"
             @keydown.window="onKeyDown($event)"
     >
 
@@ -55,6 +56,23 @@
                 <button type="button" @click="showRuler = !showRuler" class="lyp-toolbar-icon" :title="showRuler ? '{{ __('layup::builder.hide_ruler') }}' : '{{ __('layup::builder.show_ruler') }}'" :style="showRuler ? 'color: var(--primary-500)' : ''">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"/></svg></button></div></div>
 
+        <div class="lyp-section-toolbar">
+            <label for="{{ $getId() }}-section">{{ __('layup::builder.section') }}</label>
+            <select id="{{ $getId() }}-section" x-show="sections.length" x-model="activeSectionId">
+                <template x-for="(section, index) in sections" :key="section.id">
+                    <option :value="section.id" x-text="(index + 1) + '. ' + (section.settings?.id || @js(__('layup::builder.section')))"></option>
+                </template>
+            </select>
+            <button type="button" @click="sectionChange('sectionAdd')">{{ __('layup::builder.add_section') }}</button>
+            <template x-if="activeSection"><div class="lyp-section-actions">
+                <button type="button" @click="sectionEdit(activeSection.id)">{{ __('layup::builder.section_settings') }}</button>
+                <button type="button" @click="sectionChange('sectionDuplicate', {id: activeSection.id})">{{ __('layup::builder.duplicate') }}</button>
+                <button type="button" @click="sectionChange('sectionMove', {id: activeSection.id, direction: 'up'})">{{ __('layup::builder.move_up') }}</button>
+                <button type="button" @click="sectionChange('sectionMove', {id: activeSection.id, direction: 'down'})">{{ __('layup::builder.move_down') }}</button>
+                <button type="button" @click="sectionDelete(activeSection.id)">{{ __('layup::builder.delete_section') }}</button>
+            </div></template>
+        </div>
+
         {{-- Canvas --}}
         <div class="lyp-canvas">
             <div class="lyp-canvas-inner" :style="'max-width:' + breakpoints[currentBreakpoint].width + 'px'">
@@ -80,7 +98,7 @@
                                         <template x-for="(span, ci) in template" :key="ci">
                                             <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div></template></button></template></div></div></div>
 
-                    <template x-for="(row, rowIndex) in content.rows" :key="row.id">
+                    <template x-for="(row, rowIndex) in rows" :key="row.id">
                         <div>
                             {{-- Row drop indicator --}}
                             <div
@@ -228,8 +246,8 @@
                     {{-- Drop indicator after last row --}}
                     <div
                             class="lyp-row-drop-indicator"
-                            :class="{ 'lyp-row-drop-indicator--active': rowDrag.dropIndex === content.rows.length }"
-                            @dragover.prevent="if(rowDrag.active) rowDrag.dropIndex = content.rows.length"
+                            :class="{ 'lyp-row-drop-indicator--active': rowDrag.dropIndex === rows.length }"
+                            @dragover.prevent="if(rowDrag.active) rowDrag.dropIndex = rows.length"
                             @drop.prevent="onRowDrop($event)"
                             style="min-height: 0.5rem"
                     ></div>
@@ -257,13 +275,15 @@
                                             <div class="lyp-tpl-col" :style="'flex:' + span + ' ' + span + ' 0%'"></div></template></button></template></div></div></div>
 
                     {{-- Empty State --}}
-                    <template x-if="!content.rows || content.rows.length === 0">
+                    <template x-if="!rows || rows.length === 0">
                         <div class="lyp-empty">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
                             <p>{!! __('layup::builder.empty_state') !!}</p></div></template></div></div></div>
 
         {{-- Action mount points (hidden — triggered via JS $wire.mountAction) --}}
         <div style="display:none !important; position:absolute; overflow:hidden; width:0; height:0;">
+            {{ $getAction('sectionEdit') }}
+            {{ $getAction('sectionDelete') }}
             {{ $getAction('rowDelete') }}
             {{ $getAction('rowEdit') }}
             {{ $getAction('columnDelete') }}
@@ -284,6 +304,36 @@
             content: config.content,
             breakpoints: config.breakpoints,
             currentBreakpoint: config.defaultBreakpoint,
+            activeSectionId: null,
+            get sections() { return this.content.sections || []; },
+            get activeSection() { return this.sections.find(section => section.id === this.activeSectionId) || this.sections[0] || null; },
+            get rows() { return Array.isArray(this.content.sections) ? (this.activeSection?.rows || []) : (this.content.rows || []); },
+            set rows(rows) {
+                if (Array.isArray(this.content.sections)) {
+                    if (this.activeSection) this.activeSection.rows = rows;
+                } else {
+                    this.content.rows = rows;
+                }
+            },
+            rowsForSection(id) {
+                return id === null ? (this.content.rows || []) : (this.sections.find(section => section.id === id)?.rows || []);
+            },
+            get allRows() { return Array.isArray(this.content.sections) ? this.sections.flatMap(section => section.rows || []) : this.rows; },
+            set allRows(rows) {
+                if (Array.isArray(this.content.sections)) {
+                    const byId = new Map(rows.map(row => [row.id, row]));
+                    this.sections.forEach(section => { section.rows = (section.rows || []).filter(row => byId.has(row.id)).map(row => byId.get(row.id)); });
+                } else { this.rows = rows; }
+            },
+            sectionChange(method, args = {}) {
+                $wire.callSchemaComponentMethod(this.componentKey, method, args).then(content => {
+                    this.content = content;
+                    if (method === 'sectionAdd') this.activeSectionId = this.sections.at(-1)?.id;
+                    this.pushHistory();
+                });
+            },
+            sectionEdit(id) { $wire.mountAction('sectionEdit', {id}, {schemaComponent: this.componentKey}); },
+            sectionDelete(id) { $wire.mountAction('sectionDelete', {id}, {schemaComponent: this.componentKey}); },
             rowTemplates: config.rowTemplates,
             widgetRegistry: config.widgetRegistry,
             translations: config.translations,
@@ -374,9 +424,13 @@
                     this.content = {};
                 }
 
-                if (!(this.content.rows && typeof this.content.rows === 'object')) {
-                    this.content.rows = [];
-                }
+                if (!Array.isArray(this.content.sections) && !Array.isArray(this.content.rows)) this.content.rows = [];
+                this.activeSectionId = this.sections[0]?.id || null;
+                window.addEventListener('layup-sections-updated', event => {
+                    if (event.detail.statePath !== this.statePath) return;
+                    this.content = event.detail.content;
+                    this.pushHistory();
+                });
 
                 this.history = [JSON.parse(JSON.stringify(this.content))];
                 this.historyIndex = 0;
@@ -410,10 +464,10 @@
                     // but if added via the action (not callSchemaComponentMethod), sync here.
                     const row = event.detail.row;
                     if (row && row.id) {
-                        const exists = ($self.content.rows || []).some(r => r.id === row.id);
+                        const exists = ($self.rows || []).some(r => r.id === row.id);
                         if (!exists) {
-                            $self.content.rows = $self.content.rows ?? [];
-                            $self.content.rows.splice(row.order ?? $self.content.rows.length, 0, row);
+                            $self.rows = $self.rows ?? [];
+                            $self.rows.splice(row.order ?? $self.rows.length, 0, row);
                             $self.pushHistory();
                         }
                     }
@@ -426,7 +480,7 @@
                     const id = event.detail.id;
                     const settings = event.detail.settings;
                     if (id && settings) {
-                        $self.content.rows = ($self.content.rows || []).map(row => {
+                        $self.allRows = $self.allRows.map(row => {
                             if (row.id === id) {
                                 row.settings = settings;
                             }
@@ -440,7 +494,7 @@
                     if (event.detail.statePath != $self.statePath) return;
                     const rowId = event.detail.rowId;
                     const columnId = event.detail.columnId;
-                    const row = ($self.content.rows || []).find(r => r.id === rowId);
+                    const row = $self.allRows.find(r => r.id === rowId);
                     if (row) {
                         row.columns = (row.columns || []).filter(c => c.id !== columnId);
                         $self.pushHistory();
@@ -450,7 +504,7 @@
                 window.addEventListener('layup-widget-deleted', (event) => {
                     if (event.detail.statePath != $self.statePath) return;
                     const { rowId, columnId, widgetId } = event.detail;
-                    $self.content.rows = ($self.content.rows || []).map(function(row) {
+                    $self.allRows = $self.allRows.map(function(row) {
                         if (row.id === rowId) {
                             row.columns = (row.columns || []).map(function(col) {
                                 if (col.id === columnId) {
@@ -468,7 +522,7 @@
                     if (event.detail.statePath != $self.statePath) return;
                     const { rowId, columnId, widgetId, data } = event.detail;
                     let updatedWidget = null;
-                    $self.content.rows = ($self.content.rows || []).map(function(row) {
+                    $self.allRows = $self.allRows.map(function(row) {
                         if (row.id === rowId) {
                             row.columns = (row.columns || []).map(function(col) {
                                 if (col.id === columnId) {
@@ -496,7 +550,7 @@
                     const span = event.detail.span;
                     const settings = event.detail.settings;
 
-                    $self.content.rows = ($self.content.rows || []).map(function(row) {
+                    $self.allRows = $self.allRows.map(function(row) {
                         if (row.id === rowId) {
                             row.columns = (row.columns || []).map(function(col) {
                                 if (col.id === columnId) {
@@ -534,14 +588,16 @@
                 $wire.mountAction('rowDelete', { id: id }, { schemaComponent: this.componentKey});
             },
             rowDeleted: function(id) {
-                if (typeof this.content.rows != 'object') {
+                if (typeof this.rows != 'object') {
                     return;
                 }
-                this.content.rows = this.content.rows.filter(row => row.id !== id);
+                this.allRows = this.allRows.filter(row => row.id !== id);
+                this.pushHistory();
             },
             rowDuplicate: function(id) {
                 let $self = this;
 
+                const sectionId = this.sections.find(section => section.rows?.some(row => row.id === id))?.id || null;
                 $wire.callSchemaComponentMethod(this.componentKey, 'rowDuplicate', {id: id})
                     .then(function (response) {
                         if (typeof response != 'object') {
@@ -554,8 +610,8 @@
                             return;
                         }
 
-                        $self.content.rows = $self.content.rows ?? [];
-                        $self.content.rows.splice(response.order, 0, response);
+                        $self.rowsForSection(sectionId).splice(response.order, 0, response);
+                        $self.pushHistory();
                     });
 
             },
@@ -571,7 +627,8 @@
                     position = 0;
                 }
 
-                $wire.callSchemaComponentMethod(this.componentKey, 'rowAdd', {columns: schema, position: position})
+                const sectionId = this.activeSection?.id || null;
+                $wire.callSchemaComponentMethod(this.componentKey, 'rowAdd', {columns: schema, position: position, sectionId: sectionId})
                     .then(function (response) {
 
                         if (typeof response != 'object' || !response) {
@@ -582,8 +639,7 @@
                             return;
                         }
 
-                        $self.content.rows = typeof $self.content.rows == 'object' ? $self.content.rows : [];
-                        $self.content.rows.splice(response.order, 0, response);
+                        $self.rowsForSection(sectionId).splice(response.order, 0, response);
 
 
                         $self.pushHistory();
@@ -591,8 +647,8 @@
             },
 
             rowAdd: function(schema) {
-                this.content.rows = this.content.rows ?? [];
-                this.rowAddAt(schema, this.content.rows.length);
+                this.rows = this.rows ?? [];
+                this.rowAddAt(schema, this.rows.length);
             },
 
             rowEdit: function(id) {
@@ -607,7 +663,7 @@
                 $wire.callSchemaComponentMethod(this.componentKey, 'columnAdd', {rowId: rowId})
                     .then(function (response) {
                         if (typeof response != 'object' || !response.id) return;
-                        $self.content.rows = ($self.content.rows || []).map(function(row) {
+                        $self.allRows = $self.allRows.map(function(row) {
                             if (row.id === rowId) {
                                 row.columns = [...(row.columns || []), response];
                             }
@@ -628,7 +684,7 @@
             columnMove: function(rowId, columnId, direction) {
                 let $self = this;
                 // Optimistic local move
-                const row = ($self.content.rows || []).find(r => r.id === rowId);
+                const row = $self.allRows.find(r => r.id === rowId);
                 if (row) {
                     const cols = row.columns || [];
                     const index = cols.findIndex(c => c.id === columnId);
@@ -663,7 +719,7 @@
                 $wire.callSchemaComponentMethod(this.componentKey, 'widgetAdd', args)
                     .then(function (response) {
                         if (typeof response != 'object' || !response.id) return;
-                        $self.content.rows = ($self.content.rows || []).map(function(row) {
+                        $self.allRows = $self.allRows.map(function(row) {
                             if (row.id === rowId) {
                                 row.columns = (row.columns || []).map(function(col) {
                                     if (col.id === columnId) {
@@ -690,7 +746,7 @@
                 $wire.callSchemaComponentMethod(this.componentKey, 'widgetDuplicate', {rowId: rowId, columnId: columnId, widgetId: widgetId})
                     .then(function (response) {
                         if (typeof response != 'object' || !response.id) return;
-                        $self.content.rows = ($self.content.rows || []).map(function(row) {
+                        $self.allRows = $self.allRows.map(function(row) {
                             if (row.id === rowId) {
                                 row.columns = (row.columns || []).map(function(col) {
                                     if (col.id === columnId) {
@@ -717,7 +773,7 @@
                 let $self = this;
                 // Optimistic local move
                 let widget = null;
-                $self.content.rows = ($self.content.rows || []).map(function(row) {
+                $self.allRows = $self.allRows.map(function(row) {
                     if (row.id === sourceRowId) {
                         row.columns = (row.columns || []).map(function(col) {
                             if (col.id === sourceColId) {
@@ -735,7 +791,7 @@
                     return row;
                 });
                 if (widget) {
-                    $self.content.rows = ($self.content.rows || []).map(function(row) {
+                    $self.allRows = $self.allRows.map(function(row) {
                         if (row.id === targetRowId) {
                             row.columns = (row.columns || []).map(function(col) {
                                 if (col.id === targetColId) {
@@ -759,9 +815,6 @@
 
             undo() {
                 if (this.historyIndex <= 0) return;
-                if (this.historyIndex === this.history.length - 1) {
-                    this.history.push(JSON.parse(JSON.stringify(this.content)));
-                }
                 this.historyIndex--;
                 const state = JSON.parse(JSON.stringify(this.history[this.historyIndex]));
                 this.content = state;
@@ -777,6 +830,7 @@
             },
 
             onKeyDown(e) {
+                if (e.target?.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]')) return;
                 if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); this.undo(); }
                 if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) { e.preventDefault(); this.redo(); }
                 if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); this.redo(); }
@@ -808,10 +862,10 @@
 
                 if (sourceIndex !== targetIndex) {
                     // Optimistic local reorder
-                    const rows = [...this.content.rows];
+                    const rows = [...this.rows];
                     const [moved] = rows.splice(sourceIndex, 1);
                     rows.splice(targetIndex, 0, moved);
-                    this.content.rows = rows;
+                    this.rows = rows;
                     this.pushHistory();
 
                     // Sync to PHP
@@ -875,7 +929,7 @@
             },
 
             findCol(rowId, colId) {
-                const row = this.content.rows.find(r => r.id === rowId);
+                const row = this.allRows.find(r => r.id === rowId);
                 return row ? row.columns.find(c => c.id === colId) : null;
             },
             getColSpan(col) { return col.span?.[this.currentBreakpoint] ?? col.span?.lg ?? 6; },
@@ -898,7 +952,7 @@
             // existing content needs zero round-trips to preview.
             seedLivePreviews() {
                 const map = this.initialLivePreviews || {};
-                (this.content.rows || []).forEach(row => {
+                this.allRows.forEach(row => {
                     (row.columns || []).forEach(col => {
                         (col.widgets || []).forEach(widget => {
                             if (map[widget.id] != null) {
@@ -1104,7 +1158,7 @@
                 const { rowId, colId, widgetId } = this.inlineEdit;
 
                 // Update widget data in content
-                for (let row of this.content.rows) {
+                for (let row of this.rows) {
                     if (row.id !== rowId) continue;
                     for (let col of row.columns) {
                         if (col.id !== colId) continue;
@@ -1128,7 +1182,7 @@
 
             // Column resizing
             startColumnResize(rowId, colIndex, event) {
-                const row = this.content.rows.find(r => r.id === rowId);
+                const row = this.allRows.find(r => r.id === rowId);
                 if (!row || colIndex <= 0 || colIndex >= row.columns.length) return;
 
                 this.columnResize = {
@@ -1156,7 +1210,7 @@
                 if (deltaSpan === 0) return;
 
                 const { rowId, colIndex, startSpans } = this.columnResize;
-                const row = this.content.rows.find(r => r.id === rowId);
+                const row = this.allRows.find(r => r.id === rowId);
                 if (!row) return;
 
                 const leftCol = row.columns[colIndex - 1];
@@ -1185,7 +1239,7 @@
 
                 // Save column span changes to PHP state
                 if (this.columnResize.rowId) {
-                    const row = this.content.rows.find(r => r.id === this.columnResize.rowId);
+                    const row = this.allRows.find(r => r.id === this.columnResize.rowId);
                     if (row) {
                         const spans = row.columns.map(col => col.span);
                         this.pushHistory();

@@ -1,4 +1,4 @@
-@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="flex flex-col sm:flex-row items-center gap-4 border dark:border-gray-700 rounded-lg p-4 {{ $vis }} {{ $data['class'] ?? '' }}"
      style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"

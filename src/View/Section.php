@@ -94,18 +94,16 @@ class Section extends BaseView
      */
     public static function buildSectionStyles(array $settings): string
     {
-        $styles = [];
-
-        if (! empty($settings['background_color'])) {
-            $styles[] = "background-color: {$settings['background_color']}";
-        }
+        $shared = $settings;
+        unset($shared['inline_css']);
+        $styles = [parent::buildInlineStyles($shared)];
 
         if (! empty($settings['background_gradient'])) {
             $styles[] = "background: {$settings['background_gradient']}";
         }
 
-        if (! empty($settings['background_image']) && empty($settings['background_video'])) {
-            $url = asset('storage/' . $settings['background_image']);
+        if (is_string($settings['background_image'] ?? null) && $settings['background_image'] !== '' && empty($settings['background_video'])) {
+            $url = \Illuminate\Support\Facades\Storage::disk(config('layup.uploads.disk', 'public'))->url($settings['background_image']);
             $styles[] = "background-image: url('{$url}')";
             $styles[] = 'background-size: cover';
             $styles[] = 'background-position: center';
@@ -122,11 +120,11 @@ class Section extends BaseView
             $styles[] = $settings['inline_css'];
         }
 
-        return implode('; ', $styles);
+        return implode('; ', array_filter($styles));
     }
 
     public function render(): \Illuminate\Contracts\View\View
     {
-        return view('layup::components.section');
+        return view('layup::components.section', ['section' => ['settings' => $this->data, 'rows' => $this->children]]);
     }
 }

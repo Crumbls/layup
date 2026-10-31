@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Section creation, selection, settings, duplication, reordering, and confirmed deletion in the visual builder, with legacy row documents preserved.
+- Shared Design overrides per breakpoint for sections, rows, columns, and built-in Blade widgets, with inherited values and selected-breakpoint live previews.
+- Editable All sides spacing controls alongside per-side overrides and units.
+
 ### Fixed
+
+- Section content now survives builder operations and validation; standalone content rendering retains section wrappers and settings.
+- Shared padding, margin, typography, borders, shadows, opacity, visibility, and custom attributes render on sections and previously incomplete widget wrappers.
+- Existing uniform and numeric spacing values remain readable and editable; new columns use the current spacing data format.
+- Row direction and wrapping controls now affect the frontend layout.
+- Entrance animations preserve saved inline styles and configured opacity instead of replacing the element's styles.
+- Delayed row responses stay in their originating section; undo no longer adds duplicate redo steps, and widget moves retain the source when the destination is missing.
+- Updated the page-authoring guide with section and responsive settings workflows and published-view upgrade requirements.
+
 
 - `layup:install` now runs only Layup's own Pages migrations instead of every pending application migration, skips storage linking for remote upload disks, and resolves dot and Livewire layout names correctly.
 - Field-only installs can disable both bundled Pages features, skip Pages migrations, and configure host models as Tailwind safelist content sources.

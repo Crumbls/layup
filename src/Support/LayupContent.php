@@ -22,6 +22,13 @@ class LayupContent implements Htmlable
 
     public function toHtml(): string
     {
+        if (array_key_exists('sections', $this->content)) {
+            return implode("\n", array_map(
+                fn (array $section): string => view('layup::components.section', ['section' => $section])->render(),
+                $this->getSectionTree(),
+            ));
+        }
+
         return implode("\n", array_filter(array_map(
             function (Row $row): string {
                 try {

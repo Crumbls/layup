@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $align = match($data['alignment'] ?? 'center') { 'left' => 'text-left', 'right' => 'text-right', default => 'text-center' };
     $tag = $data['heading_tag'] ?? 'h2';

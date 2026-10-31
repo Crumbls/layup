@@ -1,4 +1,13 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $words = $data['words'] ?? [];
     // Handle both simple array and Filament repeater format
@@ -10,8 +19,8 @@
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="text-2xl md:text-3xl font-bold {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
      x-data="{
         words: {{ json_encode(array_values($wordList)) }},
         current: '',
@@ -45,3 +54,5 @@
 >
     {{ $data['prefix'] ?? '' }}<span x-text="current"></span><span class="animate-pulse" style="color: {{ $cursorColor }}">|</span>{{ $data['suffix'] ?? '' }}
 </div>
+
+@if($entranceAttributes !== '')</div>@endif

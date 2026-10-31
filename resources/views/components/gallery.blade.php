@@ -1,11 +1,20 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $lightbox = !empty($data['lightbox']);
     $showCaptions = !empty($data['show_captions']);
     $captions = $showCaptions ? array_map('trim', explode("\n", $data['captions_text'] ?? '')) : [];
     $galCols = $data['columns'] ?? 3;
     $galGap = $data['gap'] ?? '0.5rem';
-    $galId = 'layup-gal-' . md5(uniqid('gal', true));
+    $galId = !empty($data['id']) ? $data['id'] : 'layup-gal-' . md5(uniqid('gal', true));
 @endphp
 <style>
     #{{ $galId }} { display:grid; grid-template-columns:1fr; gap:{{ $galGap }}; }
@@ -13,10 +22,9 @@
     @media(min-width:1024px) { #{{ $galId }} { grid-template-columns:repeat({{ $galCols }},1fr); } }
 </style>
 <div id="{{ $galId }}"
-     @if(!empty($data['id'])) data-block-id="{{ $data['id'] }}"@endif
      class="{{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
      @if($lightbox) x-data="layupLightbox()" @endif
 >
     @foreach(($data['images'] ?? []) as $idx => $image)
@@ -52,3 +60,5 @@
                 <button @click="next()" class="absolute right-4 text-white text-3xl hover:text-gray-300">&#8250;</button></div></template>
     @endif
 </div>
+
+@if($entranceAttributes !== '')</div>@endif

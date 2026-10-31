@@ -3,6 +3,16 @@
 declare(strict_types=1);
 
 return [
+    'all_sides' => 'Alle Seiten',
+    'section' => 'Abschnitt',
+    'add_section' => 'Abschnitt hinzufügen',
+    'section_settings' => 'Abschnittseinstellungen',
+    'delete_section' => 'Abschnitt löschen',
+    'delete_section_confirm' => 'Diesen Abschnitt und alle enthaltenen Zeilen, Spalten und Widgets löschen?',
+    'move_up' => 'Nach oben',
+    'move_down' => 'Nach unten',
+    'responsive_settings' => 'Responsive Anpassungen',
+    'responsive_help' => 'Leere Werte werden von kleineren Haltepunkten und den Grundeinstellungen übernommen.',
 
     /*
     |--------------------------------------------------------------------------

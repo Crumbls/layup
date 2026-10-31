@@ -1,4 +1,8 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
     $bg = $data['bg_color'] ?? 'var(--layup-primary)';
     $tc = $data['text_color_btn'] ?? 'var(--layup-on-primary)';
     $pos = ($data['position'] ?? 'right') === 'left' ? 'left: 1.5rem' : 'right: 1.5rem';
@@ -9,15 +13,17 @@
     };
     $showAfter = $data['show_after'] ?? 300;
 @endphp
-<div x-data="{ visible: false }"
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
+     x-data="{ visible: false }"
      @scroll.window="visible = window.scrollY > {{ $showAfter }}"
-     class="fixed bottom-6 z-50"
-     style="{{ $pos }}"
+     class="{{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }} fixed bottom-6 z-50"
+     style="{{ $pos }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
 >
-    <button x-show="visible" x-transition
+    <div {!! \Crumbls\Layup\View\BaseView::animationAttributes($animationData) !!}><button x-show="visible" x-transition
             @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
             class="{{ $sizeClass }} rounded-full shadow-lg flex items-center justify-center hover:opacity-90 transition-opacity"
             style="background-color: {{ $bg }}; color: {{ $tc }}"
             aria-label="{{ __('layup::frontend.back_to_top.label') }}">
         ↑
-    </button></div>
+    </button></div></div>

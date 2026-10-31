@@ -8,6 +8,25 @@ use Closure;
 
 class ContentWalker
 {
+    /** Transform rows without losing their owning section or its settings. */
+    public static function mapRowGroups(array $content, Closure $callback): array
+    {
+        if (array_key_exists('sections', $content)) {
+            foreach ($content['sections'] as &$section) {
+                $section['rows'] = array_values($callback($section['rows'] ?? [], $section['id'] ?? null));
+            }
+        } else {
+            $content['rows'] = array_values($callback($content['rows'] ?? [], null));
+        }
+
+        return $content;
+    }
+
+    public static function mapRows(array $content, Closure $callback): array
+    {
+        return self::mapRowGroups($content, fn (array $rows): array => array_map($callback, $rows));
+    }
+
     /**
      * Walk all widgets in a content structure, calling $callback for each.
      *
@@ -61,7 +80,7 @@ class ContentWalker
      */
     public static function extractRows(array $content): array
     {
-        if (! empty($content['sections'])) {
+        if (array_key_exists('sections', $content)) {
             $rows = [];
 
             foreach ($content['sections'] as $section) {

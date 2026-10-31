@@ -1,4 +1,4 @@
-@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
 @if(!empty($data['html']))
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="overflow-hidden {{ $vis }} {{ $data['class'] ?? '' }}"

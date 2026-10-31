@@ -1,9 +1,18 @@
+@php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
 @php $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []); @endphp
 @if(!empty($data['image']))
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="relative inline-block {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
 >
     <img src="{{ asset('storage/' . $data['image']) }}" alt="" class="w-full h-auto" />
     @foreach(($data['points'] ?? []) as $i => $point)
@@ -17,3 +26,5 @@
     @endforeach
 </div>
 @endif
+
+@if($entranceAttributes !== '')</div>@endif

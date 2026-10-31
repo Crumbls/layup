@@ -1,12 +1,21 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $dir = ($data['direction'] ?? 'horizontal') === 'vertical' ? 'rotateX(180deg)' : 'rotateY(180deg)';
     $height = $data['height'] ?? '300px';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="group {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="perspective: 1000px; height: {{ $height }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="perspective: 1000px; height: {{ $height }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
 >
     <div class="relative w-full h-full transition-transform duration-700" style="transform-style: preserve-3d; group-hover:transform: {{ $dir }}" x-data="{ flipped: false }" @mouseenter="flipped = true" @mouseleave="flipped = false" :style="flipped ? 'transform: {{ $dir }}' : ''">
         {{-- Front --}}
@@ -20,3 +29,5 @@
             @if(!empty($data['back_description']))<p class="text-white/80 dark:text-white/80 mb-4">{{ $data['back_description'] }}</p>@endif
             @if(!empty($data['link_url']))<a href="{{ $data['link_url'] }}" class="bg-white/20 dark:bg-white/20 hover:bg-white/30 dark:hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition-colors">{{ $data['link_text'] ?? __('layup::frontend.flip_card.learn_more') }}</a>@endif
         </div></div></div>
+
+@if($entranceAttributes !== '')</div>@endif

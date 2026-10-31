@@ -1,4 +1,13 @@
-<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="divide-y divide-gray-200 dark:divide-gray-700 border border-gray-200 dark:border-gray-700 rounded-lg {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" x-data="layupAccordion({{ !empty($data['open_first']) ? 'true' : 'false' }})" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}">
+@php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+<div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif class="divide-y divide-gray-200 dark:divide-gray-700 border border-gray-200 dark:border-gray-700 rounded-lg {{ \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []) }} {{ $data['class'] ?? '' }}" x-data="layupAccordion({{ !empty($data['open_first']) ? 'true' : 'false' }})" style="{{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}">
     @foreach(($data['items'] ?? []) as $index => $item)
         <div>
             <button @click="toggle({{ $index }})" class="flex items-center justify-between w-full px-4 py-3 text-left font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" :class="isOpen({{ $index }}) ? 'bg-gray-50 dark:bg-gray-800' : ''">
@@ -10,3 +19,5 @@
                 </div></div></div>
     @endforeach
 </div>
+
+@if($entranceAttributes !== '')</div>@endif

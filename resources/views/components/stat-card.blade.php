@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $color = $data['accent_color'] ?? 'var(--layup-primary)';
     $trendStyle = match($data['trend'] ?? '') {

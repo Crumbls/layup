@@ -1,12 +1,21 @@
 @php
+    $designData = $data;
+    unset($designData['animation']);
+    $animationData = $data;
+    unset($animationData['responsive'], $animationData['opacity']);
+    $entranceAttributes = \Crumbls\Layup\View\BaseView::animationAttributes($animationData);
+@endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($designData) !!}
+@if($entranceAttributes !== '')<div {!! $entranceAttributes !!}>@endif
+@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $bg = $data['bg_color'] ?? 'var(--layup-primary)';
     $textColor = $data['text_color_bar'] ?? 'var(--layup-on-primary)';
 @endphp
 <div @if(!empty($data['id']))id="{{ $data['id'] }}"@endif
      class="py-3 px-4 text-center text-sm {{ $vis }} {{ $data['class'] ?? '' }}"
-     style="background-color: {{ $bg }}; color: {{ $textColor }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($data) }}"
-     {!! \Crumbls\Layup\View\BaseView::animationAttributes($data) !!}
+     style="background-color: {{ $bg }}; color: {{ $textColor }}; {{ \Crumbls\Layup\View\BaseView::buildInlineStyles($designData) }}"
+
      @if(!empty($data['dismissible'])) x-data="{ show: true }" x-show="show" x-transition @endif
 >
     <div class="flex items-center justify-center gap-3">
@@ -18,3 +27,5 @@
             <button @click="show = false" class="ml-2 opacity-60 hover:opacity-100" style="color: {{ $textColor }}">&times;</button>
         @endif
     </div></div>
+
+@if($entranceAttributes !== '')</div>@endif

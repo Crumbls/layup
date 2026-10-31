@@ -1,4 +1,4 @@
-@php
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($data ?? []) !!}@php
     $vis = \Crumbls\Layup\View\BaseView::visibilityClasses($data['hide_on'] ?? []);
     $networks = $data['networks'] ?? ['facebook', 'twitter', 'linkedin', 'email'];
     $style = $data['style'] ?? 'icon';
@@ -27,7 +27,7 @@
             <button @click="navigator.clipboard.writeText(window.location.href); $el.textContent = '{{ __('layup::frontend.share_buttons.copied') }}'"
                     class="inline-flex items-center gap-1 px-3 py-2 rounded text-sm text-white transition-colors"
                     style="background-color: #6b7280">
-                @if($style !== 'text') 
+                @if($style !== 'text')
                 @endif
                 @if($style !== 'icon'){{ __('layup::frontend.share_buttons.copy_link') }}
                 @endif

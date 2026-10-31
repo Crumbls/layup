@@ -6,6 +6,7 @@
     $overlayOpacity = ($settings['overlay_opacity'] ?? 0) / 100;
     $hasOverlay = $overlayOpacity > 0;
 @endphp
+{!! \Crumbls\Layup\View\BaseView::responsiveStyles($settings) !!}
 <section @if(!empty($settings['id']))id="{{ $settings['id'] }}"@endif
          class="relative {{ $vis }} {{ $settings['class'] ?? '' }}"
          style="{{ $sectionStyles }}"
@@ -23,7 +24,7 @@
     @endif
 
     {{-- Content: render rows --}}
-    <div class="relative space-y-4" style="z-index: 2">
+    <div class="relative space-y-4 {{ array_key_exists('full_width', $settings) && !$settings['full_width'] ? \Crumbls\Layup\Support\PageLayout::resolve($page ?? null) . ' mx-auto' : '' }}" style="z-index: 2">
         @foreach($section['rows'] ?? [] as $row)
             {!! $row->render() !!}
         @endforeach

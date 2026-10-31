@@ -6,16 +6,20 @@ namespace Crumbls\Layup\Forms\Components;
 
 use Crumbls\Layup\Forms\Components\Traits\HandlesColumns;
 use Crumbls\Layup\Forms\Components\Traits\HandlesRows;
+use Crumbls\Layup\Forms\Components\Traits\HandlesSections;
 use Crumbls\Layup\Forms\Components\Traits\HandlesWidgets;
+use Crumbls\Layup\Support\ContentWalker;
 use Crumbls\Layup\Support\WidgetRegistry;
 use Filament\Forms\Components\Field;
 use Filament\Support\Components\Attributes\ExposedLivewireMethod;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Renderless;
 
 class LayupBuilder extends Field
 {
     use HandlesColumns;
     use HandlesRows;
+    use HandlesSections;
     use HandlesWidgets;
 
     protected string $view = 'layup::forms.components.layup-builder';
@@ -25,8 +29,35 @@ class LayupBuilder extends Field
         parent::setUp();
 
         $this->columnSpanFull();
+        $this->afterStateHydrated(function (LayupBuilder $component, mixed $state): void {
+            $state = is_array($state) ? $state : ['rows' => []];
+            if (isset($state['sections'])) {
+                foreach ($state['sections'] as &$section) {
+                    $section['id'] ??= 'section_' . Str::random(8);
+                }
+                unset($section);
+            }
+            $state = ContentWalker::mapRowGroups($state, function (array $rows): array {
+                foreach ($rows as &$row) {
+                    $row['id'] ??= 'row_' . Str::random(8);
+                    foreach ($row['columns'] ?? [] as $ci => $column) {
+                        $column['id'] ??= 'col_' . Str::random(8);
+                        foreach ($column['widgets'] ?? [] as $wi => $widget) {
+                            $widget['id'] ??= 'widget_' . Str::random(8);
+                            $column['widgets'][$wi] = $widget;
+                        }
+                        $row['columns'][$ci] = $column;
+                    }
+                }
+
+                return $rows;
+            });
+            $component->state($state);
+        });
 
         $this->registerActions([
+            $this->sectionEditAction(),
+            $this->sectionDeleteAction(),
             $this->rowDeleteAction(),
             $this->rowEditAction(),
             $this->columnDeleteAction(),

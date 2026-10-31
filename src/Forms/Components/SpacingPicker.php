@@ -11,6 +11,25 @@ use Filament\Schemas\Components\Section;
 
 class SpacingPicker
 {
+    /** Normalize saved values before hydration and CSS generation. */
+    public static function normalize(mixed $value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+        if (is_numeric($value)) {
+            return ['unit' => 'px', 'all' => $value];
+        }
+        if (is_string($value) && preg_match('/^[pm]-(\d+(?:\.\d+)?)$/D', $value, $matches)) {
+            return ['unit' => 'rem', 'all' => (float) $matches[1] / 4];
+        }
+        if (is_string($value) && preg_match('/^(-?\d+(?:\.\d+)?)(px|rem|em|%)$/D', $value, $matches)) {
+            return ['unit' => $matches[2], 'all' => $matches[1]];
+        }
+
+        return [];
+    }
+
     /**
      * Simple mode: single value applied to all sides.
      */
@@ -19,6 +38,7 @@ class SpacingPicker
         return TextInput::make($name)
             ->label($label)
             ->numeric()
+            ->minValue($name === 'padding' ? 0 : null)
             ->nullable()
             ->suffix('px');
     }
@@ -48,6 +68,7 @@ class SpacingPicker
                         TextInput::make("{$name}.top")
                             ->label(__('layup::widgets.shared.top'))
                             ->numeric()
+                            ->minValue($name === 'padding' ? 0 : null)
                             ->nullable()
                             ->placeholder('0'),
                     ])
@@ -59,16 +80,20 @@ class SpacingPicker
                         TextInput::make("{$name}.left")
                             ->label(__('layup::widgets.shared.left'))
                             ->numeric()
+                            ->minValue($name === 'padding' ? 0 : null)
                             ->nullable()
                             ->placeholder('0'),
                         TextInput::make("{$name}.all")
-                            ->label(strtoupper(substr($label, 0, 3)))
-                            ->disabled()
-                            ->placeholder('—')
+                            ->label(__('layup::builder.all_sides'))
+                            ->numeric()
+                            ->minValue($name === 'padding' ? 0 : null)
+                            ->nullable()
+                            ->placeholder('0')
                             ->extraInputAttributes(['class' => 'text-center']),
                         TextInput::make("{$name}.right")
                             ->label(__('layup::widgets.shared.right'))
                             ->numeric()
+                            ->minValue($name === 'padding' ? 0 : null)
                             ->nullable()
                             ->placeholder('0'),
                     ])
@@ -80,6 +105,7 @@ class SpacingPicker
                         TextInput::make("{$name}.bottom")
                             ->label(__('layup::widgets.shared.bottom'))
                             ->numeric()
+                            ->minValue($name === 'padding' ? 0 : null)
                             ->nullable()
                             ->placeholder('0'),
                     ])
